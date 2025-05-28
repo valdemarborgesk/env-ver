@@ -1,93 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Platform Versions</title>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+  <!-- Optional: DataTables Dark Theme -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
   <style>
-    /* Base Variables */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
     :root {
       --bg-color: #f4f4f4;
       --text-color: #222;
-      --table-bg: #fff;
-      --table-alt: #f9f9f9;
-      --header-bg: #007acc;
-      --header-text: #fff;
-      --border-color: #ddd;
     }
 
     body.dark {
       --bg-color: #121212;
       --text-color: #f0f0f0;
-      --table-bg: #1e1e1e;
-      --table-alt: #2a2a2a;
-      --header-bg: #1f6feb;
-      --header-text: #fff;
-      --border-color: #444;
-    }
-
-    /* Layout Styling */
-    body {
-      font-family: Arial, sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      padding: 20px;
-      margin: 0;
-      transition: background 0.3s, color 0.3s;
     }
 
     h1 {
-      margin-top: 0;
+      color: var(--text-color);
     }
 
-    /* Toggle Button */
     #toggleDarkMode {
       float: right;
       margin-top: -10px;
       background: none;
-      border: 1px solid var(--border-color);
+      border: 1px solid #ccc;
       color: var(--text-color);
-      padding: 6px 12px;
+      padding: 5px 10px;
       cursor: pointer;
       border-radius: 5px;
-      font-size: 0.9em;
-      transition: background 0.3s, color 0.3s, border 0.3s;
     }
 
-    /* Table Styling */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--table-bg);
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      text-align: left;
-    }
-
-    th {
-      background-color: var(--header-bg);
-      color: var(--header-text);
-    }
-
-    tr:nth-child(even) {
-      background-color: var(--table-alt);
+    table.dataTable thead th {
+      background-color: #007acc;
+      color: white;
     }
 
     code {
-      background: #3332;
+      background: #eee;
       padding: 2px 4px;
       border-radius: 4px;
+    }
+
+    body.dark code {
+      background: #333;
     }
   </style>
 </head>
 <body>
-  <button id="toggleDarkMode">☀️ Light Mode</button>
+  <button id="toggleDarkMode">🌙 Dark Mode</button>
   <h1>Platform Versions</h1>
-
-  <table id="versionsTable">
+  <table id="versionsTable" class="display" style="width:100%">
     <thead>
       <tr>
         <th>Environment</th>
@@ -101,30 +75,30 @@
     <tbody></tbody>
   </table>
 
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
   <script>
-    // Default to dark unless explicitly set to 'light'
-    const theme = localStorage.getItem('theme');
-    const prefersDark = theme !== 'light';
-    const body = document.body;
+    // Dark Mode Toggle
     const toggleButton = document.getElementById('toggleDarkMode');
+    const userPrefersDark = localStorage.getItem('theme') !== 'light';
 
-    if (prefersDark) body.classList.add('dark');
-    toggleButton.textContent = body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    if (userPrefersDark) document.body.classList.add('dark');
+    toggleButton.textContent = document.body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
 
     toggleButton.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      const isDark = body.classList.contains('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
       toggleButton.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // Fetch and render version data
+    // Fetch and populate DataTable
     fetch('https://central-server.kelvininc.com/platformversions')
       .then(response => response.json())
       .then(data => {
-        const tbody = document.querySelector('#versionsTable tbody');
-        Object.entries(data).forEach(([env, versions]) => {
-          const row = document.createElement('tr');
+        const tableData = Object.entries(data).map(([env, versions]) => {
           const core = versions['core'] || '';
           const coreUI = versions['core-ui'] || '';
           const coreAPI = versions['core-api'] || '';
@@ -133,16 +107,20 @@
             .filter(([key]) => !['core', 'core-ui', 'core-api', 'api-spec'].includes(key))
             .map(([key, val]) => `${key}: <code>${val}</code>`)
             .join('<br>');
+          return [env, core, coreUI, coreAPI, apiSpec, others];
+        });
 
-          row.innerHTML = `
-            <td><strong>${env}</strong></td>
-            <td><code>${core}</code></td>
-            <td><code>${coreUI}</code></td>
-            <td><code>${coreAPI}</code></td>
-            <td><code>${apiSpec}</code></td>
-            <td>${others}</td>
-          `;
-          tbody.appendChild(row);
+        $('#versionsTable').DataTable({
+          data: tableData,
+          columns: [
+            { title: "Environment" },
+            { title: "Core" },
+            { title: "Core UI" },
+            { title: "Core API" },
+            { title: "API Spec" },
+            { title: "Other" }
+          ],
+          responsive: true
         });
       })
       .catch(err => {
