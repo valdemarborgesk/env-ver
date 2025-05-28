@@ -1,1 +1,65 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="theme-color" content="#000000"><link rel="manifest" href="/env-ver/manifest.json"><link rel="shortcut icon" href="/env-ver/favicon.ico"><title>React App</title><link href="/env-ver/static/css/2.fbce6968.chunk.css" rel="stylesheet"><link href="/env-ver/static/css/main.853d3cfd.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script>!function(e){function r(r){for(var n,l,a=r[0],f=r[1],i=r[2],p=0,s=[];p<a.length;p++)l=a[p],Object.prototype.hasOwnProperty.call(o,l)&&o[l]&&s.push(o[l][0]),o[l]=0;for(n in f)Object.prototype.hasOwnProperty.call(f,n)&&(e[n]=f[n]);for(c&&c(r);s.length;)s.shift()();return u.push.apply(u,i||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,a=1;a<t.length;a++){var f=t[a];0!==o[f]&&(n=!1)}n&&(u.splice(r--,1),e=l(l.s=t[0]))}return e}var n={},o={1:0},u=[];function l(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,l),t.l=!0,t.exports}l.m=e,l.c=n,l.d=function(e,r,t){l.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},l.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},l.t=function(e,r){if(1&r&&(e=l(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(l.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)l.d(t,n,function(r){return e[r]}.bind(null,n));return t},l.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return l.d(r,"a",r),r},l.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},l.p="/env-ver/";var a=this.webpackJsonpreact=this.webpackJsonpreact||[],f=a.push.bind(a);a.push=r,a=a.slice();for(var i=0;i<a.length;i++)r(a[i]);var c=f;t()}([])</script><script src="/env-ver/static/js/2.752d8ebe.chunk.js"></script><script src="/env-ver/static/js/main.89096931.chunk.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Platform Versions</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    h1 { color: #333; }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #007acc; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    code { background: #eee; padding: 2px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Platform Versions</h1>
+  <table id="versionsTable">
+    <thead>
+      <tr>
+        <th>Environment</th>
+        <th>Core</th>
+        <th>Core UI</th>
+        <th>Core API</th>
+        <th>API Spec</th>
+        <th>Other</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch('https://central-server.kelvininc.com/platformversions')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.querySelector('#versionsTable tbody');
+        Object.entries(data).forEach(([env, versions]) => {
+          const row = document.createElement('tr');
+          const core = versions['core'] || '';
+          const coreUI = versions['core-ui'] || '';
+          const coreAPI = versions['core-api'] || '';
+          const apiSpec = versions['api-spec'] || '';
+          const others = Object.entries(versions)
+            .filter(([key]) => !['core', 'core-ui', 'core-api', 'api-spec'].includes(key))
+            .map(([key, val]) => `${key}: <code>${val}</code>`)
+            .join('<br>');
+
+          row.innerHTML = `
+            <td><strong>${env}</strong></td>
+            <td><code>${core}</code></td>
+            <td><code>${coreUI}</code></td>
+            <td><code>${coreAPI}</code></td>
+            <td><code>${apiSpec}</code></td>
+            <td>${others}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        document.body.innerHTML = '<p style="color:red;">Failed to load version data.</p>';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
