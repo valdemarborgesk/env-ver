@@ -107,10 +107,13 @@
           urlsResp.json()
         ]);
         const tableData = Object.entries(versions).map(([env, versionInfo]) => {
+         codex/add-environment-urls-to-env-list
           let baseUrl = urls[env] || `${env}.kelvin.ai`;
           if (!/^https?:\/\//.test(baseUrl)) {
             baseUrl = `https://${baseUrl}`;
           }
+          const baseUrl = urls[env] || `https://${env}.kelvin.ai`;
+         gh-pages
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
           const metadataLink = `<a href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer">/metadata</a>`;
           const coreVersion = versionInfo["core"] || "";
