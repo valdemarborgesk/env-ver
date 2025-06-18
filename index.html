@@ -98,18 +98,31 @@
     // Fetch and populate DataTable
     async function populateTable() {
       try {
-        const response = await fetch("https://central-server.kelvininc.com/platformversions");
-        const data = await response.json();
-        const tableData = Object.entries(data).map(([env, versions]) => {
-          const core = versions["core"] || "";
-          const coreUI = versions["core-ui"] || "";
-          const coreAPI = versions["core-api"] || "";
-          const apiSpec = versions["api-spec"] || "";
-          const others = Object.entries(versions)
+        const [versionsResp, urlsResp] = await Promise.all([
+          fetch("https://central-server.kelvininc.com/platformversions"),
+          fetch("https://central-server.kelvininc.com/platformurls")
+        ]);
+        const [versions, urls] = await Promise.all([
+          versionsResp.json(),
+          urlsResp.json()
+        ]);
+        const tableData = Object.entries(versions).map(([env, versionInfo]) => {
+          let baseUrl = urls[env] || `${env}.kelvin.ai`;
+          if (!/^https?:\/\//.test(baseUrl)) {
+            baseUrl = `https://${baseUrl}`;
+          }
+          const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
+          const metadataLink = `<a href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer">/metadata</a>`;
+          const coreVersion = versionInfo["core"] || "";
+          const core = `${coreVersion} (${metadataLink})`;
+          const coreUI = versionInfo["core-ui"] || "";
+          const coreAPI = versionInfo["core-api"] || "";
+          const apiSpec = versionInfo["api-spec"] || "";
+          const others = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
             .map(([key, val]) => `${key}: <code>${val}</code>`)
             .join("<br>");
-          return [env, core, coreUI, coreAPI, apiSpec, others];
+          return [envLink, core, coreUI, coreAPI, apiSpec, others];
         });
 
         $("#versionsTable").DataTable({
