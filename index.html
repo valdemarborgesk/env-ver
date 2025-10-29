@@ -294,19 +294,28 @@
       return parts.map((part) => part.padStart(6, "0")).join(".");
     };
 
-    const renderVersionCell = (version, suffix = "") => {
-      if (version === undefined || version === null || version === "") return "";
-      const sortValue = getVersionSortValue(version);
+    const createVersionCell = (version, suffix = "") => {
       const suffixHtml = suffix ? ` ${suffix}` : "";
-      return `<span data-order="${sortValue}"><code>${version}</code>${suffixHtml}</span>`;
+      if (version === undefined || version === null || version === "") {
+        return {
+          display: `${versionPlaceholder}${suffixHtml}`,
+          sort: "",
+          filter: ""
+        };
+      }
+
+      const sortValue = getVersionSortValue(version);
+      return {
+        display: `<span class="version-cell"><code>${version}</code>${suffixHtml}</span>`,
+        sort: sortValue,
+        filter: version
+      };
     };
 
-    const renderVersionCellOrPlaceholder = (version, suffix = "") => {
-      const hasVersion = !(version === undefined || version === null || version === "");
-      if (!hasVersion) {
-        return suffix ? `${versionPlaceholder} ${suffix}` : versionPlaceholder;
-      }
-      return renderVersionCell(version, suffix);
+    const versionColumnRender = {
+      _: "display",
+      sort: "sort",
+      filter: "filter"
     };
 
     toggleButton.addEventListener('click', () => {
@@ -335,11 +344,7 @@
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
           const metadataLink = `<a href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer">/metadata</a>`;
           const metadataSuffix = `(${metadataLink})`;
-          const core = renderVersionCellOrPlaceholder(versionInfo["core"], metadataSuffix);
-          const coreUI = renderVersionCellOrPlaceholder(versionInfo["core-ui"]);
-          const coreAPI = renderVersionCellOrPlaceholder(versionInfo["core-api"]);
-          const apiSpec = renderVersionCellOrPlaceholder(versionInfo["api-spec"]);
-          const others = Object.entries(versionInfo)
+          const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
             .map(([key, val]) => {
               const valueMarkup = (val === undefined || val === null || val === "")
@@ -348,20 +353,28 @@
               return `<div class="kv-pair"><span class="kv-key">${key}</span>${valueMarkup}</div>`;
             })
             .join("");
-          const othersCell = others || versionPlaceholder;
-          return [envLink, core, coreUI, coreAPI, apiSpec, othersCell];
+
+          return {
+            environment: envLink,
+            core: createVersionCell(versionInfo["core"], metadataSuffix),
+            coreUi: createVersionCell(versionInfo["core-ui"]),
+            coreApi: createVersionCell(versionInfo["core-api"]),
+            apiSpec: createVersionCell(versionInfo["api-spec"]),
+            others: othersHtml || versionPlaceholder
+          };
         });
 
         $("#versionsTable").DataTable({
           data: tableData,
           columns: [
-            { title: "Environment" },
-            { title: "Core" },
-            { title: "Core UI" },
-            { title: "Core API" },
-            { title: "API Spec" },
-            { title: "Other" }
+            { title: "Environment", data: "environment" },
+            { title: "Core", data: "core", render: versionColumnRender },
+            { title: "Core UI", data: "coreUi", render: versionColumnRender },
+            { title: "Core API", data: "coreApi", render: versionColumnRender },
+            { title: "API Spec", data: "apiSpec", render: versionColumnRender },
+            { title: "Other", data: "others" }
           ],
+          order: [[1, "desc"]],
           pageLength: 50,
           responsive: true
         });
