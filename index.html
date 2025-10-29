@@ -3,41 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <title>Platform Versions</title>
+  <link rel="icon" href="https://kelvin.ai/favicon.ico" />
   <!-- DataTables CSS -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
   <!-- Optional: DataTables Dark Theme -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
   <style>
     :root {
-      --background-gradient: linear-gradient(145deg, #f8faff 0%, #e8eef9 100%);
-      --color-bg: #f5f7fb;
+      --background-gradient: linear-gradient(160deg, #f4f8fb 0%, #e6f1ff 100%);
+      --color-bg: #f4f8fb;
       --color-surface: #ffffff;
-      --color-surface-alt: #f1f4fb;
-      --color-text: #1f2933;
-      --color-muted: #5f6b7d;
-      --color-border: rgba(17, 24, 39, 0.08);
-      --color-accent: #336cfb;
-      --color-accent-strong: #2354d8;
-      --color-link: #2354d8;
-      --table-header-bg: #2354d8;
-      --table-row-hover: rgba(51, 108, 251, 0.08);
-      --code-bg: rgba(35, 84, 216, 0.08);
+      --color-surface-alt: #eef5ff;
+      --color-text: #112240;
+      --color-muted: #5d738e;
+      --color-border: rgba(17, 34, 64, 0.1);
+      --color-accent: #00a3ff;
+      --color-accent-strong: #0082d1;
+      --color-link: #006ecb;
+      --table-header-bg: #0f2f57;
+      --table-row-hover: rgba(0, 163, 255, 0.08);
+      --code-bg: rgba(0, 163, 255, 0.08);
+      --brand-glow: rgba(0, 163, 255, 0.26);
     }
 
     body.dark {
-      --background-gradient: linear-gradient(145deg, #262c3f 0%, #1d2434 100%);
-      --color-bg: #202637;
-      --color-surface: #262f45;
-      --color-surface-alt: #2e3950;
-      --color-text: #e7edf8;
-      --color-muted: #a6b3cd;
-      --color-border: rgba(255, 255, 255, 0.08);
-      --color-accent: #89a9ff;
-      --color-accent-strong: #a6c0ff;
-      --color-link: #a6c0ff;
-      --table-header-bg: #5a7ff3;
-      --table-row-hover: rgba(137, 169, 255, 0.14);
-      --code-bg: rgba(137, 169, 255, 0.16);
+      --background-gradient: linear-gradient(160deg, #081529 0%, #020b17 100%);
+      --color-bg: #0b1a30;
+      --color-surface: #111f36;
+      --color-surface-alt: #15263f;
+      --color-text: #e3f1ff;
+      --color-muted: #92abc7;
+      --color-border: rgba(111, 170, 255, 0.18);
+      --color-accent: #46c6ff;
+      --color-accent-strong: #5fd3ff;
+      --color-link: #7dd8ff;
+      --table-header-bg: #123b67;
+      --table-row-hover: rgba(70, 198, 255, 0.14);
+      --code-bg: rgba(70, 198, 255, 0.18);
+      --brand-glow: rgba(70, 198, 255, 0.32);
     }
 
     body {
@@ -51,25 +54,41 @@
     }
 
     .main-container {
-      max-width: 1100px;
+      position: relative;
+      max-width: 1180px;
       margin: 0 auto;
       background: var(--color-surface);
-      border-radius: 20px;
-      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 28px 60px rgba(9, 25, 46, 0.18);
       border: 1px solid var(--color-border);
-      padding: 42px;
+      padding: 48px 52px;
       transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      overflow: hidden;
+    }
+
+    .main-container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(120% 120% at 90% 0%, rgba(0, 163, 255, 0.16) 0%, rgba(0, 163, 255, 0) 52%);
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+
+    body.dark .main-container::before {
+      background: radial-gradient(120% 120% at 90% 0%, rgba(70, 198, 255, 0.24) 0%, rgba(70, 198, 255, 0) 55%);
     }
 
     h1 {
       margin: 0;
-      font-size: 2rem;
+      font-size: 2.2rem;
       letter-spacing: -0.01em;
     }
 
     .subtitle {
-      margin-top: 8px;
-      font-size: 0.98rem;
+      margin-top: 10px;
+      font-size: 1rem;
       color: var(--color-muted);
     }
 
@@ -79,20 +98,44 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
+    }
+
+    .page-title {
+      max-width: 620px;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      background: rgba(0, 163, 255, 0.14);
+      color: var(--color-link);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.165em;
+    }
+
+    body.dark .brand-pill {
+      background: rgba(70, 198, 255, 0.18);
+      color: var(--color-link);
     }
 
     #toggleDarkMode {
-      background: var(--color-accent);
-      color: #fff;
+      background: linear-gradient(140deg, var(--color-accent), var(--color-accent-strong));
+      color: #ffffff;
       border: none;
-      padding: 10px 16px;
+      padding: 12px 20px;
       border-radius: 999px;
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(51, 108, 251, 0.25);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+      box-shadow: 0 16px 30px var(--brand-glow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -100,21 +143,83 @@
 
     #toggleDarkMode:hover {
       transform: translateY(-1px);
-      box-shadow: 0 12px 26px rgba(51, 108, 251, 0.32);
-      background: var(--color-accent-strong);
+      box-shadow: 0 18px 34px var(--brand-glow);
+      opacity: 0.95;
+    }
+
+    #toggleDarkMode:focus-visible {
+      outline: 3px solid rgba(0, 163, 255, 0.35);
+      outline-offset: 4px;
     }
 
     .table-card {
+      position: relative;
       background: var(--color-surface);
-      border-radius: 16px;
+      border-radius: 18px;
       border: 1px solid var(--color-border);
-      padding: 20px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(12, 36, 64, 0.12);
       transition: background 0.35s ease, border-color 0.35s ease;
+    }
+
+    .table-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(120deg, rgba(0, 163, 255, 0.12), rgba(0, 163, 255, 0));
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    body.dark .table-card::before {
+      background: linear-gradient(120deg, rgba(70, 198, 255, 0.2), rgba(70, 198, 255, 0));
     }
 
     .table-card .dataTables_wrapper {
       width: 100%;
+    }
+
+    a {
+      color: var(--color-link);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover,
+    a:focus-visible {
+      color: var(--color-accent-strong);
+    }
+
+    .metadata-link {
+      color: var(--color-muted);
+      font-weight: 600;
+    }
+
+    .metadata-link:hover,
+    .metadata-link:focus-visible {
+      color: var(--color-link);
+    }
+
+    .version-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .version-cell code {
+      background: var(--code-bg);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--color-text);
+      border: 1px solid rgba(17, 34, 64, 0.08);
+    }
+
+    body.dark .version-cell code {
+      border-color: rgba(143, 181, 222, 0.32);
+      color: var(--color-text);
     }
 
     table.dataTable thead th {
@@ -144,9 +249,10 @@
     }
 
     table.dataTable td {
-      padding: 12px 16px;
+      padding: 14px 16px;
       vertical-align: top;
       color: var(--color-text);
+      line-height: 1.55;
     }
 
     table.dataTable a {
@@ -167,12 +273,25 @@
       border-radius: 10px;
       padding: 8px 12px;
       outline: none;
+      font-weight: 500;
     }
 
     .dataTables_wrapper .dataTables_filter input:focus,
     .dataTables_wrapper .dataTables_length select:focus {
       border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px rgba(51, 108, 251, 0.15);
+      box-shadow: 0 0 0 3px rgba(0, 163, 255, 0.2);
+    }
+
+    .dataTables_wrapper .dataTables_filter label,
+    .dataTables_wrapper .dataTables_length label,
+    .dataTables_wrapper .dataTables_info {
+      color: var(--color-muted);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+      margin-top: 14px;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -187,8 +306,10 @@
 
     .dataTables_wrapper .dataTables_paginate .paginate_button.current,
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background: var(--color-accent) !important;
+      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong)) !important;
       color: #fff !important;
+      border-color: transparent !important;
+      box-shadow: 0 6px 14px var(--brand-glow);
     }
 
     code {
@@ -206,6 +327,9 @@
     .kv-pair {
       margin-bottom: 6px;
       line-height: 1.4;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
     }
 
     .kv-key {
@@ -219,24 +343,49 @@
       margin-left: 1px;
     }
 
+    .kv-pair:last-child {
+      margin-bottom: 0;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 32px 16px;
       }
 
       .main-container {
-        padding: 28px 20px;
+        padding: 32px 24px;
       }
 
       #toggleDarkMode {
         width: 100%;
         justify-content: center;
       }
+
+      .page-header {
+        gap: 20px;
+      }
+
+      .page-title {
+        max-width: none;
+      }
     }
 
     @media (max-width: 520px) {
+      body {
+        padding: 24px 14px;
+      }
+
       .page-header {
         flex-direction: column;
+        align-items: stretch;
+      }
+
+      .main-container {
+        padding: 28px 20px;
+      }
+
+      .brand-pill {
+        margin-bottom: 12px;
       }
     }
   </style>
@@ -244,9 +393,10 @@
 <body>
   <main class="main-container">
     <header class="page-header">
-      <div>
+      <div class="page-title">
+        <span class="brand-pill">Kelvin Platform</span>
         <h1>Platform Versions</h1>
-        <p class="subtitle">Snapshot of the latest builds across our hosted environments.</p>
+        <p class="subtitle">Live view of environment releases across the Kelvin platform.</p>
       </div>
       <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
     </header>
@@ -342,7 +492,7 @@
             baseUrl = `https://${baseUrl}`;
           }
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
-          const metadataLink = `<a href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer">/metadata</a>`;
+          const metadataLink = `<a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer">/metadata</a>`;
           const metadataSuffix = `(${metadataLink})`;
           const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
