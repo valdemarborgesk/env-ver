@@ -8,72 +8,244 @@
   <!-- Optional: DataTables Dark Theme -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      margin: 0;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      transition: background-color 0.3s, color 0.3s;
-    }
-
     :root {
-      --bg-color: #f4f4f4;
-      --text-color: #222;
+      --background-gradient: linear-gradient(145deg, #f8faff 0%, #e8eef9 100%);
+      --color-bg: #f5f7fb;
+      --color-surface: #ffffff;
+      --color-surface-alt: #f1f4fb;
+      --color-text: #1f2933;
+      --color-muted: #5f6b7d;
+      --color-border: rgba(17, 24, 39, 0.08);
+      --color-accent: #336cfb;
+      --color-accent-strong: #2354d8;
+      --color-link: #2354d8;
+      --table-header-bg: #2354d8;
+      --table-row-hover: rgba(51, 108, 251, 0.08);
+      --code-bg: rgba(35, 84, 216, 0.08);
     }
 
     body.dark {
-      --bg-color: #121212;
-      --text-color: #f0f0f0;
+      --background-gradient: linear-gradient(145deg, #262c3f 0%, #1d2434 100%);
+      --color-bg: #202637;
+      --color-surface: #262f45;
+      --color-surface-alt: #2e3950;
+      --color-text: #e7edf8;
+      --color-muted: #a6b3cd;
+      --color-border: rgba(255, 255, 255, 0.08);
+      --color-accent: #89a9ff;
+      --color-accent-strong: #a6c0ff;
+      --color-link: #a6c0ff;
+      --table-header-bg: #5a7ff3;
+      --table-row-hover: rgba(137, 169, 255, 0.14);
+      --code-bg: rgba(137, 169, 255, 0.16);
+    }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      background: var(--background-gradient);
+      color: var(--color-text);
+      min-height: 100vh;
+      padding: 56px 24px;
+      transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    .main-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--color-surface);
+      border-radius: 20px;
+      box-shadow: 0 22px 45px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--color-border);
+      padding: 42px;
+      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
     }
 
     h1 {
-      color: var(--text-color);
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: -0.01em;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 0.98rem;
+      color: var(--color-muted);
+    }
+
+    .page-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
     #toggleDarkMode {
-      float: right;
-      margin-top: -10px;
-      background: none;
-      border: 1px solid #ccc;
-      color: var(--text-color);
-      padding: 5px 10px;
+      background: var(--color-accent);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 5px;
+      box-shadow: 0 10px 24px rgba(51, 108, 251, 0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #toggleDarkMode:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(51, 108, 251, 0.32);
+      background: var(--color-accent-strong);
+    }
+
+    .table-card {
+      background: var(--color-surface);
+      border-radius: 16px;
+      border: 1px solid var(--color-border);
+      padding: 20px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transition: background 0.35s ease, border-color 0.35s ease;
+    }
+
+    .table-card .dataTables_wrapper {
+      width: 100%;
     }
 
     table.dataTable thead th {
-      background-color: #007acc;
-      color: white;
+      background-color: var(--table-header-bg) !important;
+      color: #fff !important;
+      border-bottom: none !important;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    table.dataTable tbody tr {
+      background-color: var(--color-surface) !important;
+      transition: background-color 0.2s ease;
+    }
+
+    table.dataTable tbody tr:nth-child(even) {
+      background-color: var(--color-surface-alt) !important;
+    }
+
+    table.dataTable tbody tr:hover {
+      background-color: var(--table-row-hover) !important;
+    }
+
+    table.dataTable td,
+    table.dataTable th {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    table.dataTable td {
+      padding: 12px 16px;
+      vertical-align: top;
+      color: var(--color-text);
+    }
+
+    table.dataTable a {
+      color: var(--color-link);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    table.dataTable a:hover {
+      text-decoration: underline;
+    }
+
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      border-radius: 10px;
+      padding: 8px 12px;
+      outline: none;
+    }
+
+    .dataTables_wrapper .dataTables_filter input:focus,
+    .dataTables_wrapper .dataTables_length select:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(51, 108, 251, 0.15);
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      background: transparent !important;
+      color: var(--color-text) !important;
+      border-radius: 8px !important;
+      border: 1px solid transparent !important;
+      margin: 0 2px !important;
+      padding: 6px 12px !important;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background: var(--color-accent) !important;
+      color: #fff !important;
     }
 
     code {
-      background: #eee;
-      padding: 2px 4px;
+      background: var(--code-bg);
+      padding: 2px 6px;
       border-radius: 4px;
+      font-family: "Source Code Pro", "Fira Code", monospace;
+      font-size: 0.9rem;
     }
 
-    body.dark code {
-      background: #333;
+    @media (max-width: 768px) {
+      body {
+        padding: 32px 16px;
+      }
+
+      .main-container {
+        padding: 28px 20px;
+      }
+
+      #toggleDarkMode {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page-header {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
-  <button id="toggleDarkMode">🌙 Dark Mode</button>
-  <h1>Platform Versions</h1>
-  <table id="versionsTable" class="display" style="width:100%">
-    <thead>
-      <tr>
-        <th>Environment</th>
-        <th>Core</th>
-        <th>Core UI</th>
-        <th>Core API</th>
-        <th>API Spec</th>
-        <th>Other</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <main class="main-container">
+    <header class="page-header">
+      <div>
+        <h1>Platform Versions</h1>
+        <p class="subtitle">Snapshot of the latest builds across our hosted environments.</p>
+      </div>
+      <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
+    </header>
+    <div class="table-card">
+      <table id="versionsTable" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Environment</th>
+            <th>Core</th>
+            <th>Core UI</th>
+            <th>Core API</th>
+            <th>API Spec</th>
+            <th>Other</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js" defer></script>
@@ -86,13 +258,18 @@
     const userPrefersDark = savedTheme ? savedTheme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     if (userPrefersDark) document.body.classList.add("dark");
-    toggleButton.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+    const setToggleState = () => {
+      const isDark = document.body.classList.contains("dark");
+      toggleButton.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      toggleButton.setAttribute("aria-pressed", String(isDark));
+    };
+    setToggleState();
 
     toggleButton.addEventListener('click', () => {
       document.body.classList.toggle('dark');
       const isDark = document.body.classList.contains('dark');
-      toggleButton.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      setToggleState();
     });
 
     // Fetch and populate DataTable
