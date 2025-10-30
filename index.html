@@ -108,12 +108,10 @@
     }
 
     .page-header {
-      position: relative;
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      justify-content: center;
-      gap: 16px;
+      gap: 24px;
       margin-bottom: 32px;
       padding: 16px 72px 0 72px;
     }
@@ -126,15 +124,16 @@
       text-align: center;
       margin: 0 auto;
       flex: 1 1 auto;
+      justify-self: center;
     }
 
     .brand-mark {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       gap: 14px;
-      margin-bottom: 16px;
-      align-self: flex-start;
+      margin: 0;
+      justify-self: start;
     }
 
     .brand-mark img {
@@ -158,9 +157,8 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      position: absolute;
-      top: 12px;
-      right: 12px;
+      justify-self: end;
+      align-self: center;
     }
 
     #toggleDarkMode:hover {
@@ -387,6 +385,10 @@
       }
 
       .page-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         gap: 20px;
         padding: 16px 24px 0 24px;
       }
@@ -398,6 +400,7 @@
 
       .brand-mark {
         align-self: center;
+        margin-bottom: 12px;
       }
     }
 
@@ -423,10 +426,10 @@
 <body>
   <main class="main-container">
     <header class="page-header">
+      <div class="brand-mark">
+        <img src="assets/kelvin-logo.png" alt="Kelvin logo" />
+      </div>
       <div class="page-title">
-        <div class="brand-mark">
-          <img src="assets/kelvin-logo.png" alt="Kelvin logo" />
-        </div>
         <h1>Platform Versions</h1>
         <p class="subtitle">Live view of environment releases across the Kelvin platform.</p>
       </div>
