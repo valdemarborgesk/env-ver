@@ -82,8 +82,23 @@
 
     h1 {
       margin: 0;
-      font-size: 2.2rem;
-      letter-spacing: -0.01em;
+      font-size: 2.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 10px 18px;
+      display: inline-block;
+      border-radius: 999px;
+      background: rgba(0, 163, 255, 0.12);
+      border: 1px solid rgba(0, 163, 255, 0.24);
+      color: var(--color-link);
+      box-shadow: 0 12px 24px rgba(0, 163, 255, 0.18);
+    }
+
+    body.dark h1 {
+      background: rgba(70, 198, 255, 0.18);
+      border-color: rgba(70, 198, 255, 0.32);
+      color: var(--color-text);
+      box-shadow: 0 14px 28px rgba(70, 198, 255, 0.22);
     }
 
     .subtitle {
@@ -113,9 +128,10 @@
     }
 
     .brand-mark img {
-      height: 36px;
+      height: 48px;
       width: auto;
       display: block;
+      filter: drop-shadow(0 10px 24px rgba(0, 163, 255, 0.25));
     }
 
     #toggleDarkMode {
