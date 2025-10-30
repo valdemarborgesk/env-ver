@@ -108,12 +108,27 @@
     }
 
     .page-header {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
+      display: flex;
+      flex-direction: column;
       gap: 24px;
       margin-bottom: 32px;
       padding: 16px 72px 0 72px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 14px;
+      margin: 0;
     }
 
     .page-title {
@@ -123,17 +138,6 @@
       align-items: center;
       text-align: center;
       margin: 0 auto;
-      flex: 1 1 auto;
-      justify-self: center;
-    }
-
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 14px;
-      margin: 0;
-      justify-self: start;
     }
 
     .brand-mark img {
@@ -379,18 +383,19 @@
       #toggleDarkMode {
         position: static;
         width: 100%;
-        justify-content: center;
-        align-self: center;
         margin-top: 8px;
+        justify-content: center;
       }
 
       .page-header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         gap: 20px;
         padding: 16px 24px 0 24px;
+      }
+
+      .brand-row {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
       }
 
       .page-title {
@@ -426,14 +431,16 @@
 <body>
   <main class="main-container">
     <header class="page-header">
-      <div class="brand-mark">
-        <img src="assets/kelvin-logo.png" alt="Kelvin logo" />
+      <div class="brand-row">
+        <div class="brand-mark">
+          <img src="assets/kelvin-logo.png" alt="Kelvin logo" />
+        </div>
+        <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
       </div>
       <div class="page-title">
         <h1>Platform Versions</h1>
         <p class="subtitle">Live view of environment releases across the Kelvin platform.</p>
       </div>
-      <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
     </header>
     <div class="table-card">
       <table id="versionsTable" class="display" style="width:100%">
