@@ -486,6 +486,37 @@
       font-size: 0.85rem;
     }
 
+    .copy-metadata-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: var(--color-accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .copy-metadata-btn:hover {
+      background: var(--color-accent-strong);
+      transform: translateY(-1px);
+    }
+
+    .copy-metadata-btn:active {
+      transform: translateY(0);
+    }
+
+    .copy-metadata-btn.copied {
+      background: #10b981;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 32px 16px;
@@ -657,7 +688,7 @@
             baseUrl = `https://${baseUrl}`;
           }
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
-          const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}">/metadata</a></span>`;
+          const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}" data-metadata='${JSON.stringify(versionInfo)}'>/metadata</a></span>`;
           const metadataSuffix = `(${metadataLink})`;
           const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
@@ -701,7 +732,40 @@
 
     populateTable();
 
-    // Metadata tooltip functionality (simplified - no CORS issues)
+    // Metadata tooltip functionality with copy button
+    function createMetadataTooltip(env, metadata) {
+      const items = [];
+
+      if (metadata.core) items.push({ label: 'Core', value: metadata.core });
+      if (metadata['core-ui']) items.push({ label: 'Core UI', value: metadata['core-ui'] });
+      if (metadata['core-api']) items.push({ label: 'Core API', value: metadata['core-api'] });
+      if (metadata['api-spec']) items.push({ label: 'API Spec', value: metadata['api-spec'] });
+
+      const otherKeys = Object.keys(metadata).filter(
+        key => !['core', 'core-ui', 'core-api', 'api-spec'].includes(key)
+      );
+      otherKeys.forEach(key => {
+        items.push({ label: key, value: metadata[key] });
+      });
+
+      const itemsHtml = items.map(item => `
+        <div class="metadata-item">
+          <div class="metadata-label">${item.label}</div>
+          <div class="metadata-value"><code>${item.value || 'N/A'}</code></div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="metadata-tooltip-title">${env} Metadata</div>
+        <div class="metadata-content">
+          ${itemsHtml}
+          <button class="copy-metadata-btn" data-metadata='${JSON.stringify(metadata, null, 2)}'>
+            📋 Copy JSON
+          </button>
+        </div>
+      `;
+    }
+
     document.addEventListener('mouseover', (e) => {
       const link = e.target.closest('.metadata-link');
       if (!link) return;
@@ -714,14 +778,8 @@
         tooltip = document.createElement('div');
         tooltip.className = 'metadata-tooltip';
         const env = link.dataset.env;
-        tooltip.innerHTML = `
-          <div class="metadata-tooltip-title">${env} Metadata</div>
-          <div class="metadata-content">
-            <p style="color: var(--color-muted); font-size: 0.9rem; margin: 0;">
-              Click to view full metadata endpoint →
-            </p>
-          </div>
-        `;
+        const metadata = JSON.parse(link.dataset.metadata || '{}');
+        tooltip.innerHTML = createMetadataTooltip(env, metadata);
         wrapper.appendChild(tooltip);
       }
 
@@ -736,8 +794,34 @@
       if (!wrapper) return;
 
       const tooltip = wrapper.querySelector('.metadata-tooltip');
-      if (tooltip) {
+      if (tooltip && !tooltip.matches(':hover')) {
         tooltip.classList.remove('visible');
+      }
+    });
+
+    // Handle copy button clicks
+    document.addEventListener('click', async (e) => {
+      if (e.target.closest('.copy-metadata-btn')) {
+        const btn = e.target.closest('.copy-metadata-btn');
+        const metadata = btn.dataset.metadata;
+
+        try {
+          await navigator.clipboard.writeText(metadata);
+          const originalText = btn.innerHTML;
+          btn.innerHTML = '✓ Copied!';
+          btn.classList.add('copied');
+
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('copied');
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy:', err);
+          btn.innerHTML = '✗ Failed';
+          setTimeout(() => {
+            btn.innerHTML = '📋 Copy JSON';
+          }, 2000);
+        }
       }
     });
 
