@@ -250,6 +250,7 @@
     .metadata-link {
       color: var(--color-muted);
       font-weight: 600;
+      cursor: pointer;
     }
 
     .metadata-link:hover,
@@ -486,12 +487,15 @@
       font-size: 0.85rem;
     }
 
-    .copy-metadata-btn {
-      width: 100%;
+    .metadata-actions {
+      display: flex;
+      gap: 8px;
       margin-top: 12px;
+    }
+
+    .metadata-btn {
+      flex: 1;
       padding: 8px 12px;
-      background: var(--color-accent);
-      color: white;
       border: none;
       border-radius: 8px;
       font-size: 0.85rem;
@@ -502,6 +506,12 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
+      text-decoration: none;
+    }
+
+    .copy-metadata-btn {
+      background: var(--color-accent);
+      color: white;
     }
 
     .copy-metadata-btn:hover {
@@ -515,6 +525,18 @@
 
     .copy-metadata-btn.copied {
       background: #10b981;
+    }
+
+    .view-metadata-btn {
+      background: var(--color-surface-alt);
+      color: var(--color-text);
+      border: 2px solid var(--color-border);
+    }
+
+    .view-metadata-btn:hover {
+      border-color: var(--color-accent);
+      background: var(--color-surface);
+      transform: translateY(-1px);
     }
 
     @media (max-width: 768px) {
@@ -732,8 +754,8 @@
 
     populateTable();
 
-    // Metadata tooltip functionality with copy button
-    function createMetadataTooltip(env, metadata) {
+    // Metadata tooltip functionality with copy and view buttons
+    function createMetadataTooltip(env, metadata, metadataUrl) {
       const items = [];
 
       if (metadata.core) items.push({ label: 'Core', value: metadata.core });
@@ -759,43 +781,63 @@
         <div class="metadata-tooltip-title">${env} Metadata</div>
         <div class="metadata-content">
           ${itemsHtml}
-          <button class="copy-metadata-btn" data-metadata='${JSON.stringify(metadata, null, 2)}'>
-            📋 Copy JSON
-          </button>
+          <div class="metadata-actions">
+            <button class="metadata-btn copy-metadata-btn" data-metadata='${JSON.stringify(metadata, null, 2)}'>
+              📋 Copy JSON
+            </button>
+            <a href="${metadataUrl}" target="_blank" rel="noopener noreferrer" class="metadata-btn view-metadata-btn">
+              🔗 View Full
+            </a>
+          </div>
         </div>
       `;
     }
 
-    document.addEventListener('mouseover', (e) => {
+    // Click to toggle tooltip
+    document.addEventListener('click', (e) => {
       const link = e.target.closest('.metadata-link');
-      if (!link) return;
 
-      const wrapper = link.closest('.metadata-tooltip-wrapper');
-      if (!wrapper) return;
+      if (link) {
+        e.preventDefault();
+        const wrapper = link.closest('.metadata-tooltip-wrapper');
+        if (!wrapper) return;
 
-      let tooltip = wrapper.querySelector('.metadata-tooltip');
-      if (!tooltip) {
-        tooltip = document.createElement('div');
-        tooltip.className = 'metadata-tooltip';
-        const env = link.dataset.env;
-        const metadata = JSON.parse(link.dataset.metadata || '{}');
-        tooltip.innerHTML = createMetadataTooltip(env, metadata);
-        wrapper.appendChild(tooltip);
-      }
+        let tooltip = wrapper.querySelector('.metadata-tooltip');
 
-      tooltip.classList.add('visible');
-    });
+        // If tooltip exists, toggle it
+        if (tooltip) {
+          const isVisible = tooltip.classList.contains('visible');
+          // Close all other tooltips
+          document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
+            t.classList.remove('visible');
+          });
 
-    document.addEventListener('mouseout', (e) => {
-      const link = e.target.closest('.metadata-link');
-      if (!link) return;
+          if (!isVisible) {
+            tooltip.classList.add('visible');
+          }
+        } else {
+          // Create new tooltip
+          // Close all other tooltips first
+          document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
+            t.classList.remove('visible');
+          });
 
-      const wrapper = link.closest('.metadata-tooltip-wrapper');
-      if (!wrapper) return;
-
-      const tooltip = wrapper.querySelector('.metadata-tooltip');
-      if (tooltip && !tooltip.matches(':hover')) {
-        tooltip.classList.remove('visible');
+          tooltip = document.createElement('div');
+          tooltip.className = 'metadata-tooltip';
+          const env = link.dataset.env;
+          const metadata = JSON.parse(link.dataset.metadata || '{}');
+          const metadataUrl = link.dataset.metadataUrl;
+          tooltip.innerHTML = createMetadataTooltip(env, metadata, metadataUrl);
+          wrapper.appendChild(tooltip);
+          tooltip.classList.add('visible');
+        }
+      } else {
+        // Click outside - close all tooltips unless clicking on tooltip itself
+        if (!e.target.closest('.metadata-tooltip')) {
+          document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
+            t.classList.remove('visible');
+          });
+        }
       }
     });
 
