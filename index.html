@@ -147,6 +147,40 @@
       filter: drop-shadow(0 10px 24px rgba(0, 163, 255, 0.25));
     }
 
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      margin-left: auto;
+      align-items: center;
+    }
+
+    #apiReferenceLink {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border: 2px solid var(--color-border);
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    #apiReferenceLink:hover {
+      transform: translateY(-1px);
+      border-color: var(--color-accent);
+      background: var(--color-surface-alt);
+    }
+
+    #apiReferenceLink:focus-visible {
+      outline: 3px solid rgba(0, 163, 255, 0.35);
+      outline-offset: 4px;
+    }
+
     #toggleDarkMode {
       background: linear-gradient(140deg, var(--color-accent), var(--color-accent-strong));
       color: #ffffff;
@@ -161,7 +195,6 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      margin-left: auto;
     }
 
     #toggleDarkMode:hover {
@@ -370,6 +403,89 @@
       margin-bottom: 0;
     }
 
+    .metadata-tooltip-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .metadata-tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      min-width: 280px;
+      max-width: 400px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      white-space: normal;
+    }
+
+    .metadata-tooltip.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(-12px);
+    }
+
+    .metadata-tooltip.loading {
+      text-align: center;
+      color: var(--color-muted);
+      font-size: 0.9rem;
+    }
+
+    .metadata-tooltip.error {
+      color: #ef4444;
+      font-size: 0.9rem;
+    }
+
+    .metadata-tooltip-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      color: var(--color-text);
+      border-bottom: 1px solid var(--color-border);
+      padding-bottom: 8px;
+    }
+
+    .metadata-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .metadata-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metadata-label {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .metadata-value {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      font-weight: 500;
+    }
+
+    .metadata-value code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
     @media (max-width: 768px) {
       body {
         padding: 32px 16px;
@@ -379,10 +495,15 @@
         padding: 32px 24px;
       }
 
-      #toggleDarkMode {
-        position: static;
+      .header-actions {
+        flex-direction: column;
         width: 100%;
-        margin-top: 8px;
+        margin-left: 0;
+      }
+
+      #apiReferenceLink,
+      #toggleDarkMode {
+        width: 100%;
         justify-content: center;
       }
 
@@ -434,7 +555,10 @@
         <div class="brand-mark">
           <img src="assets/kelvin-logo.png" alt="Kelvin logo" />
         </div>
-        <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
+        <div class="header-actions">
+          <a id="apiReferenceLink" href="kelvin-api-reference.html" target="_blank" rel="noopener noreferrer">📚 API Reference</a>
+          <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
+        </div>
       </div>
       <div class="page-title">
         <h1>Platform Versions</h1>
@@ -533,7 +657,7 @@
             baseUrl = `https://${baseUrl}`;
           }
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
-          const metadataLink = `<a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer">/metadata</a>`;
+          const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}">/metadata</a></span>`;
           const metadataSuffix = `(${metadataLink})`;
           const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
@@ -576,6 +700,100 @@
     }
 
     populateTable();
+
+    // Metadata tooltip functionality
+    const metadataCache = new Map();
+
+    async function fetchMetadata(url) {
+      if (metadataCache.has(url)) {
+        return metadataCache.get(url);
+      }
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch');
+        const data = await response.json();
+        metadataCache.set(url, data);
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    function createTooltipContent(metadata, env) {
+      const items = [];
+
+      if (metadata.core) items.push({ label: 'Core', value: metadata.core });
+      if (metadata['core-ui']) items.push({ label: 'Core UI', value: metadata['core-ui'] });
+      if (metadata['core-api']) items.push({ label: 'Core API', value: metadata['core-api'] });
+      if (metadata['api-spec']) items.push({ label: 'API Spec', value: metadata['api-spec'] });
+
+      const otherKeys = Object.keys(metadata).filter(
+        key => !['core', 'core-ui', 'core-api', 'api-spec'].includes(key)
+      );
+      otherKeys.forEach(key => {
+        items.push({ label: key, value: metadata[key] });
+      });
+
+      const itemsHtml = items.map(item => `
+        <div class="metadata-item">
+          <div class="metadata-label">${item.label}</div>
+          <div class="metadata-value"><code>${item.value || 'N/A'}</code></div>
+        </div>
+      `).join('');
+
+      return `
+        <div class="metadata-tooltip-title">${env} Metadata</div>
+        <div class="metadata-content">
+          ${itemsHtml}
+        </div>
+      `;
+    }
+
+    document.addEventListener('mouseover', async (e) => {
+      const link = e.target.closest('.metadata-link');
+      if (!link) return;
+
+      const wrapper = link.closest('.metadata-tooltip-wrapper');
+      if (!wrapper) return;
+
+      let tooltip = wrapper.querySelector('.metadata-tooltip');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.className = 'metadata-tooltip loading';
+        tooltip.innerHTML = 'Loading...';
+        wrapper.appendChild(tooltip);
+      }
+
+      tooltip.classList.add('visible');
+
+      const metadataUrl = link.dataset.metadataUrl;
+      const env = link.dataset.env;
+
+      if (!tooltip.classList.contains('loading')) return;
+
+      try {
+        const metadata = await fetchMetadata(metadataUrl);
+        tooltip.className = 'metadata-tooltip visible';
+        tooltip.innerHTML = createTooltipContent(metadata, env);
+      } catch (error) {
+        tooltip.className = 'metadata-tooltip visible error';
+        tooltip.innerHTML = 'Failed to load metadata';
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      const link = e.target.closest('.metadata-link');
+      if (!link) return;
+
+      const wrapper = link.closest('.metadata-tooltip-wrapper');
+      if (!wrapper) return;
+
+      const tooltip = wrapper.querySelector('.metadata-tooltip');
+      if (tooltip) {
+        tooltip.classList.remove('visible');
+      }
+    });
 
   </script>
 </body>

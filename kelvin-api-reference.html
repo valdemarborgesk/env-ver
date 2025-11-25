@@ -298,6 +298,21 @@
             font-size: 14px;
             margin-bottom: 20px;
         }
+
+        .description strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .description code,
+        .params-table code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
         
         .description p {
             margin-bottom: 12px;
@@ -18580,6 +18595,62 @@ to be requested.
         }, observerOptions);
         
         sections.forEach(section => observer.observe(section));
+
+        // Format markdown-style text in descriptions
+        function formatMarkdownText() {
+            // Select all description divs and table cells that might contain markdown
+            const elements = document.querySelectorAll('.description, .params-table td, .response-desc');
+
+            elements.forEach(element => {
+                let html = element.innerHTML;
+
+                // Convert **text** to <strong>text</strong>
+                html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+                // Convert `code` to <code>code</code> (but not if already in code tags)
+                // First, protect existing code tags
+                const codeTags = [];
+                html = html.replace(/<code>([^<]*)<\/code>/g, (match) => {
+                    codeTags.push(match);
+                    return `__CODE_TAG_${codeTags.length - 1}__`;
+                });
+
+                // Now convert backtick code
+                html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+                // Restore protected code tags
+                html = html.replace(/__CODE_TAG_(\d+)__/g, (match, index) => {
+                    return codeTags[parseInt(index)];
+                });
+
+                element.innerHTML = html;
+            });
+        }
+
+        // Clean up empty code tags and empty cells
+        function cleanEmptyElements() {
+            // Remove completely empty code tags (no content at all)
+            document.querySelectorAll('code').forEach(code => {
+                if (code.textContent.trim() === '' && code.children.length === 0) {
+                    // If it's in a table cell, replace with a dash
+                    const td = code.closest('td');
+                    if (td && td.textContent.trim() === '') {
+                        td.innerHTML = '<span style="color: var(--text-muted);">—</span>';
+                    }
+                }
+            });
+
+            // Clean up empty param locations
+            document.querySelectorAll('.param-location').forEach(span => {
+                if (span.textContent.trim() === '') {
+                    span.innerHTML = '<span style="color: var(--text-muted);">—</span>';
+                }
+            });
+        }
+
+        // Run formatting after DOM is fully loaded
+        formatMarkdownText();
+        cleanEmptyElements();
     </script>
 </body>
 </html>
