@@ -793,7 +793,6 @@
           }
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
           const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}" data-metadata='${JSON.stringify(versionInfo)}'>/metadata</a></span>`;
-          const metadataSuffix = `(${metadataLink})`;
           const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
             .map(([key, val]) => {
@@ -806,10 +805,11 @@
 
           return {
             environment: envLink,
-            core: createVersionCell(versionInfo["core"], metadataSuffix),
+            core: createVersionCell(versionInfo["core"]),
             coreUi: createVersionCell(versionInfo["core-ui"]),
             coreApi: createVersionCell(versionInfo["core-api"]),
             apiSpec: createVersionCell(versionInfo["api-spec"]),
+            metadata: metadataLink,
             others: othersHtml || versionPlaceholder
           };
         });
@@ -822,6 +822,7 @@
             { title: "Core UI", data: "coreUi", render: versionColumnRender },
             { title: "Core API", data: "coreApi", render: versionColumnRender },
             { title: "API Spec", data: "apiSpec", render: versionColumnRender },
+            { title: "Metadata", data: "metadata" },
             { title: "Other", data: "others" }
           ],
           order: [[1, "desc"]],
