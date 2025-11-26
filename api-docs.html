@@ -78,22 +78,175 @@
     let currentTheme = getInitialTheme();
     document.body.className = currentTheme;
 
-    // Light theme colors
+    // Light theme configuration
     const lightTheme = {
+      spacing: {
+        unit: 5,
+        sectionHorizontal: 40,
+        sectionVertical: 40
+      },
+      breakpoints: {
+        small: '50rem',
+        medium: '85rem',
+        large: '105rem'
+      },
       colors: {
+        tonalOffset: 0.3,
         primary: {
           main: '#00a3ff'
+        },
+        success: {
+          main: '#10b981'
+        },
+        warning: {
+          main: '#f59e0b'
+        },
+        error: {
+          main: '#ef4444'
         },
         text: {
           primary: '#333333',
           secondary: '#666666'
         },
-        background: {
-          main: '#ffffff',
-          secondary: '#f8f9fa'
-        },
         border: {
-          main: '#e0e0e0'
+          dark: '#e0e0e0',
+          light: '#f0f0f0'
+        },
+        responses: {
+          success: {
+            color: '#10b981',
+            backgroundColor: '#f0fdf4'
+          },
+          error: {
+            color: '#ef4444',
+            backgroundColor: '#fef2f2'
+          },
+          redirect: {
+            color: '#f59e0b',
+            backgroundColor: '#fffbeb'
+          },
+          info: {
+            color: '#00a3ff',
+            backgroundColor: '#eff6ff'
+          }
+        },
+        http: {
+          get: '#10b981',
+          post: '#00a3ff',
+          put: '#f59e0b',
+          options: '#a855f7',
+          patch: '#ec4899',
+          delete: '#ef4444',
+          basic: '#999999',
+          link: '#ec4899',
+          head: '#a855f7'
+        }
+      },
+      schema: {
+        linesColor: '#e0e0e0',
+        defaultDetailsWidth: '75%',
+        typeNameColor: '#00a3ff',
+        typeTitleColor: '#333333',
+        requireLabelColor: '#ef4444',
+        labelsTextSize: '0.9em',
+        nestingSpacing: '1em',
+        nestedBackground: '#f8f9fa',
+        arrow: {
+          size: '1.1em',
+          color: '#666666'
+        }
+      },
+      typography: {
+        fontSize: '14px',
+        lineHeight: '1.6em',
+        fontWeightRegular: '400',
+        fontWeightBold: '600',
+        fontWeightLight: '300',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+        smoothing: 'antialiased',
+        optimizeSpeed: true,
+        headings: {
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+          fontWeight: '700',
+          lineHeight: '1.4em'
+        },
+        code: {
+          fontSize: '13px',
+          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
+          fontWeight: '400',
+          color: '#e53935',
+          backgroundColor: 'rgba(38, 50, 56, 0.05)',
+          wrap: false
+        },
+        links: {
+          color: '#00a3ff',
+          visited: '#00a3ff',
+          hover: '#0080cc',
+          textDecoration: 'auto',
+          hoverTextDecoration: 'underline'
+        }
+      },
+      sidebar: {
+        width: '260px',
+        backgroundColor: '#f8f9fa',
+        textColor: '#333333',
+        activeTextColor: '#00a3ff',
+        groupItems: {
+          activeBackgroundColor: '#e8f4fd',
+          activeTextColor: '#00a3ff',
+          textTransform: 'uppercase'
+        },
+        level1Items: {
+          activeBackgroundColor: '#e8f4fd',
+          activeTextColor: '#00a3ff',
+          textTransform: 'none'
+        },
+        arrow: {
+          size: '1.5em',
+          color: '#666666'
+        }
+      },
+      logo: {
+        maxHeight: '50px',
+        maxWidth: '200px',
+        gutter: '2px'
+      },
+      rightPanel: {
+        backgroundColor: '#263238',
+        width: '40%',
+        textColor: '#ffffff',
+        servers: {
+          overlay: {
+            backgroundColor: '#fafafa',
+            textColor: '#263238'
+          },
+          url: {
+            backgroundColor: '#ffffff'
+          }
+        }
+      },
+      codeBlock: {
+        backgroundColor: '#263238',
+        tokens: {}
+      }
+    };
+
+    // Dark theme configuration
+    const darkTheme = {
+      spacing: {
+        unit: 5,
+        sectionHorizontal: 40,
+        sectionVertical: 40
+      },
+      breakpoints: {
+        small: '50rem',
+        medium: '85rem',
+        large: '105rem'
+      },
+      colors: {
+        tonalOffset: 0.3,
+        primary: {
+          main: '#00a3ff'
         },
         success: {
           main: '#10b981'
@@ -103,96 +256,131 @@
         },
         error: {
           main: '#ef4444'
-        },
-        http: {
-          get: '#10b981',
-          post: '#00a3ff',
-          put: '#f59e0b',
-          delete: '#ef4444',
-          patch: '#a855f7'
-        }
-      },
-      typography: {
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-        fontSize: '14px',
-        headings: {
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-          fontWeight: '700'
-        },
-        code: {
-          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
-          fontSize: '13px',
-          backgroundColor: '#f8f9fa',
-          color: '#333333'
-        }
-      },
-      sidebar: {
-        backgroundColor: '#f8f9fa',
-        textColor: '#333333',
-        activeTextColor: '#00a3ff'
-      },
-      rightPanel: {
-        backgroundColor: '#f8f9fa',
-        textColor: '#333333'
-      }
-    };
-
-    // Dark theme colors
-    const darkTheme = {
-      colors: {
-        primary: {
-          main: '#00a3ff'
         },
         text: {
           primary: '#e0e0e0',
           secondary: '#b0b0b0'
         },
-        background: {
-          main: '#1a1a1a',
-          secondary: '#0f0f0f'
-        },
         border: {
-          main: '#404040'
+          dark: '#404040',
+          light: '#2d2d2d'
         },
-        success: {
-          main: '#10b981'
-        },
-        warning: {
-          main: '#f59e0b'
-        },
-        error: {
-          main: '#ef4444'
+        responses: {
+          success: {
+            color: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)'
+          },
+          error: {
+            color: '#ef4444',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)'
+          },
+          redirect: {
+            color: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)'
+          },
+          info: {
+            color: '#00a3ff',
+            backgroundColor: 'rgba(0, 163, 255, 0.1)'
+          }
         },
         http: {
           get: '#10b981',
           post: '#00a3ff',
           put: '#f59e0b',
+          options: '#a855f7',
+          patch: '#ec4899',
           delete: '#ef4444',
-          patch: '#a855f7'
+          basic: '#999999',
+          link: '#ec4899',
+          head: '#a855f7'
+        }
+      },
+      schema: {
+        linesColor: '#404040',
+        defaultDetailsWidth: '75%',
+        typeNameColor: '#00a3ff',
+        typeTitleColor: '#e0e0e0',
+        requireLabelColor: '#ef4444',
+        labelsTextSize: '0.9em',
+        nestingSpacing: '1em',
+        nestedBackground: '#0f0f0f',
+        arrow: {
+          size: '1.1em',
+          color: '#b0b0b0'
         }
       },
       typography: {
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
         fontSize: '14px',
+        lineHeight: '1.6em',
+        fontWeightRegular: '400',
+        fontWeightBold: '600',
+        fontWeightLight: '300',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+        smoothing: 'antialiased',
+        optimizeSpeed: true,
         headings: {
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-          fontWeight: '700'
+          fontWeight: '700',
+          lineHeight: '1.4em'
         },
         code: {
-          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
           fontSize: '13px',
-          backgroundColor: '#0f0f0f',
-          color: '#e0e0e0'
+          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
+          fontWeight: '400',
+          color: '#ff6b6b',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          wrap: false
+        },
+        links: {
+          color: '#00a3ff',
+          visited: '#00a3ff',
+          hover: '#33b5ff',
+          textDecoration: 'auto',
+          hoverTextDecoration: 'underline'
         }
       },
       sidebar: {
+        width: '260px',
         backgroundColor: '#1a1a1a',
         textColor: '#e0e0e0',
-        activeTextColor: '#00a3ff'
+        activeTextColor: '#00a3ff',
+        groupItems: {
+          activeBackgroundColor: 'rgba(0, 163, 255, 0.1)',
+          activeTextColor: '#00a3ff',
+          textTransform: 'uppercase'
+        },
+        level1Items: {
+          activeBackgroundColor: 'rgba(0, 163, 255, 0.1)',
+          activeTextColor: '#00a3ff',
+          textTransform: 'none'
+        },
+        arrow: {
+          size: '1.5em',
+          color: '#b0b0b0'
+        }
+      },
+      logo: {
+        maxHeight: '50px',
+        maxWidth: '200px',
+        gutter: '2px'
       },
       rightPanel: {
         backgroundColor: '#0f0f0f',
-        textColor: '#e0e0e0'
+        width: '40%',
+        textColor: '#e0e0e0',
+        servers: {
+          overlay: {
+            backgroundColor: '#1a1a1a',
+            textColor: '#e0e0e0'
+          },
+          url: {
+            backgroundColor: '#2d2d2d'
+          }
+        }
+      },
+      codeBlock: {
+        backgroundColor: '#0f0f0f',
+        tokens: {}
       }
     };
 
