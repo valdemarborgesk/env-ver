@@ -430,7 +430,7 @@
       transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                   transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       white-space: normal;
-      overflow: auto;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -457,36 +457,46 @@
       z-index: -1;
     }
 
-    /* Custom scrollbar for glassmorphism popup */
-    .metadata-tooltip::-webkit-scrollbar {
+    .metadata-tooltip .metadata-content {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .metadata-json-wrapper {
+      flex: 1;
+      overflow: auto;
+      min-height: 0;
+      margin-bottom: 12px;
+    }
+
+    /* Custom scrollbar for JSON content */
+    .metadata-json-wrapper::-webkit-scrollbar {
       width: 10px;
     }
 
-    .metadata-tooltip::-webkit-scrollbar-track {
+    .metadata-json-wrapper::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0.2);
       border-radius: 10px;
       margin: 4px;
     }
 
-    .metadata-tooltip::-webkit-scrollbar-thumb {
+    .metadata-json-wrapper::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
       border: 2px solid rgba(0, 0, 0, 0.2);
     }
 
-    .metadata-tooltip::-webkit-scrollbar-thumb:hover {
+    .metadata-json-wrapper::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.3);
     }
 
     /* Firefox scrollbar */
-    .metadata-tooltip {
+    .metadata-json-wrapper {
       scrollbar-width: thin;
       scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.2);
-    }
-
-    .metadata-tooltip .metadata-content {
-      flex: 1;
-      min-height: 0;
     }
 
     .metadata-tooltip pre {
@@ -552,7 +562,7 @@
     .metadata-actions {
       display: flex;
       gap: 8px;
-      margin-top: 12px;
+      flex-shrink: 0;
     }
 
     .metadata-btn {
@@ -843,7 +853,9 @@
       return `
         <div class="metadata-tooltip-title">${env} Metadata</div>
         <div class="metadata-content">
-          <pre style="background: rgba(0, 0, 0, 0.3); padding: 16px; border-radius: 12px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); font-family: 'JetBrains Mono', 'Fira Code', monospace; white-space: pre-wrap; word-break: break-word; border: 1px solid rgba(255, 255, 255, 0.08); line-height: 1.6;">${formattedJson}</pre>
+          <div class="metadata-json-wrapper">
+            <pre style="background: rgba(0, 0, 0, 0.3); padding: 16px; border-radius: 12px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); font-family: 'JetBrains Mono', 'Fira Code', monospace; white-space: pre-wrap; word-break: break-word; border: 1px solid rgba(255, 255, 255, 0.08); line-height: 1.6;">${formattedJson}</pre>
+          </div>
           <div class="metadata-actions">
             <button class="metadata-btn copy-metadata-btn" data-metadata='${formattedJson}'>
               📋 Copy JSON
