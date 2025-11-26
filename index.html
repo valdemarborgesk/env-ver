@@ -417,13 +417,13 @@
       padding: 16px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       z-index: 10000;
-      width: min(500px, 90vw);
-      max-height: 70vh;
+      max-width: calc(100vw - 40px);
+      max-height: calc(100vh - 40px);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease;
       white-space: normal;
-      overflow: hidden;
+      overflow: auto;
       display: flex;
       flex-direction: column;
     }
@@ -434,8 +434,6 @@
     }
 
     .metadata-tooltip .metadata-content {
-      overflow-y: auto;
-      overflow-x: hidden;
       flex: 1;
       min-height: 0;
     }
