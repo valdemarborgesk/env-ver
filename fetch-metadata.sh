@@ -55,8 +55,13 @@ if command -v python3 &> /dev/null; then
   # Get access token using Python Keycloak auth
   # Set environment variables for non-interactive auth
   export KEYCLOAK_URL="${API_BASE_URL}"
-  export KEYCLOAK_USERNAME="${KEYCLOAK_USERNAME:-test@test.com}"
-  export KEYCLOAK_PASSWORD="${KEYCLOAK_PASSWORD:-Hello123\$567}"
+
+  # Check if credentials are provided
+  if [ -z "$KEYCLOAK_USERNAME" ] || [ -z "$KEYCLOAK_PASSWORD" ]; then
+    echo "  ✗ KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD must be set"
+    echo "  Skipping OpenAPI fetch"
+    exit 0
+  fi
 
   ACCESS_TOKEN=$(python3 -c "
 import sys

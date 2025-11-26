@@ -15,6 +15,7 @@ on:
 jobs:
   fetch-metadata:
     runs-on: ubuntu-latest
+    environment: github-pages
 
     steps:
       - name: Checkout repository
@@ -34,6 +35,9 @@ jobs:
         run: chmod +x fetch-metadata.sh
 
       - name: Fetch metadata
+        env:
+          KEYCLOAK_USERNAME: ${{ secrets.KEYCLOAK_USERNAME }}
+          KEYCLOAK_PASSWORD: ${{ secrets.KEYCLOAK_PASSWORD }}
         run: ./fetch-metadata.sh
 
       - name: Check for changes

@@ -29,11 +29,23 @@ try:
     USING_UNIFIED_KEYRING = True
 except ImportError:
     # Fall back to old keyring_store system
-    from keyring_store import (
-        get_credentials as get_keyring_credentials,
-        store_credentials as store_keyring_credentials,
-    )
-    USING_UNIFIED_KEYRING = False
+    try:
+        from keyring_store import (
+            get_credentials as get_keyring_credentials,
+            store_credentials as store_keyring_credentials,
+        )
+        USING_UNIFIED_KEYRING = False
+    except ImportError:
+        # No keyring system available - use stub functions
+        def get_keyring_credentials():
+            """No keyring system available."""
+            return None
+
+        def store_keyring_credentials(username, password):
+            """No keyring system available."""
+            pass
+
+        USING_UNIFIED_KEYRING = False
 
 # Logging configuration (guard against duplicate handlers)
 logger = logging.getLogger(__name__)
