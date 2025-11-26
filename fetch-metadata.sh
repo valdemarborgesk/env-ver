@@ -46,48 +46,51 @@ echo "Total environments: $(echo "$environments" | wc -l)"
 echo ""
 echo "Fetching OpenAPI specification..."
 
-# Login credentials
-API_EMAIL="test@test.com"
-API_PASSWORD='Hello123$567'
+# Use Python script for Keycloak authentication
 API_BASE_URL="https://beta.kelvininc.com"
 
-# Create a temporary cookie jar
-COOKIE_JAR=$(mktemp)
+if command -v python3 &> /dev/null; then
+  echo "Authenticating to beta environment..."
 
-# Try to login and fetch OpenAPI spec
-echo "Authenticating to beta environment..."
+  # Get access token using Python Keycloak auth
+  # Set environment variables for non-interactive auth
+  export KEYCLOAK_URL="${API_BASE_URL}"
+  export KEYCLOAK_USERNAME="${KEYCLOAK_USERNAME:-test@test.com}"
+  export KEYCLOAK_PASSWORD="${KEYCLOAK_PASSWORD:-Hello123\$567}"
 
-# Login to get session cookie (using form data)
-login_response=$(curl -s -c "$COOKIE_JAR" -L -X POST \
-  "${API_BASE_URL}/auth" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "email=${API_EMAIL}&password=${API_PASSWORD}" \
-  -w "\n%{http_code}")
+  ACCESS_TOKEN=$(python3 -c "
+import sys
+sys.path.insert(0, '.')
+from keycloak_auth import authenticate
+token = authenticate('${API_BASE_URL}', '${KEYCLOAK_USERNAME}', '${KEYCLOAK_PASSWORD}', prompt=False)
+if token:
+    print(token)
+else:
+    sys.exit(1)
+" 2>/dev/null)
 
-http_code=$(echo "$login_response" | tail -n1)
+  if [ -n "$ACCESS_TOKEN" ]; then
+    echo "  ✓ Authentication successful"
 
-if [ "$http_code" = "200" ] || [ "$http_code" = "204" ]; then
-  echo "  ✓ Authentication successful"
-
-  # Fetch OpenAPI spec with session cookie
-  if curl -s -L -b "$COOKIE_JAR" -c "$COOKIE_JAR" -f "${API_BASE_URL}/api/swagger/openapi.json" > openapi.json 2>/dev/null; then
-    # Check if we got valid JSON
-    if jq empty openapi.json 2>/dev/null; then
-      echo "  ✓ Successfully fetched OpenAPI specification"
-      echo "  File size: $(wc -c < openapi.json) bytes"
+    # Fetch OpenAPI spec with Bearer token
+    if curl -s -L -H "Authorization: Bearer $ACCESS_TOKEN" -f "${API_BASE_URL}/api/swagger/openapi.json" > openapi.json 2>/dev/null; then
+      # Check if we got valid JSON
+      if jq empty openapi.json 2>/dev/null; then
+        echo "  ✓ Successfully fetched OpenAPI specification"
+        echo "  File size: $(wc -c < openapi.json) bytes"
+      else
+        echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
+        rm -f openapi.json
+      fi
     else
-      echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
-      rm -f openapi.json
+      echo "  ✗ Failed to fetch OpenAPI specification"
     fi
   else
-    echo "  ✗ Failed to fetch OpenAPI specification"
+    echo "  ✗ Authentication failed"
   fi
 else
-  echo "  ✗ Authentication failed (HTTP $http_code)"
+  echo "  ✗ Python3 not found, skipping OpenAPI fetch"
 fi
-
-# Cleanup cookie jar
-rm -f "$COOKIE_JAR"
 
 echo ""
 echo "All done!"
