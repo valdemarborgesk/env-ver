@@ -410,28 +410,38 @@
     }
 
     .metadata-tooltip {
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-8px);
+      position: fixed;
       background: var(--color-surface);
       border: 2px solid var(--color-border);
       border-radius: 12px;
       padding: 16px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-      min-width: 280px;
-      max-width: 400px;
+      z-index: 10000;
+      width: min(500px, 90vw);
+      max-height: 70vh;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity 0.2s ease;
       white-space: normal;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .metadata-tooltip.visible {
       opacity: 1;
       pointer-events: auto;
-      transform: translateX(-50%) translateY(-12px);
+    }
+
+    .metadata-tooltip .metadata-content {
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .metadata-tooltip pre {
+      margin: 0;
+      overflow-x: auto;
     }
 
     .metadata-tooltip.loading {
@@ -772,7 +782,7 @@
       return `
         <div class="metadata-tooltip-title">${env} Metadata</div>
         <div class="metadata-content">
-          <pre style="background: var(--code-bg); padding: 12px; border-radius: 8px; overflow-x: auto; max-height: 300px; font-size: 0.8rem; margin: 0; color: var(--color-text); font-family: monospace;">${formattedJson}</pre>
+          <pre style="background: var(--code-bg); padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.8rem; color: var(--color-text); font-family: monospace;">${formattedJson}</pre>
           <div class="metadata-actions">
             <button class="metadata-btn copy-metadata-btn" data-metadata='${formattedJson}'>
               📋 Copy JSON
@@ -783,6 +793,39 @@
           </div>
         </div>
       `;
+    }
+
+    // Position tooltip near the trigger element
+    function positionTooltip(tooltip, triggerElement) {
+      const triggerRect = triggerElement.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate position
+      let top = triggerRect.bottom + 8;
+      let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+
+      // Check if tooltip goes below viewport
+      if (top + tooltipRect.height > viewportHeight - 20) {
+        // Show above the element instead
+        top = triggerRect.top - tooltipRect.height - 8;
+      }
+
+      // Ensure tooltip doesn't go off screen horizontally
+      if (left < 20) {
+        left = 20;
+      } else if (left + tooltipRect.width > viewportWidth - 20) {
+        left = viewportWidth - tooltipRect.width - 20;
+      }
+
+      // Ensure tooltip doesn't go off screen vertically
+      if (top < 20) {
+        top = 20;
+      }
+
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${left}px`;
     }
 
     // Cache for loaded metadata
@@ -815,27 +858,25 @@
 
       if (link) {
         e.preventDefault();
-        const wrapper = link.closest('.metadata-tooltip-wrapper');
-        if (!wrapper) return;
 
-        let tooltip = wrapper.querySelector('.metadata-tooltip');
+        // Check if this link already has a tooltip
+        const existingTooltip = document.querySelector('.metadata-tooltip[data-env="' + link.dataset.env + '"]');
 
-        // If tooltip exists, toggle it
-        if (tooltip) {
-          const isVisible = tooltip.classList.contains('visible');
-          // Close all other tooltips
+        if (existingTooltip) {
+          const isVisible = existingTooltip.classList.contains('visible');
+          // Close all tooltips
           document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
             t.classList.remove('visible');
           });
 
           if (!isVisible) {
-            tooltip.classList.add('visible');
+            existingTooltip.classList.add('visible');
+            positionTooltip(existingTooltip, link);
           }
           return;
         }
 
-        // Create new tooltip
-        // Close all other tooltips first
+        // Close all other tooltips
         document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
           t.classList.remove('visible');
         });
@@ -843,10 +884,15 @@
         const env = link.dataset.env;
         const metadataUrl = link.dataset.metadataUrl;
 
-        tooltip = document.createElement('div');
+        // Create new tooltip and add to body
+        const tooltip = document.createElement('div');
         tooltip.className = 'metadata-tooltip';
+        tooltip.setAttribute('data-env', env);
         tooltip.innerHTML = createLoadingTooltip(env);
-        wrapper.appendChild(tooltip);
+        document.body.appendChild(tooltip);
+
+        // Position and show
+        positionTooltip(tooltip, link);
         tooltip.classList.add('visible');
 
         // Load metadata from local file
@@ -859,6 +905,9 @@
           const fallbackData = JSON.parse(link.dataset.metadata || '{}');
           tooltip.innerHTML = createMetadataTooltip(env, fallbackData, metadataUrl);
         }
+
+        // Reposition after content is loaded
+        setTimeout(() => positionTooltip(tooltip, link), 0);
       } else {
         // Click outside - close all tooltips unless clicking on tooltip itself
         if (!e.target.closest('.metadata-tooltip')) {
