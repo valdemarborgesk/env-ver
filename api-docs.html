@@ -6,6 +6,21 @@
   <title>Kelvin API Documentation</title>
   <link rel="icon" href="https://kelvin.ai/favicon.ico" />
   <style>
+    /* Light theme (default) */
+    :root {
+      --color-primary: #0284c7;
+    }
+
+    /* Dark theme */
+    body.dark {
+      --color-primary: #60a5fa;
+      --color-text-primary: #e5e7eb;
+      --color-text-secondary: #9ca3af;
+      --color-background-primary: #111827;
+      --color-background-secondary: #1f2937;
+      --color-border: #374151;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -48,10 +63,10 @@
 <body>
   <button id="theme-toggle" type="button" aria-live="polite">🌙 Dark Mode</button>
 
-  <!-- Redoc container -->
-  <div id="redoc"></div>
+  <!-- Redoc HTML element -->
+  <redoc spec-url="openapi.json" scroll-y-offset="60"></redoc>
 
-  <!-- Redoc script -->
+  <!-- Redoc standalone script -->
   <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
 
   <script>
@@ -73,48 +88,6 @@
 
     let currentTheme = getInitialTheme();
     document.body.className = currentTheme;
-
-    // Simple theme - just customize colors
-    const theme = currentTheme === 'dark' ? {
-      colors: {
-        primary: {
-          main: '#60a5fa'
-        },
-        text: {
-          primary: '#e5e7eb',
-          secondary: '#9ca3af'
-        }
-      },
-      sidebar: {
-        backgroundColor: '#1f2937',
-        textColor: '#e5e7eb'
-      },
-      rightPanel: {
-        backgroundColor: '#111827'
-      }
-    } : {
-      colors: {
-        primary: {
-          main: '#0284c7'
-        }
-      }
-    };
-
-    // Initialize Redoc with minimal config
-    Redoc.init(
-      'openapi.json',
-      {
-        theme: theme,
-        scrollYOffset: 60,
-        hideDownloadButton: false,
-        disableSearch: false,
-        expandResponses: '200,201',
-        pathInMiddlePanel: true,
-        requiredPropsFirst: true,
-        sortPropsAlphabetically: true
-      },
-      document.getElementById('redoc')
-    );
 
     // Theme toggle button
     const toggleButton = document.getElementById('theme-toggle');
