@@ -9,14 +9,226 @@
     body {
       margin: 0;
       padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    #theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    body.light #theme-toggle {
+      background: #ffffff;
+      color: #333333;
+      border: 1px solid #e0e0e0;
+    }
+
+    body.dark #theme-toggle {
+      background: #2d2d2d;
+      color: #ffffff;
+      border: 1px solid #404040;
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #theme-toggle:active {
+      transform: translateY(0);
     }
   </style>
 </head>
-<body>
-  <!-- Redoc element -->
-  <redoc spec-url="openapi.json"></redoc>
+<body class="light">
+  <button id="theme-toggle" type="button" aria-live="polite">🌙 Dark Mode</button>
+
+  <!-- Redoc container -->
+  <div id="redoc-container"></div>
 
   <!-- Redoc script -->
   <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+
+  <script>
+    // Theme management
+    const STORAGE_KEY = 'kelvin-api-docs-theme';
+
+    // Get initial theme from localStorage or default to light
+    function getInitialTheme() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) return stored;
+
+      // Check system preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+
+      return 'light';
+    }
+
+    let currentTheme = getInitialTheme();
+    document.body.className = currentTheme;
+
+    // Light theme colors
+    const lightTheme = {
+      colors: {
+        primary: {
+          main: '#00a3ff'
+        },
+        text: {
+          primary: '#333333',
+          secondary: '#666666'
+        },
+        background: {
+          main: '#ffffff',
+          secondary: '#f8f9fa'
+        },
+        border: {
+          main: '#e0e0e0'
+        },
+        success: {
+          main: '#10b981'
+        },
+        warning: {
+          main: '#f59e0b'
+        },
+        error: {
+          main: '#ef4444'
+        }
+      },
+      typography: {
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+        fontSize: '14px',
+        headings: {
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+          fontWeight: '700'
+        },
+        code: {
+          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
+          fontSize: '13px'
+        }
+      },
+      sidebar: {
+        backgroundColor: '#f8f9fa',
+        textColor: '#333333',
+        activeTextColor: '#00a3ff'
+      },
+      rightPanel: {
+        backgroundColor: '#2d2d2d',
+        textColor: '#ffffff'
+      }
+    };
+
+    // Dark theme colors
+    const darkTheme = {
+      colors: {
+        primary: {
+          main: '#00a3ff'
+        },
+        text: {
+          primary: '#e0e0e0',
+          secondary: '#b0b0b0'
+        },
+        background: {
+          main: '#1a1a1a',
+          secondary: '#2d2d2d'
+        },
+        border: {
+          main: '#404040'
+        },
+        success: {
+          main: '#10b981'
+        },
+        warning: {
+          main: '#f59e0b'
+        },
+        error: {
+          main: '#ef4444'
+        }
+      },
+      typography: {
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+        fontSize: '14px',
+        headings: {
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
+          fontWeight: '700'
+        },
+        code: {
+          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
+          fontSize: '13px'
+        }
+      },
+      sidebar: {
+        backgroundColor: '#2d2d2d',
+        textColor: '#e0e0e0',
+        activeTextColor: '#00a3ff'
+      },
+      rightPanel: {
+        backgroundColor: '#1a1a1a',
+        textColor: '#e0e0e0'
+      }
+    };
+
+    // Initialize Redoc with theme
+    function initRedoc(theme) {
+      const container = document.getElementById('redoc-container');
+      container.innerHTML = ''; // Clear existing content
+
+      Redoc.init(
+        'openapi.json',
+        {
+          theme: theme === 'dark' ? darkTheme : lightTheme,
+          scrollYOffset: 60,
+          hideDownloadButton: false,
+          disableSearch: false,
+          expandResponses: '200,201',
+          jsonSampleExpandLevel: 2,
+          hideSingleRequestSampleTab: true,
+          menuToggle: true,
+          nativeScrollbars: false,
+          pathInMiddlePanel: true,
+          requiredPropsFirst: true,
+          sortPropsAlphabetically: true,
+          expandSingleSchemaField: true
+        },
+        container
+      );
+    }
+
+    // Initialize with current theme
+    initRedoc(currentTheme);
+
+    // Theme toggle button
+    const toggleButton = document.getElementById('theme-toggle');
+
+    function updateToggleButton() {
+      if (currentTheme === 'dark') {
+        toggleButton.innerHTML = '☀️ Light Mode';
+        toggleButton.setAttribute('aria-pressed', 'true');
+      } else {
+        toggleButton.innerHTML = '🌙 Dark Mode';
+        toggleButton.setAttribute('aria-pressed', 'false');
+      }
+    }
+
+    updateToggleButton();
+
+    toggleButton.addEventListener('click', () => {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.className = currentTheme;
+      localStorage.setItem(STORAGE_KEY, currentTheme);
+      updateToggleButton();
+      initRedoc(currentTheme);
+    });
+  </script>
 </body>
 </html>

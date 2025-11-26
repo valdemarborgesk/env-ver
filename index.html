@@ -874,27 +874,31 @@
       const tooltipRect = tooltip.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
+      const margin = 20;
 
       // Calculate position
       let top = triggerRect.bottom + 8;
       let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
 
       // Check if tooltip goes below viewport
-      if (top + tooltipRect.height > viewportHeight - 20) {
+      if (top + tooltipRect.height > viewportHeight - margin) {
         // Show above the element instead
         top = triggerRect.top - tooltipRect.height - 8;
       }
 
       // Ensure tooltip doesn't go off screen horizontally
-      if (left < 20) {
-        left = 20;
-      } else if (left + tooltipRect.width > viewportWidth - 20) {
-        left = viewportWidth - tooltipRect.width - 20;
+      if (left < margin) {
+        left = margin;
+      } else if (left + tooltipRect.width > viewportWidth - margin) {
+        left = viewportWidth - tooltipRect.width - margin;
       }
 
-      // Ensure tooltip doesn't go off screen vertically
-      if (top < 20) {
-        top = 20;
+      // Ensure tooltip doesn't go off screen vertically - maintain equal margins
+      if (top < margin) {
+        top = margin;
+      } else if (top + tooltipRect.height > viewportHeight - margin) {
+        // Ensure equal bottom margin
+        top = viewportHeight - tooltipRect.height - margin;
       }
 
       tooltip.style.top = `${top}px`;
