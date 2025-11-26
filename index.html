@@ -754,35 +754,16 @@
 
     populateTable();
 
-    // Metadata tooltip functionality with copy and view buttons
+    // Metadata tooltip functionality - using data we already have!
     function createMetadataTooltip(env, metadata, metadataUrl) {
-      const items = [];
-
-      if (metadata.core) items.push({ label: 'Core', value: metadata.core });
-      if (metadata['core-ui']) items.push({ label: 'Core UI', value: metadata['core-ui'] });
-      if (metadata['core-api']) items.push({ label: 'Core API', value: metadata['core-api'] });
-      if (metadata['api-spec']) items.push({ label: 'API Spec', value: metadata['api-spec'] });
-
-      const otherKeys = Object.keys(metadata).filter(
-        key => !['core', 'core-ui', 'core-api', 'api-spec'].includes(key)
-      );
-      otherKeys.forEach(key => {
-        items.push({ label: key, value: metadata[key] });
-      });
-
-      const itemsHtml = items.map(item => `
-        <div class="metadata-item">
-          <div class="metadata-label">${item.label}</div>
-          <div class="metadata-value"><code>${item.value || 'N/A'}</code></div>
-        </div>
-      `).join('');
+      const formattedJson = JSON.stringify(metadata, null, 2);
 
       return `
         <div class="metadata-tooltip-title">${env} Metadata</div>
         <div class="metadata-content">
-          ${itemsHtml}
+          <pre style="background: var(--code-bg); padding: 12px; border-radius: 8px; overflow-x: auto; max-height: 300px; font-size: 0.8rem; margin: 0; color: var(--color-text); font-family: monospace;">${formattedJson}</pre>
           <div class="metadata-actions">
-            <button class="metadata-btn copy-metadata-btn" data-metadata='${JSON.stringify(metadata, null, 2)}'>
+            <button class="metadata-btn copy-metadata-btn" data-metadata='${formattedJson}'>
               📋 Copy JSON
             </button>
             <a href="${metadataUrl}" target="_blank" rel="noopener noreferrer" class="metadata-btn view-metadata-btn">
@@ -815,22 +796,24 @@
           if (!isVisible) {
             tooltip.classList.add('visible');
           }
-        } else {
-          // Create new tooltip
-          // Close all other tooltips first
-          document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
-            t.classList.remove('visible');
-          });
-
-          tooltip = document.createElement('div');
-          tooltip.className = 'metadata-tooltip';
-          const env = link.dataset.env;
-          const metadata = JSON.parse(link.dataset.metadata || '{}');
-          const metadataUrl = link.dataset.metadataUrl;
-          tooltip.innerHTML = createMetadataTooltip(env, metadata, metadataUrl);
-          wrapper.appendChild(tooltip);
-          tooltip.classList.add('visible');
+          return;
         }
+
+        // Create new tooltip using data we already fetched from platformversions
+        // Close all other tooltips first
+        document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
+          t.classList.remove('visible');
+        });
+
+        const env = link.dataset.env;
+        const metadata = JSON.parse(link.dataset.metadata || '{}');
+        const metadataUrl = link.dataset.metadataUrl;
+
+        tooltip = document.createElement('div');
+        tooltip.className = 'metadata-tooltip';
+        tooltip.innerHTML = createMetadataTooltip(env, metadata, metadataUrl);
+        wrapper.appendChild(tooltip);
+        tooltip.classList.add('visible');
       } else {
         // Click outside - close all tooltips unless clicking on tooltip itself
         if (!e.target.closest('.metadata-tooltip')) {
