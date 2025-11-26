@@ -53,7 +53,7 @@
   <button id="theme-toggle" type="button" aria-live="polite">🌙 Dark Mode</button>
 
   <!-- Redoc container -->
-  <div id="redoc-container"></div>
+  <div id="redoc"></div>
 
   <!-- Redoc script -->
   <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
@@ -214,20 +214,10 @@
       rightPanel: {
         backgroundColor: '#263238',
         width: '40%',
-        textColor: '#ffffff',
-        servers: {
-          overlay: {
-            backgroundColor: '#fafafa',
-            textColor: '#263238'
-          },
-          url: {
-            backgroundColor: '#ffffff'
-          }
-        }
+        textColor: '#ffffff'
       },
       codeBlock: {
-        backgroundColor: '#263238',
-        tokens: {}
+        backgroundColor: '#263238'
       }
     };
 
@@ -367,51 +357,32 @@
       rightPanel: {
         backgroundColor: '#0f0f0f',
         width: '40%',
-        textColor: '#e0e0e0',
-        servers: {
-          overlay: {
-            backgroundColor: '#1a1a1a',
-            textColor: '#e0e0e0'
-          },
-          url: {
-            backgroundColor: '#2d2d2d'
-          }
-        }
+        textColor: '#e0e0e0'
       },
       codeBlock: {
-        backgroundColor: '#0f0f0f',
-        tokens: {}
+        backgroundColor: '#0f0f0f'
       }
     };
 
-    // Initialize Redoc with theme
-    function initRedoc(theme) {
-      const container = document.getElementById('redoc-container');
-      container.innerHTML = ''; // Clear existing content
+    // Initialize Redoc once on page load
+    const redocOptions = {
+      theme: currentTheme === 'dark' ? darkTheme : lightTheme,
+      scrollYOffset: 60,
+      hideDownloadButton: false,
+      disableSearch: false,
+      expandResponses: '200,201',
+      jsonSampleExpandLevel: 2,
+      hideSingleRequestSampleTab: true,
+      menuToggle: true,
+      nativeScrollbars: false,
+      pathInMiddlePanel: true,
+      requiredPropsFirst: true,
+      sortPropsAlphabetically: true,
+      expandSingleSchemaField: true
+    };
 
-      Redoc.init(
-        'openapi.json',
-        {
-          theme: theme === 'dark' ? darkTheme : lightTheme,
-          scrollYOffset: 60,
-          hideDownloadButton: false,
-          disableSearch: false,
-          expandResponses: '200,201',
-          jsonSampleExpandLevel: 2,
-          hideSingleRequestSampleTab: true,
-          menuToggle: true,
-          nativeScrollbars: false,
-          pathInMiddlePanel: true,
-          requiredPropsFirst: true,
-          sortPropsAlphabetically: true,
-          expandSingleSchemaField: true
-        },
-        container
-      );
-    }
-
-    // Initialize with current theme
-    initRedoc(currentTheme);
+    // Initialize Redoc
+    Redoc.init('openapi.json', redocOptions, document.getElementById('redoc'));
 
     // Theme toggle button
     const toggleButton = document.getElementById('theme-toggle');
@@ -433,7 +404,9 @@
       document.body.className = currentTheme;
       localStorage.setItem(STORAGE_KEY, currentTheme);
       updateToggleButton();
-      initRedoc(currentTheme);
+
+      // Reload the page to apply new theme
+      window.location.reload();
     });
   </script>
 </body>
