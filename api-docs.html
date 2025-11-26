@@ -364,9 +364,12 @@
       }
     };
 
+    // Get current theme config
+    const currentThemeConfig = currentTheme === 'dark' ? darkTheme : lightTheme;
+
     // Initialize Redoc once on page load
     const redocOptions = {
-      theme: currentTheme === 'dark' ? darkTheme : lightTheme,
+      ...currentThemeConfig,
       scrollYOffset: 60,
       hideDownloadButton: false,
       disableSearch: false,
