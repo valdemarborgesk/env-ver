@@ -63,18 +63,30 @@ if command -v python3 &> /dev/null; then
     exit 0
   fi
 
-  ACCESS_TOKEN=$(python3 -c "
+  # Run authentication and capture both stdout and stderr
+  AUTH_OUTPUT=$(python3 -c "
 import sys
 sys.path.insert(0, '.')
-from keycloak_auth import authenticate
-token = authenticate('${API_BASE_URL}', '${KEYCLOAK_USERNAME}', '${KEYCLOAK_PASSWORD}', prompt=False)
-if token:
-    print(token)
-else:
+try:
+    from keycloak_auth import authenticate
+    token = authenticate('${API_BASE_URL}', '${KEYCLOAK_USERNAME}', '${KEYCLOAK_PASSWORD}', prompt=False)
+    if token:
+        print(token)
+    else:
+        print('Authentication returned None', file=sys.stderr)
+        sys.exit(1)
+except Exception as e:
+    print(f'Error: {e}', file=sys.stderr)
+    import traceback
+    traceback.print_exc(file=sys.stderr)
     sys.exit(1)
-" 2>/dev/null)
+" 2>&1)
 
-  if [ -n "$ACCESS_TOKEN" ]; then
+  AUTH_EXIT_CODE=$?
+
+  # Check if authentication succeeded
+  if [ $AUTH_EXIT_CODE -eq 0 ] && [ -n "$AUTH_OUTPUT" ]; then
+    ACCESS_TOKEN="$AUTH_OUTPUT"
     echo "  ✓ Authentication successful"
 
     # Fetch OpenAPI spec with Bearer token
@@ -92,6 +104,7 @@ else:
     fi
   else
     echo "  ✗ Authentication failed"
+    echo "  Error output: $AUTH_OUTPUT"
   fi
 else
   echo "  ✗ Python3 not found, skipping OpenAPI fetch"
