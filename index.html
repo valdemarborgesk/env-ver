@@ -754,7 +754,18 @@
 
     populateTable();
 
-    // Metadata tooltip functionality - using data we already have!
+    // Metadata tooltip functionality - load from local files fetched by GitHub Action
+    function createLoadingTooltip(env) {
+      return `
+        <div class="metadata-tooltip-title">${env} Metadata</div>
+        <div class="metadata-content">
+          <p style="color: var(--color-muted); font-size: 0.9rem; margin: 0; text-align: center;">
+            Loading metadata...
+          </p>
+        </div>
+      `;
+    }
+
     function createMetadataTooltip(env, metadata, metadataUrl) {
       const formattedJson = JSON.stringify(metadata, null, 2);
 
@@ -774,8 +785,32 @@
       `;
     }
 
+    // Cache for loaded metadata
+    const metadataCache = new Map();
+
+    async function loadMetadata(env) {
+      if (metadataCache.has(env)) {
+        return metadataCache.get(env);
+      }
+
+      try {
+        // Try to load from local file first (fetched by GitHub Action)
+        const response = await fetch(`metadata/${env}.json`);
+        if (response.ok) {
+          const data = await response.json();
+          metadataCache.set(env, data);
+          return data;
+        }
+      } catch (error) {
+        console.warn(`Failed to load local metadata for ${env}:`, error);
+      }
+
+      // Fallback to platformversions data if local file doesn't exist
+      return null;
+    }
+
     // Click to toggle tooltip
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
       const link = e.target.closest('.metadata-link');
 
       if (link) {
@@ -799,21 +834,31 @@
           return;
         }
 
-        // Create new tooltip using data we already fetched from platformversions
+        // Create new tooltip
         // Close all other tooltips first
         document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
           t.classList.remove('visible');
         });
 
         const env = link.dataset.env;
-        const metadata = JSON.parse(link.dataset.metadata || '{}');
         const metadataUrl = link.dataset.metadataUrl;
 
         tooltip = document.createElement('div');
         tooltip.className = 'metadata-tooltip';
-        tooltip.innerHTML = createMetadataTooltip(env, metadata, metadataUrl);
+        tooltip.innerHTML = createLoadingTooltip(env);
         wrapper.appendChild(tooltip);
         tooltip.classList.add('visible');
+
+        // Load metadata from local file
+        const metadata = await loadMetadata(env);
+
+        if (metadata) {
+          tooltip.innerHTML = createMetadataTooltip(env, metadata, metadataUrl);
+        } else {
+          // Fallback to basic data we have
+          const fallbackData = JSON.parse(link.dataset.metadata || '{}');
+          tooltip.innerHTML = createMetadataTooltip(env, fallbackData, metadataUrl);
+        }
       } else {
         // Click outside - close all tooltips unless clicking on tooltip itself
         if (!e.target.closest('.metadata-tooltip')) {

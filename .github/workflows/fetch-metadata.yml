@@ -1,0 +1,44 @@
+name: Fetch Platform Metadata
+
+on:
+  schedule:
+    # Run every hour at minute 0
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual trigger
+  push:
+    branches:
+      - gh-pages
+    paths:
+      - 'fetch-metadata.sh'
+      - '.github/workflows/fetch-metadata.yml'
+
+jobs:
+  fetch-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Make script executable
+        run: chmod +x fetch-metadata.sh
+
+      - name: Fetch metadata
+        run: ./fetch-metadata.sh
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code metadata/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add metadata/
+          git commit -m "Update platform metadata [automated]"
+          git push

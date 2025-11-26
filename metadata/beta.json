@@ -1,0 +1,69 @@
+{
+  "versions": {
+    "core": "6.4.x",
+    "core-ui": "1.4.13-beta.43",
+    "core-api": "9.0.0-beta2025.8.0fd099c57",
+    "api-spec": "9.0.0-rc2025.11.74a0f07"
+  },
+  "feature_flags": {
+    "log_forward": true,
+    "telemetry_forward": true,
+    "remote_workload_deploy": true,
+    "remote_workload_undeploy": true,
+    "remote_workload_actions": true,
+    "auto_workload_image_build": false,
+    "docker_cluster": true,
+    "k3s_cluster": true,
+    "kubernetes_cluster": true,
+    "live_log_forward": true
+  },
+  "documentation": {
+    "url": "https://docs.kelvin.ai/6.4/"
+  },
+  "authentication": {
+    "realm": "kelvin",
+    "url": "https://beta.kelvininc.com",
+    "path": "/auth",
+    "logout_path": "/logout"
+  },
+  "core-ui": {
+    "kelvin-edge-ui": "beta.kelvininc.com:5000/kelvin-edge-ui:1.0.5-beta.35",
+    "client_id": "kelvin-core"
+  },
+  "core-api": {
+    "url": "https://beta.kelvininc.com",
+    "path": "/api/v4",
+    "docs": "/api/swagger"
+  },
+  "docker": {
+    "url": "beta.kelvininc.com",
+    "port": 5000
+  },
+  "sdk": {
+    "docker_minimum_version": "19.03.5",
+    "ksdk_latest_version": "9.4.3",
+    "ksdk_minimum_version": "9.4.3",
+    "components": {
+      "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
+      "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
+      "kelvin-python-app-runner-slim": "python:3.8-slim",
+      "kelvin-mqtt-broker": "beta.kelvininc.com:5000/kelvin-mqtt-broker:2.0.11-7",
+      "kelvin-edge-gateway": "beta.kelvininc.com:5000/kelvin-edge-gateway:beta-251112-54a0e0b",
+      "kelvin-edge-sync": "beta.kelvininc.com:5000/kelvin-edge-sync:beta-251112-54a0e0b",
+      "kelvin-control-change-manager": "beta.kelvininc.com:5000/kelvin-control-change-manager:beta-251112-54a0e0b",
+      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:beta-251112-54a0e0b"
+    }
+  },
+  "bridge": {
+    "apps": {
+      "kelvin-bridge-roc-client": "beta.kelvininc.com:5000/kelvin-bridge-roc-client:3.0.2",
+      "kelvin-bridge-opcua-client": "beta.kelvininc.com:5000/kelvin-bridge-opcua-client:3.4.11",
+      "kelvin-bridge-modbus-client": "beta.kelvininc.com:5000/kelvin-bridge-modbus-client:4.5.2",
+      "kelvin-csv-publisher-connector": "beta.kelvininc.com:5000/kelvin-csv-publisher-connector:1.0.9"
+    }
+  },
+  "schema": {
+    "latest_spec_version": "4.13.0",
+    "minimum_spec_version": "4.6.0"
+  }
+}
