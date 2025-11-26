@@ -435,13 +435,14 @@
 
     .metadata-tooltip .metadata-content {
       overflow-y: auto;
+      overflow-x: hidden;
       flex: 1;
       min-height: 0;
     }
 
     .metadata-tooltip pre {
       margin: 0;
-      overflow-x: auto;
+      overflow: visible;
     }
 
     .metadata-tooltip.loading {
@@ -782,7 +783,7 @@
       return `
         <div class="metadata-tooltip-title">${env} Metadata</div>
         <div class="metadata-content">
-          <pre style="background: var(--code-bg); padding: 12px; border-radius: 8px; overflow-x: auto; font-size: 0.8rem; color: var(--color-text); font-family: monospace;">${formattedJson}</pre>
+          <pre style="background: var(--code-bg); padding: 12px; border-radius: 8px; font-size: 0.8rem; color: var(--color-text); font-family: monospace; white-space: pre-wrap; word-break: break-word;">${formattedJson}</pre>
           <div class="metadata-actions">
             <button class="metadata-btn copy-metadata-btn" data-metadata='${formattedJson}'>
               📋 Copy JSON
