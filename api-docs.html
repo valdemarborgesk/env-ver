@@ -5,114 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kelvin API Documentation</title>
   <link rel="icon" href="https://kelvin.ai/favicon.ico" />
-  <style>
-    /* Light theme (default) */
-    :root {
-      --color-primary: #0284c7;
-    }
-
-    /* Dark theme */
-    body.dark {
-      --color-primary: #60a5fa;
-      --color-text-primary: #e5e7eb;
-      --color-text-secondary: #9ca3af;
-      --color-background-primary: #111827;
-      --color-background-secondary: #1f2937;
-      --color-border: #374151;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    #theme-toggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      background: #ffffff;
-      color: #333333;
-      border: 1px solid #e0e0e0;
-    }
-
-    body.dark #theme-toggle {
-      background: #2d2d2d;
-      color: #ffffff;
-      border: 1px solid #404040;
-    }
-
-    #theme-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    #theme-toggle:active {
-      transform: translateY(0);
-    }
-  </style>
 </head>
 <body>
-  <button id="theme-toggle" type="button" aria-live="polite">🌙 Dark Mode</button>
+  <!-- Scalar API Reference -->
+  <script id="api-reference" data-url="openapi.json"></script>
 
-  <!-- Redoc HTML element -->
-  <redoc spec-url="openapi.json" scroll-y-offset="60"></redoc>
-
-  <!-- Redoc standalone script -->
-  <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
-
-  <script>
-    // Theme management
-    const STORAGE_KEY = 'kelvin-api-docs-theme';
-
-    // Get initial theme from localStorage or default to light
-    function getInitialTheme() {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) return stored;
-
-      // Check system preference
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
-
-      return 'light';
-    }
-
-    let currentTheme = getInitialTheme();
-    document.body.className = currentTheme;
-
-    // Theme toggle button
-    const toggleButton = document.getElementById('theme-toggle');
-
-    function updateToggleButton() {
-      if (currentTheme === 'dark') {
-        toggleButton.innerHTML = '☀️ Light Mode';
-        toggleButton.setAttribute('aria-pressed', 'true');
-      } else {
-        toggleButton.innerHTML = '🌙 Dark Mode';
-        toggleButton.setAttribute('aria-pressed', 'false');
-      }
-    }
-
-    updateToggleButton();
-
-    toggleButton.addEventListener('click', () => {
-      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-      document.body.className = currentTheme;
-      localStorage.setItem(STORAGE_KEY, currentTheme);
-      updateToggleButton();
-
-      // Reload the page to apply new theme
-      window.location.reload();
-    });
-  </script>
+  <!-- Load Scalar from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
 </body>
 </html>
