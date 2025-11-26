@@ -457,6 +457,33 @@
       z-index: -1;
     }
 
+    /* Custom scrollbar for glassmorphism popup */
+    .metadata-tooltip::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .metadata-tooltip::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      margin: 4px;
+    }
+
+    .metadata-tooltip::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .metadata-tooltip::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Firefox scrollbar */
+    .metadata-tooltip {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.2);
+    }
+
     .metadata-tooltip .metadata-content {
       flex: 1;
       min-height: 0;
