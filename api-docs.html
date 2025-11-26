@@ -9,7 +9,6 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
 
     #theme-toggle {
@@ -25,9 +24,6 @@
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    body.light #theme-toggle {
       background: #ffffff;
       color: #333333;
       border: 1px solid #e0e0e0;
@@ -49,7 +45,7 @@
     }
   </style>
 </head>
-<body class="light">
+<body>
   <button id="theme-toggle" type="button" aria-live="polite">🌙 Dark Mode</button>
 
   <!-- Redoc container -->
@@ -78,314 +74,47 @@
     let currentTheme = getInitialTheme();
     document.body.className = currentTheme;
 
-    // Light theme configuration
-    const lightTheme = {
-      spacing: {
-        unit: 5,
-        sectionHorizontal: 40,
-        sectionVertical: 40
-      },
-      breakpoints: {
-        small: '50rem',
-        medium: '85rem',
-        large: '105rem'
-      },
+    // Simple theme - just customize colors
+    const theme = currentTheme === 'dark' ? {
       colors: {
-        tonalOffset: 0.3,
         primary: {
-          main: '#00a3ff'
-        },
-        success: {
-          main: '#059669'
-        },
-        warning: {
-          main: '#d97706'
-        },
-        error: {
-          main: '#dc2626'
+          main: '#60a5fa'
         },
         text: {
-          primary: '#1a1a1a',
-          secondary: '#4b5563'
-        },
-        border: {
-          dark: '#d1d5db',
-          light: '#e5e7eb'
-        },
-        responses: {
-          success: {
-            color: '#047857',
-            backgroundColor: '#d1fae5'
-          },
-          error: {
-            color: '#b91c1c',
-            backgroundColor: '#fee2e2'
-          },
-          redirect: {
-            color: '#b45309',
-            backgroundColor: '#fed7aa'
-          },
-          info: {
-            color: '#0369a1',
-            backgroundColor: '#dbeafe'
-          }
-        },
-        http: {
-          get: '#059669',
-          post: '#0284c7',
-          put: '#d97706',
-          options: '#9333ea',
-          patch: '#db2777',
-          delete: '#dc2626',
-          basic: '#6b7280',
-          link: '#db2777',
-          head: '#9333ea'
-        }
-      },
-      schema: {
-        linesColor: '#d1d5db',
-        defaultDetailsWidth: '75%',
-        typeNameColor: '#0369a1',
-        typeTitleColor: '#1a1a1a',
-        requireLabelColor: '#dc2626',
-        labelsTextSize: '0.9em',
-        nestingSpacing: '1em',
-        nestedBackground: '#f9fafb',
-        arrow: {
-          size: '1.1em',
-          color: '#6b7280'
-        }
-      },
-      typography: {
-        fontSize: '15px',
-        lineHeight: '1.6em',
-        fontWeightRegular: '400',
-        fontWeightBold: '600',
-        fontWeightLight: '300',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-        smoothing: 'antialiased',
-        optimizeSpeed: true,
-        headings: {
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-          fontWeight: '700',
-          lineHeight: '1.4em'
-        },
-        code: {
-          fontSize: '13px',
-          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
-          fontWeight: '400',
-          color: '#c53030',
-          backgroundColor: '#f3f4f6',
-          wrap: false
-        },
-        links: {
-          color: '#0284c7',
-          visited: '#0284c7',
-          hover: '#0369a1',
-          textDecoration: 'none',
-          hoverTextDecoration: 'underline'
-        }
-      },
-      sidebar: {
-        width: '260px',
-        backgroundColor: '#f9fafb',
-        textColor: '#1a1a1a',
-        activeTextColor: '#0284c7',
-        groupItems: {
-          activeBackgroundColor: '#dbeafe',
-          activeTextColor: '#0369a1',
-          textTransform: 'uppercase'
-        },
-        level1Items: {
-          activeBackgroundColor: '#dbeafe',
-          activeTextColor: '#0369a1',
-          textTransform: 'none'
-        },
-        arrow: {
-          size: '1.5em',
-          color: '#6b7280'
-        }
-      },
-      logo: {
-        maxHeight: '50px',
-        maxWidth: '200px',
-        gutter: '2px'
-      },
-      rightPanel: {
-        backgroundColor: '#f3f4f6',
-        width: '40%',
-        textColor: '#1a1a1a'
-      },
-      codeBlock: {
-        backgroundColor: '#1f2937'
-      }
-    };
-
-    // Dark theme configuration
-    const darkTheme = {
-      spacing: {
-        unit: 5,
-        sectionHorizontal: 40,
-        sectionVertical: 40
-      },
-      breakpoints: {
-        small: '50rem',
-        medium: '85rem',
-        large: '105rem'
-      },
-      colors: {
-        tonalOffset: 0.3,
-        primary: {
-          main: '#3b82f6'
-        },
-        success: {
-          main: '#34d399'
-        },
-        warning: {
-          main: '#fbbf24'
-        },
-        error: {
-          main: '#f87171'
-        },
-        text: {
-          primary: '#d1d5db',
+          primary: '#e5e7eb',
           secondary: '#9ca3af'
-        },
-        border: {
-          dark: '#374151',
-          light: '#1f2937'
-        },
-        responses: {
-          success: {
-            color: '#6ee7b7',
-            backgroundColor: 'rgba(52, 211, 153, 0.15)'
-          },
-          error: {
-            color: '#fca5a5',
-            backgroundColor: 'rgba(248, 113, 113, 0.15)'
-          },
-          redirect: {
-            color: '#fcd34d',
-            backgroundColor: 'rgba(251, 191, 36, 0.15)'
-          },
-          info: {
-            color: '#93c5fd',
-            backgroundColor: 'rgba(59, 130, 246, 0.15)'
-          }
-        },
-        http: {
-          get: '#34d399',
-          post: '#60a5fa',
-          put: '#fbbf24',
-          options: '#a78bfa',
-          patch: '#f472b6',
-          delete: '#f87171',
-          basic: '#9ca3af',
-          link: '#f472b6',
-          head: '#a78bfa'
-        }
-      },
-      schema: {
-        linesColor: '#374151',
-        defaultDetailsWidth: '75%',
-        typeNameColor: '#60a5fa',
-        typeTitleColor: '#d1d5db',
-        requireLabelColor: '#f87171',
-        labelsTextSize: '0.9em',
-        nestingSpacing: '1em',
-        nestedBackground: '#1f2937',
-        arrow: {
-          size: '1.1em',
-          color: '#9ca3af'
-        }
-      },
-      typography: {
-        fontSize: '15px',
-        lineHeight: '1.6em',
-        fontWeightRegular: '400',
-        fontWeightBold: '600',
-        fontWeightLight: '300',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-        smoothing: 'antialiased',
-        optimizeSpeed: true,
-        headings: {
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif',
-          fontWeight: '700',
-          lineHeight: '1.4em'
-        },
-        code: {
-          fontSize: '13px',
-          fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
-          fontWeight: '400',
-          color: '#fca5a5',
-          backgroundColor: '#1f2937',
-          wrap: false
-        },
-        links: {
-          color: '#60a5fa',
-          visited: '#60a5fa',
-          hover: '#93c5fd',
-          textDecoration: 'none',
-          hoverTextDecoration: 'underline'
         }
       },
       sidebar: {
-        width: '260px',
-        backgroundColor: '#111827',
-        textColor: '#d1d5db',
-        activeTextColor: '#60a5fa',
-        groupItems: {
-          activeBackgroundColor: 'rgba(59, 130, 246, 0.15)',
-          activeTextColor: '#93c5fd',
-          textTransform: 'uppercase'
-        },
-        level1Items: {
-          activeBackgroundColor: 'rgba(59, 130, 246, 0.15)',
-          activeTextColor: '#93c5fd',
-          textTransform: 'none'
-        },
-        arrow: {
-          size: '1.5em',
-          color: '#9ca3af'
-        }
-      },
-      logo: {
-        maxHeight: '50px',
-        maxWidth: '200px',
-        gutter: '2px'
+        backgroundColor: '#1f2937',
+        textColor: '#e5e7eb'
       },
       rightPanel: {
-        backgroundColor: '#1f2937',
-        width: '40%',
-        textColor: '#d1d5db'
-      },
-      codeBlock: {
         backgroundColor: '#111827'
       }
+    } : {
+      colors: {
+        primary: {
+          main: '#0284c7'
+        }
+      }
     };
 
-    // Get current theme config
-    const currentThemeConfig = currentTheme === 'dark' ? darkTheme : lightTheme;
-
-    // Initialize Redoc once on page load
-    const redocOptions = {
-      ...currentThemeConfig,
-      scrollYOffset: 60,
-      hideDownloadButton: false,
-      disableSearch: false,
-      expandResponses: '200,201',
-      jsonSampleExpandLevel: 2,
-      hideSingleRequestSampleTab: true,
-      menuToggle: true,
-      nativeScrollbars: false,
-      pathInMiddlePanel: true,
-      requiredPropsFirst: true,
-      sortPropsAlphabetically: true,
-      expandSingleSchemaField: true
-    };
-
-    // Initialize Redoc
-    Redoc.init('openapi.json', redocOptions, document.getElementById('redoc'));
+    // Initialize Redoc with minimal config
+    Redoc.init(
+      'openapi.json',
+      {
+        theme: theme,
+        scrollYOffset: 60,
+        hideDownloadButton: false,
+        disableSearch: false,
+        expandResponses: '200,201',
+        pathInMiddlePanel: true,
+        requiredPropsFirst: true,
+        sortPropsAlphabetically: true
+      },
+      document.getElementById('redoc')
+    );
 
     // Theme toggle button
     const toggleButton = document.getElementById('theme-toggle');
