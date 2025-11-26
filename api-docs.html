@@ -8,9 +8,51 @@
 </head>
 <body>
   <!-- Scalar API Reference -->
-  <script id="api-reference" data-url="openapi.json"></script>
+  <script id="api-reference"></script>
 
   <!-- Load Scalar from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+
+  <script>
+    // Get theme from localStorage (synced with platform versions page)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+
+    // Fetch and configure the API reference
+    fetch('openapi.json')
+      .then(response => response.json())
+      .then(spec => {
+        // Override the servers to use the correct Kelvin AI URL
+        spec.servers = [
+          {
+            url: 'https://{environment}.kelvin.ai/api/v4',
+            description: 'Kelvin Platform API',
+            variables: {
+              environment: {
+                default: 'beta',
+                description: 'Environment (e.g., beta, staging, production)',
+                enum: ['beta', 'staging', 'production']
+              }
+            }
+          }
+        ];
+
+        // Initialize Scalar with the modified spec and theme
+        const apiReference = document.getElementById('api-reference');
+        apiReference.dataset.configuration = JSON.stringify({
+          spec: {
+            content: spec
+          },
+          theme: savedTheme,
+          darkMode: savedTheme === 'dark'
+        });
+      });
+
+    // Listen for theme changes from other pages
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        location.reload();
+      }
+    });
+  </script>
 </body>
 </html>
