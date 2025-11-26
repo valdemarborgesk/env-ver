@@ -42,3 +42,52 @@ done
 
 echo "Metadata fetch complete!"
 echo "Total environments: $(echo "$environments" | wc -l)"
+
+echo ""
+echo "Fetching OpenAPI specification..."
+
+# Login credentials
+API_EMAIL="test@test.com"
+API_PASSWORD='Hello123$567'
+API_BASE_URL="https://beta.kelvininc.com"
+
+# Create a temporary cookie jar
+COOKIE_JAR=$(mktemp)
+
+# Try to login and fetch OpenAPI spec
+echo "Authenticating to beta environment..."
+
+# Login to get session cookie (using form data)
+login_response=$(curl -s -c "$COOKIE_JAR" -L -X POST \
+  "${API_BASE_URL}/auth" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "email=${API_EMAIL}&password=${API_PASSWORD}" \
+  -w "\n%{http_code}")
+
+http_code=$(echo "$login_response" | tail -n1)
+
+if [ "$http_code" = "200" ] || [ "$http_code" = "204" ]; then
+  echo "  ✓ Authentication successful"
+
+  # Fetch OpenAPI spec with session cookie
+  if curl -s -L -b "$COOKIE_JAR" -c "$COOKIE_JAR" -f "${API_BASE_URL}/api/swagger/openapi.json" > openapi.json 2>/dev/null; then
+    # Check if we got valid JSON
+    if jq empty openapi.json 2>/dev/null; then
+      echo "  ✓ Successfully fetched OpenAPI specification"
+      echo "  File size: $(wc -c < openapi.json) bytes"
+    else
+      echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
+      rm -f openapi.json
+    fi
+  else
+    echo "  ✗ Failed to fetch OpenAPI specification"
+  fi
+else
+  echo "  ✗ Authentication failed (HTTP $http_code)"
+fi
+
+# Cleanup cookie jar
+rm -f "$COOKIE_JAR"
+
+echo ""
+echo "All done!"
