@@ -64,14 +64,14 @@ if command -v python3 &> /dev/null; then
   fi
 
   # Run authentication and capture both stdout and stderr
-  # Use kelvin-client for API operations (not admin-cli which is for Keycloak admin)
+  # Use admin-cli for OpenAPI spec access (Keycloak admin operations)
   AUTH_OUTPUT=$(python3 -c "
 import sys
 import os
 sys.path.insert(0, '.')
 try:
-    # Override CLIENT_ID to use kelvin-client for API operations
-    os.environ['KEYCLOAK_CLIENT_ID'] = 'kelvin-client'
+    # Use admin-cli for OpenAPI spec access
+    os.environ['KEYCLOAK_CLIENT_ID'] = 'admin-cli'
     from keycloak_auth import authenticate
     token = authenticate('${API_BASE_URL}', '${KEYCLOAK_USERNAME}', '${KEYCLOAK_PASSWORD}', prompt=False)
     if token:
