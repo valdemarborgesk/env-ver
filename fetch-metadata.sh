@@ -99,23 +99,19 @@ except Exception as e:
       if jq empty openapi.json 2>/dev/null; then
         echo "  ✓ Successfully fetched OpenAPI specification"
 
-        # Get list of environments from platformurls.json
-        env_list=$(cat metadata/platformurls.json | jq -r 'keys | sort | @json')
-
-        # Modify the servers section to use {environment}.kelvin.ai with actual environments
-        jq --argjson envs "$env_list" '.servers = [{
-          "url": "https://{environment}.kelvin.ai/api/v4",
-          "description": "Kelvin Platform API",
-          "variables": {
-            "environment": {
-              "default": "beta",
-              "description": "Select environment",
-              "enum": $envs
-            }
+        # Build servers array with actual URLs from platformurls.json
+        servers_json=$(cat metadata/platformurls.json | jq '[
+          to_entries | .[] | {
+            "url": ("https://" + .value + "/api/v4"),
+            "description": ("Kelvin Platform - " + .key)
           }
-        }]' openapi.json > openapi.json.tmp && mv openapi.json.tmp openapi.json
+        ] | sort_by(.description)')
 
-        echo "  ✓ Modified servers to use {environment}.kelvin.ai with $(echo $env_list | jq 'length') environments"
+        # Modify the servers section with actual environment URLs
+        jq --argjson servers "$servers_json" '.servers = $servers' openapi.json > openapi.json.tmp && mv openapi.json.tmp openapi.json
+
+        env_count=$(echo "$servers_json" | jq 'length')
+        echo "  ✓ Modified servers with $env_count environment URLs"
         echo "  File size: $(wc -c < openapi.json) bytes"
       else
         echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
