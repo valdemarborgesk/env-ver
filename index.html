@@ -879,9 +879,9 @@
       const viewportHeight = window.innerHeight;
       const margin = 20;
 
-      // Calculate position
+      // Calculate position - align to the right of the trigger
       let top = triggerRect.bottom + 8;
-      let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+      let left = triggerRect.right - tooltipRect.width;
 
       // Check if tooltip goes below viewport
       if (top + tooltipRect.height > viewportHeight - margin) {
