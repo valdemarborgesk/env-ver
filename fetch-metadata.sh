@@ -46,90 +46,38 @@ echo "Total environments: $(echo "$environments" | wc -l)"
 echo ""
 echo "Fetching OpenAPI specification..."
 
-# Use Python script for Keycloak authentication
 API_BASE_URL="https://beta.kelvininc.com"
 
-if command -v python3 &> /dev/null; then
-  echo "Authenticating to beta environment..."
+# Fetch OpenAPI spec directly (no authentication required for this endpoint)
+if curl -s -L -f "${API_BASE_URL}/api/swagger/openapi.json" > openapi.json 2>/dev/null; then
+  # Check if we got valid JSON
+  if jq empty openapi.json 2>/dev/null; then
+    echo "  ✓ Successfully fetched OpenAPI specification"
 
-  # Get access token using Python Keycloak auth
-  # Set environment variables for non-interactive auth
-  export KEYCLOAK_URL="${API_BASE_URL}"
+    # Get list of environments from platformurls.json
+    env_list=$(cat metadata/platformurls.json | jq -r 'keys | sort | @json')
 
-  # Check if credentials are provided
-  if [ -z "$KEYCLOAK_USERNAME" ] || [ -z "$KEYCLOAK_PASSWORD" ]; then
-    echo "  ✗ KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD must be set"
-    echo "  Skipping OpenAPI fetch"
-    exit 0
-  fi
+    # Modify the servers section to use {environment}.kelvin.ai with actual environments
+    jq --argjson envs "$env_list" '.servers = [{
+      "url": "https://{environment}.kelvin.ai/api/v4",
+      "description": "Kelvin Platform API",
+      "variables": {
+        "environment": {
+          "default": "beta",
+          "description": "Select environment",
+          "enum": $envs
+        }
+      }
+    }]' openapi.json > openapi.json.tmp && mv openapi.json.tmp openapi.json
 
-  # Run authentication and capture both stdout and stderr
-  # Use kelvin-client for API operations (not admin-cli which is for Keycloak admin)
-  AUTH_OUTPUT=$(python3 -c "
-import sys
-import os
-sys.path.insert(0, '.')
-try:
-    # Override CLIENT_ID to use kelvin-client for API operations
-    os.environ['KEYCLOAK_CLIENT_ID'] = 'kelvin-client'
-    from keycloak_auth import authenticate
-    token = authenticate('${API_BASE_URL}', '${KEYCLOAK_USERNAME}', '${KEYCLOAK_PASSWORD}', prompt=False)
-    if token:
-        print(token)
-    else:
-        print('Authentication returned None', file=sys.stderr)
-        sys.exit(1)
-except Exception as e:
-    print(f'Error: {e}', file=sys.stderr)
-    import traceback
-    traceback.print_exc(file=sys.stderr)
-    sys.exit(1)
-" 2>&1)
-
-  AUTH_EXIT_CODE=$?
-
-  # Check if authentication succeeded
-  if [ $AUTH_EXIT_CODE -eq 0 ] && [ -n "$AUTH_OUTPUT" ]; then
-    ACCESS_TOKEN="$AUTH_OUTPUT"
-    echo "  ✓ Authentication successful"
-
-    # Fetch OpenAPI spec with Bearer token
-    if curl -s -L -H "Authorization: Bearer $ACCESS_TOKEN" -f "${API_BASE_URL}/api/swagger/openapi.json" > openapi.json 2>/dev/null; then
-      # Check if we got valid JSON
-      if jq empty openapi.json 2>/dev/null; then
-        echo "  ✓ Successfully fetched OpenAPI specification"
-
-        # Get list of environments from platformurls.json
-        env_list=$(cat metadata/platformurls.json | jq -r 'keys | sort | @json')
-
-        # Modify the servers section to use {environment}.kelvin.ai with actual environments
-        jq --argjson envs "$env_list" '.servers = [{
-          "url": "https://{environment}.kelvin.ai/api/v4",
-          "description": "Kelvin Platform API",
-          "variables": {
-            "environment": {
-              "default": "beta",
-              "description": "Select environment",
-              "enum": $envs
-            }
-          }
-        }]' openapi.json > openapi.json.tmp && mv openapi.json.tmp openapi.json
-
-        echo "  ✓ Modified servers to use {environment}.kelvin.ai with $(echo $env_list | jq 'length') environments"
-        echo "  File size: $(wc -c < openapi.json) bytes"
-      else
-        echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
-        rm -f openapi.json
-      fi
-    else
-      echo "  ✗ Failed to fetch OpenAPI specification"
-    fi
+    echo "  ✓ Modified servers to use {environment}.kelvin.ai with $(echo $env_list | jq 'length') environments"
+    echo "  File size: $(wc -c < openapi.json) bytes"
   else
-    echo "  ✗ Authentication failed"
-    echo "  Error output: $AUTH_OUTPUT"
+    echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
+    rm -f openapi.json
   fi
 else
-  echo "  ✗ Python3 not found, skipping OpenAPI fetch"
+  echo "  ✗ Failed to fetch OpenAPI specification"
 fi
 
 echo ""
