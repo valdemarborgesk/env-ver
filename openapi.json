@@ -21,11 +21,39 @@
       "variables": {
         "environment": {
           "default": "beta",
-          "description": "Environment (e.g., beta, staging, production)",
+          "description": "Select environment",
           "enum": [
+            "alpha",
             "beta",
-            "staging",
-            "production"
+            "carlos",
+            "cenovus",
+            "clr",
+            "devon",
+            "devon-staging",
+            "hal-cementing",
+            "hal-cementing-staging",
+            "hal-sandbox",
+            "hall-int-dev",
+            "hall-int-prod",
+            "halliburton-dev1",
+            "halliburton-prod1",
+            "idoba",
+            "ironoak",
+            "ironoak-staging",
+            "jkmrc",
+            "mcgx",
+            "ovintiv",
+            "petronas",
+            "qmai",
+            "sales",
+            "santos-cooper",
+            "santos-csg",
+            "santos-dev",
+            "santos-dev2",
+            "santos-staging",
+            "validus",
+            "westside",
+            "westside-staging"
           ]
         }
       }
