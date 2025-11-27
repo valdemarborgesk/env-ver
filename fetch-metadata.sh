@@ -94,6 +94,21 @@ except Exception as e:
       # Check if we got valid JSON
       if jq empty openapi.json 2>/dev/null; then
         echo "  ✓ Successfully fetched OpenAPI specification"
+
+        # Modify the servers section to use {environment}.kelvin.ai
+        jq '.servers = [{
+          "url": "https://{environment}.kelvin.ai/api/v4",
+          "description": "Kelvin Platform API",
+          "variables": {
+            "environment": {
+              "default": "beta",
+              "description": "Environment (e.g., beta, staging, production)",
+              "enum": ["beta", "staging", "production"]
+            }
+          }
+        }]' openapi.json > openapi.json.tmp && mv openapi.json.tmp openapi.json
+
+        echo "  ✓ Modified servers to use {environment}.kelvin.ai"
         echo "  File size: $(wc -c < openapi.json) bytes"
       else
         echo "  ✗ Failed to fetch OpenAPI specification (invalid JSON)"
