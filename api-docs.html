@@ -5,36 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kelvin API Documentation</title>
   <link rel="icon" href="https://kelvin.ai/favicon.ico" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-  <script>
-    // Get theme from localStorage and apply it before page renders
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-      document.documentElement.classList.add('light-mode');
-      document.documentElement.style.colorScheme = 'light';
-    } else {
-      document.documentElement.style.colorScheme = 'dark';
-    }
-  </script>
 </head>
 <body>
-  <script id="api-reference" data-url="openapi.json"></script>
+  <!-- Scalar API Reference -->
+  <script id="api-reference"></script>
 
   <!-- Load Scalar from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
 
   <script>
-    // Listen for theme changes from other pages
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'theme') {
-        location.reload();
-      }
-    });
+    // Configuration - change this URL to point to different environments
+    const OPENAPI_SPEC_URL = './openapi.json';
+
+    // Set the data-url attribute
+    document.getElementById('api-reference').setAttribute('data-url', OPENAPI_SPEC_URL);
   </script>
 </body>
 </html>
