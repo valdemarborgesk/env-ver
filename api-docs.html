@@ -5,53 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kelvin API Documentation</title>
   <link rel="icon" href="https://kelvin.ai/favicon.ico" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-    }
-    #api-reference {
-      height: 100vh;
-    }
-  </style>
-  <script>
-    // Get theme from localStorage and apply it before page renders
-    (function() {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      if (savedTheme === 'light') {
-        document.documentElement.classList.add('light-mode');
-        document.documentElement.style.colorScheme = 'light';
-      } else {
-        document.documentElement.style.colorScheme = 'dark';
-      }
-    })();
-  </script>
 </head>
 <body>
-  <div id="api-reference"></div>
+  <script id="api-reference" type="application/json">
+  {
+    "url": "./openapi.json"
+  }
+  </script>
 
   <!-- Load Scalar from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
 
   <script>
-    // Wait for Scalar to be loaded
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      const configuration = {
-        url: './openapi.json',
-        theme: savedTheme === 'light' ? 'default' : 'moon',
-      };
-
-      Scalar.createApiReference('#api-reference', configuration);
-
-      // Listen for theme changes from other pages
-      window.addEventListener('storage', (e) => {
-        if (e.key === 'theme') {
-          location.reload();
-        }
-      });
+    // Listen for theme changes from other pages
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        location.reload();
+      }
     });
   </script>
 </body>
