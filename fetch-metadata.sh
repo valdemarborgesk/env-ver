@@ -60,11 +60,15 @@ if command -v python3 &> /dev/null; then
   if [ -z "$KEYCLOAK_USERNAME" ] || [ -z "$KEYCLOAK_PASSWORD" ]; then
     echo "  ✗ KEYCLOAK_USERNAME and KEYCLOAK_PASSWORD must be set"
     echo "  Skipping OpenAPI fetch"
+    echo ""
+    echo "All done!"
     exit 0
   fi
 
   # Run authentication and capture both stdout and stderr
   # Use kelvin-client for API operations (including OpenAPI spec access)
+  # Temporarily disable exit on error for auth attempt
+  set +e
   AUTH_OUTPUT=$(python3 -c "
 import sys
 import os
@@ -87,6 +91,7 @@ except Exception as e:
 " 2>&1)
 
   AUTH_EXIT_CODE=$?
+  set -e
 
   # Check if authentication succeeded
   if [ $AUTH_EXIT_CODE -eq 0 ] && [ -n "$AUTH_OUTPUT" ]; then
@@ -123,6 +128,7 @@ except Exception as e:
   else
     echo "  ✗ Authentication failed"
     echo "  Error output: $AUTH_OUTPUT"
+    echo "  Skipping OpenAPI fetch"
   fi
 else
   echo "  ✗ Python3 not found, skipping OpenAPI fetch"
@@ -130,3 +136,4 @@ fi
 
 echo ""
 echo "All done!"
+exit 0
