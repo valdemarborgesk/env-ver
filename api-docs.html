@@ -18,13 +18,15 @@
   </style>
   <script>
     // Get theme from localStorage and apply it before page renders
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-      document.documentElement.classList.add('light-mode');
-      document.documentElement.style.colorScheme = 'light';
-    } else {
-      document.documentElement.style.colorScheme = 'dark';
-    }
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-mode');
+        document.documentElement.style.colorScheme = 'light';
+      } else {
+        document.documentElement.style.colorScheme = 'dark';
+      }
+    })();
   </script>
 </head>
 <body>
@@ -34,21 +36,24 @@
   <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
 
   <script>
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    const configuration = {
-      spec: {
-        url: './openapi.json',
-      },
-      theme: savedTheme === 'light' ? 'default' : 'moon',
-    };
+    // Wait for Scalar to be loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      const configuration = {
+        spec: {
+          url: './openapi.json',
+        },
+        theme: savedTheme === 'light' ? 'default' : 'moon',
+      };
 
-    Scalar.createApiReference('#api-reference', configuration);
+      Scalar.createApiReference('#api-reference', configuration);
 
-    // Listen for theme changes from other pages
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'theme') {
-        location.reload();
-      }
+      // Listen for theme changes from other pages
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'theme') {
+          location.reload();
+        }
+      });
     });
   </script>
 </body>
