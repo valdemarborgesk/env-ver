@@ -31,9 +31,9 @@
   <div id="api-reference"></div>
 
   <!-- Load Scalar from CDN -->
-  <script type="module">
-    import { ApiReference } from 'https://cdn.jsdelivr.net/npm/@scalar/api-reference';
+  <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
 
+  <script>
     const savedTheme = localStorage.getItem('theme') || 'dark';
     const configuration = {
       spec: {
@@ -42,7 +42,7 @@
       theme: savedTheme === 'light' ? 'default' : 'moon',
     };
 
-    ApiReference(document.getElementById('api-reference'), configuration);
+    Scalar.createApiReference('#api-reference', configuration);
 
     // Listen for theme changes from other pages
     window.addEventListener('storage', (e) => {
