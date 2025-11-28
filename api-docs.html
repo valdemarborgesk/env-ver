@@ -8,17 +8,9 @@
 </head>
 <body>
   <!-- Scalar API Reference -->
-  <script id="api-reference"></script>
+  <script id="api-reference" data-url="openapi.json"></script>
 
   <!-- Load Scalar from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
-
-  <script>
-    // Configuration - change this URL to point to different environments
-    const OPENAPI_SPEC_URL = './openapi.json';
-
-    // Set the data-url attribute
-    document.getElementById('api-reference').setAttribute('data-url', OPENAPI_SPEC_URL);
-  </script>
 </body>
 </html>
