@@ -9,6 +9,11 @@
     body {
       margin: 0;
       padding: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #api-reference {
+      height: 100vh;
     }
   </style>
   <script>
@@ -23,12 +28,22 @@
   </script>
 </head>
 <body>
-  <script id="api-reference" data-url="openapi.json"></script>
+  <div id="api-reference"></div>
 
   <!-- Load Scalar from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  <script type="module">
+    import { ApiReference } from 'https://cdn.jsdelivr.net/npm/@scalar/api-reference';
 
-  <script>
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const configuration = {
+      spec: {
+        url: './openapi.json',
+      },
+      theme: savedTheme === 'light' ? 'default' : 'moon',
+    };
+
+    ApiReference(document.getElementById('api-reference'), configuration);
+
     // Listen for theme changes from other pages
     window.addEventListener('storage', (e) => {
       if (e.key === 'theme') {
