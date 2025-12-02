@@ -1,8 +1,8 @@
 {
   "versions": {
-    "core": "5.8.2",
+    "core": "5.8.5",
     "core-ui": "1.5.63",
-    "core-api": "8.10.2"
+    "core-api": "8.10.6"
   },
   "documentation": {
     "url": "https://docs.kelvininc.com"
@@ -35,7 +35,7 @@
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "hal-test.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "hal-test.kelvin.ai:5000/kelvin-edge-gateway:24.09.10",
+      "kelvin-edge-gateway": "hal-test.kelvin.ai:5000/kelvin-edge-gateway:24.09.10-r6",
       "kelvin-control-change-manager": "hal-test.kelvin.ai:5000/kelvin-control-change-manager:2.1.1"
     }
   },
