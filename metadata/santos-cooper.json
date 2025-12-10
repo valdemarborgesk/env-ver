@@ -1,8 +1,9 @@
 {
   "versions": {
-    "core": "5.12.1",
-    "core-ui": "1.9.14",
-    "core-api": "8.14.4"
+    "core": "5.13.0",
+    "core-ui": "1.10.1",
+    "core-api": "8.15.3",
+    "api-spec": "8.15.1"
   },
   "feature_flags": {
     "log_forward": true,
@@ -16,7 +17,7 @@
     "kubernetes_cluster": true
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/5.12/"
+    "url": "https://docs.kelvin.ai/5.13/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -39,14 +40,14 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.0.3",
-    "ksdk_minimum_version": "9.0.3",
+    "ksdk_latest_version": "9.1.1",
+    "ksdk_minimum_version": "9.1.1",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "kelvin-cooper.santos.com:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "kelvin-cooper.santos.com:5000/kelvin-edge-gateway:25.01.12-r4",
+      "kelvin-edge-gateway": "kelvin-cooper.santos.com:5000/kelvin-edge-gateway:25.02.4",
       "kelvin-control-change-manager": "kelvin-cooper.santos.com:5000/kelvin-control-change-manager:2.3.0"
     }
   },
