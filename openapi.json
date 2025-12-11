@@ -56,10 +56,6 @@
       "description": "Kelvin Platform - hal-sandbox"
     },
     {
-      "url": "https://hal-test.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - hal-test"
-    },
-    {
       "url": "https://halliburton-int-dev.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hall-int-dev"
     },
