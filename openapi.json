@@ -48,6 +48,10 @@
       "description": "Kelvin Platform - hal-cementing"
     },
     {
+      "url": "https://hal-cementing-dev.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - hal-cementing-dev"
+    },
+    {
       "url": "https://hal-cementing-staging.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hal-cementing-staging"
     },
