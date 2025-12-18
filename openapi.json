@@ -96,6 +96,10 @@
       "description": "Kelvin Platform - mcgx"
     },
     {
+      "url": "https://nuno.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - nuno"
+    },
+    {
       "url": "https://ovintiv.kelvin.ai/api/v4",
       "description": "Kelvin Platform - ovintiv"
     },
