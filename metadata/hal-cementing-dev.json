@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.0.0",
-    "core-ui": "2.0.0",
-    "core-api": "9.0.4",
-    "api-spec": "9.0.4"
+    "core": "6.1.0",
+    "core-ui": "2.1.0-rc.0",
+    "core-api": "9.1.1",
+    "api-spec": "9.1.0"
   },
   "feature_flags": {
     "log_forward": false,
@@ -14,10 +14,11 @@
     "auto_workload_image_build": false,
     "docker_cluster": true,
     "k3s_cluster": false,
-    "kubernetes_cluster": false
+    "kubernetes_cluster": false,
+    "live_log_forward": true
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.0/"
+    "url": "https://docs.kelvin.ai/6.1/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -40,8 +41,8 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.2.0",
-    "ksdk_minimum_version": "9.2.0",
+    "ksdk_latest_version": "9.2.2",
+    "ksdk_minimum_version": "9.2.2",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
@@ -49,7 +50,7 @@
       "kelvin-mqtt-broker": "hal-cementing-dev.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
       "kelvin-edge-gateway": "hal-cementing-dev.kelvin.ai:5000/kelvin-edge-gateway:25.05.28-r3",
       "kelvin-control-change-manager": "hal-cementing-dev.kelvin.ai:5000/kelvin-control-change-manager:2.4.1",
-      "kelvin-custom-action-manager": "hal-cementing-dev.kelvin.ai:5000/kelvin-custom-action-manager:25.05.31"
+      "kelvin-custom-action-manager": "hal-cementing-dev.kelvin.ai:5000/kelvin-custom-action-manager:25.06.1"
     }
   },
   "bridge": {
