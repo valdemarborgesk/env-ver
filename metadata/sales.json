@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "6.4.0",
-    "core-ui": "2.4.0-rc.7",
+    "core-ui": "2.4.0",
     "core-api": "9.4.0",
     "api-spec": "9.4.0"
   },
@@ -48,10 +48,10 @@
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "sales.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "sales.kelvin.ai:5000/kelvin-edge-gateway:6.4.0",
-      "kelvin-edge-sync": "sales.kelvin.ai:5000/kelvin-edge-sync:6.4.0",
-      "kelvin-control-change-manager": "sales.kelvin.ai:5000/kelvin-control-change-manager:6.4.0",
-      "kelvin-custom-action-manager": "sales.kelvin.ai:5000/kelvin-custom-action-manager:6.4.0"
+      "kelvin-edge-gateway": "sales.kelvin.ai:5000/kelvin-edge-gateway:6.4.1",
+      "kelvin-edge-sync": "sales.kelvin.ai:5000/kelvin-edge-sync:6.4.1",
+      "kelvin-control-change-manager": "sales.kelvin.ai:5000/kelvin-control-change-manager:6.4.1",
+      "kelvin-custom-action-manager": "sales.kelvin.ai:5000/kelvin-custom-action-manager:6.4.1"
     }
   },
   "bridge": {
