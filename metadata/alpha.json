@@ -3,10 +3,10 @@
     "core": "5.8.0",
     "core-ui": "1.1.0-alpha.449",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
-    "api-spec": "9.0.0-rc2025.18.e076da1"
+    "api-spec": "9.0.0-rc2025.21.01a8cf1"
   },
   "feature_flags": {
-    "log_forward": true,
+    "log_forward": false,
     "telemetry_forward": true,
     "remote_workload_deploy": true,
     "remote_workload_undeploy": true,
