@@ -1,12 +1,12 @@
 {
   "versions": {
     "core": "6.4.x",
-    "core-ui": "1.5.0-beta.52",
+    "core-ui": "1.4.13-beta.53",
     "core-api": "9.0.0-beta2025.8.0fd099c57",
     "api-spec": "9.0.0-rc2025.11.74a0f07"
   },
   "feature_flags": {
-    "log_forward": true,
+    "log_forward": false,
     "telemetry_forward": true,
     "remote_workload_deploy": true,
     "remote_workload_undeploy": true,
@@ -15,7 +15,7 @@
     "docker_cluster": true,
     "k3s_cluster": true,
     "kubernetes_cluster": true,
-    "live_log_forward": true
+    "live_log_forward": false
   },
   "documentation": {
     "url": "https://docs.kelvin.ai/6.4/"
