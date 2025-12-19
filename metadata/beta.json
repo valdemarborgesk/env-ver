@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "6.4.x",
-    "core-ui": "1.4.13-beta.53",
+    "core-ui": "1.4.13-beta.55",
     "core-api": "9.0.0-beta2025.8.0fd099c57",
     "api-spec": "9.0.0-rc2025.11.74a0f07"
   },
@@ -15,7 +15,7 @@
     "docker_cluster": true,
     "k3s_cluster": true,
     "kubernetes_cluster": true,
-    "live_log_forward": false
+    "live_log_forward": true
   },
   "documentation": {
     "url": "https://docs.kelvin.ai/6.4/"
