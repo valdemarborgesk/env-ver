@@ -41,7 +41,7 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.4.3",
+    "ksdk_latest_version": "9.4.4",
     "ksdk_minimum_version": "9.4.3",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
