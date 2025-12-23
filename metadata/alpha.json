@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "5.8.0",
-    "core-ui": "1.1.0-alpha.454",
+    "core-ui": "1.1.0-alpha.455",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
     "api-spec": "9.0.0-rc2025.23.7f38ce2"
   },
@@ -27,7 +27,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.1.0-alpha.278",
+    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.1.0-alpha.279",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -57,7 +57,7 @@
   "bridge": {
     "apps": {
       "kelvin-bridge-roc-client": "alpha.kelvininc.com:5000/kelvin-bridge-roc-client:3.0.2",
-      "kelvin-bridge-opcua-client": "alpha.kelvininc.com:5000/kelvin-bridge-opcua-client:3.6.0",
+      "kelvin-bridge-opcua-client": "alpha.kelvininc.com:5000/kelvin-bridge-opcua-client:3.4.11",
       "kelvin-bridge-modbus-client": "alpha.kelvininc.com:5000/kelvin-bridge-modbus-client:4.5.2",
       "kelvin-csv-publisher-connector": "alpha.kelvininc.com:5000/kelvin-csv-publisher-connector:1.0.9"
     }
