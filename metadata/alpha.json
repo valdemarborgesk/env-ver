@@ -3,7 +3,7 @@
     "core": "5.8.0",
     "core-ui": "1.1.0-alpha.457",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
-    "api-spec": "9.0.0-rc2025.23.7f38ce2"
+    "api-spec": "9.0.0-rc2025.24.1cac3ab"
   },
   "feature_flags": {
     "log_forward": true,
