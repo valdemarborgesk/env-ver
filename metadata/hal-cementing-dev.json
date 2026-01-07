@@ -2,8 +2,8 @@
   "versions": {
     "core": "6.4.0",
     "core-ui": "2.4.1",
-    "core-api": "9.4.2",
-    "api-spec": "9.4.2"
+    "core-api": "9.4.3",
+    "api-spec": "9.4.3"
   },
   "feature_flags": {
     "log_forward": false,
