@@ -6,16 +6,16 @@
     "api-spec": "9.0.0-rc2026.25.d2e6c56"
   },
   "feature_flags": {
-    "log_forward": true,
-    "telemetry_forward": true,
-    "remote_workload_deploy": true,
-    "remote_workload_undeploy": true,
-    "remote_workload_actions": true,
-    "auto_workload_image_build": false,
+    "log_forward": false,
+    "telemetry_forward": false,
+    "remote_workload_deploy": false,
+    "remote_workload_undeploy": false,
+    "remote_workload_actions": false,
+    "auto_workload_image_build": true,
     "docker_cluster": true,
     "k3s_cluster": true,
     "kubernetes_cluster": true,
-    "live_log_forward": true
+    "live_log_forward": false
   },
   "documentation": {
     "url": "https://docs-alpha.kelvininc.com/"
