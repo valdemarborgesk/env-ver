@@ -3739,6 +3739,9 @@
           "404": {
             "$ref": "#/components/responses/error.NotFound"
           },
+          "409": {
+            "$ref": "#/components/responses/errors_asset_responses-error.Conflict"
+          },
           "500": {
             "$ref": "#/components/responses/error.InternalServerError"
           }
@@ -5508,18 +5511,6 @@
             "$ref": "#/components/parameters/paginator.direction"
           },
           {
-            "name": "search",
-            "description": "Search for metrics with `name` or `title` matching the search term.",
-            "in": "query",
-            "style": "form",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
             "name": "sort_by",
             "in": "query",
             "style": "form",
@@ -6752,6 +6743,9 @@
           },
           "404": {
             "$ref": "#/components/responses/error.NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/errors_datastreams_responses-error.Conflict"
           }
         }
       }
@@ -10831,7 +10825,7 @@
           "Recommendation"
         ],
         "summary": "Delete Recommendation",
-        "description": "Permanently delete an existing Recommendation. Recommendations with `states` tagged as `accepted`, `auto_accepted` or `error` can not be deleted. This action cannot be undone once the API request has been submitted.\n**Permission Required:** `kelvin.permission.recommendation.delete`",
+        "description": "Permanently delete an existing Recommendation. Recommendations with `states` tagged as `accepted` or `auto_accepted` can not be deleted. This action cannot be undone once the API request has been submitted.\n**Permission Required:** `kelvin.permission.recommendation.delete`",
         "operationId": "deleteRecommendation",
         "parameters": [
           {
@@ -16530,7 +16524,15 @@
           "datastreams": {
             "type": "object",
             "additionalProperties": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "map_to": {
+                  "type": "string"
+                },
+                "configuration": {
+                  "type": "object"
+                }
+              }
             }
           },
           "configuration": {
@@ -17662,7 +17664,9 @@
             "type": "array",
             "minItems": 1,
             "description": "List of assets for which the parameters to be updated at the scheduled time. (example `krn:asset:bp_16`)",
-            "example": "krn:asset:bp_16",
+            "example": [
+              "krn:asset:bp_16"
+            ],
             "items": {
               "type": "string",
               "format": "krn"
@@ -19091,6 +19095,150 @@
           }
         }
       },
+      "enum.ControlChangeFilterField": {
+        "type": "string",
+        "example": "timestamp",
+        "enum": [
+          "timestamp",
+          "last_state",
+          "datastream_name"
+        ],
+        "description": "Field name of the Control Change to filter by."
+      },
+      "type.Strings": {
+        "description": "Value represented as a string or an array of strings.",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "requests.ControlChangeFilter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/enum.ControlChangeFilterField"
+          },
+          "value": {
+            "$ref": "#/components/schemas/type.Strings",
+            "example": "2023-11-13T12:00:00Z",
+            "description": "Value to use in association with the `field` for the filter of the Control Change."
+          }
+        }
+      },
+      "enum.RecommendationFilterField": {
+        "type": "string",
+        "example": "created",
+        "enum": [
+          "created",
+          "updated",
+          "type_name",
+          "state"
+        ],
+        "description": "Field name of the Recommendation to filter by."
+      },
+      "requests.RecommendationFilter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/enum.RecommendationFilterField"
+          },
+          "value": {
+            "$ref": "#/components/schemas/type.Strings",
+            "example": "2023-11-13T12:00:00Z",
+            "description": "Value to use in association with the `field` for the filter of the Recommendation."
+          }
+        }
+      },
+      "enum.DataTagFilterField": {
+        "type": "string",
+        "example": "tag",
+        "enum": [
+          "tag",
+          "source",
+          "end_date"
+        ],
+        "description": "Field name of the Data Tag to filter by."
+      },
+      "requests.DataTagFilter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/enum.DataTagFilterField"
+          },
+          "value": {
+            "$ref": "#/components/schemas/type.Strings",
+            "example": "High Vibration",
+            "description": "Value to use in association with the `field` for the filter of the Data Tag."
+          }
+        }
+      },
+      "requests.AssetInsightsFilters": {
+        "type": "object",
+        "description": "Create unlimited number of filters related to the Assets list and define specific filtering criteria for each new filter.",
+        "properties": {
+          "control_changes": {
+            "type": "object",
+            "description": "Create new filters based on Control Changes associated with the Assets.",
+            "properties": {
+              "contains": {
+                "type": "boolean",
+                "example": true,
+                "description": "If true, only return Assets that have Control Changes associated with them. If false, only return Assets that do not have Control Changes associated with them."
+              },
+              "filters": {
+                "type": "array",
+                "description": "Apply specific filter criteria to the Control Changes associated with the Assets.",
+                "items": {
+                  "$ref": "#/components/schemas/requests.ControlChangeFilter"
+                }
+              }
+            }
+          },
+          "recommendations": {
+            "type": "object",
+            "description": "Create new filters based on Recommendations associated with the Assets.",
+            "properties": {
+              "contains": {
+                "type": "boolean",
+                "example": true,
+                "description": "If true, only return Assets that have Recommendations associated with them. If false, only return Assets that do not have Recommendations associated with them."
+              },
+              "filters": {
+                "type": "array",
+                "description": "Apply specific filter criteria to the Recommendations associated with the Assets.",
+                "items": {
+                  "$ref": "#/components/schemas/requests.RecommendationFilter"
+                }
+              }
+            }
+          },
+          "data_tags": {
+            "type": "object",
+            "description": "Create new filters based on Data Tags associated with the Assets.",
+            "properties": {
+              "contains": {
+                "type": "boolean",
+                "example": true,
+                "description": "If true, only return Assets that have Data Tags associated with them. If false, only return Assets that do not have Data Tags associated with them."
+              },
+              "filters": {
+                "type": "array",
+                "description": "Apply specific filter criteria to the Data Tags associated with the Assets.",
+                "items": {
+                  "$ref": "#/components/schemas/requests.DataTagFilter"
+                }
+              }
+            }
+          }
+        }
+      },
       "enum.AssetInsightsSortByDirection": {
         "type": "string",
         "default": "asc",
@@ -19169,6 +19317,9 @@
           },
           "extra_fields": {
             "$ref": "#/components/schemas/requests.AssetInsightsExtraFields"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/requests.AssetInsightsFilters"
           },
           "filter_assets_with_data_qualities": {
             "type": "boolean",
@@ -19428,6 +19579,15 @@
             "description": "Array of custom properties. These properties are not used by the Kelvin Platform and are for end-user use only.",
             "items": {
               "$ref": "#/components/schemas/type.AssetProperty"
+            }
+          },
+          "in_use_by": {
+            "type": "array",
+            "description": "List of workload sources that are using this Asset.",
+            "items": {
+              "type": "string",
+              "format": "krn",
+              "example": "krn:wlappv:cluster1/workload1/app1/1.2.0"
             }
           },
           "status": {
@@ -19806,10 +19966,7 @@
             "description": "List of asset type names to be deleted.",
             "items": {
               "type": "string",
-              "example": [
-                "pump",
-                "fan"
-              ],
+              "example": "pump",
               "minLength": 1,
               "maxLength": 64
             }
@@ -19854,10 +20011,7 @@
             "description": "List of asset names to be deleted.",
             "items": {
               "type": "string",
-              "example": [
-                "well_1",
-                "well_62"
-              ],
+              "example": "well_1",
               "minLength": 1,
               "maxLength": 64
             }
@@ -20074,10 +20228,7 @@
         "properties": {
           "created_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai",
-              "krn:app:motor_speed_control"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the process that created the Control Change. This could be a user, workload, application, etc."
           },
@@ -20267,10 +20418,7 @@
           },
           "created_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai",
-              "krn:app:motor_speed_control"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the process that created the Control Change. This could be a user, workload, application, recommendation, etc."
           },
@@ -22338,6 +22486,16 @@
             "type": "boolean",
             "example": false,
             "description": "Indicates whether the Data Stream is protected or not. If `true`, the Data Stream is protected and cannot be deleted or modified."
+          },
+          "in_use_by": {
+            "type": "array",
+            "description": "List of workload sources that are using this Data Stream.",
+            "items": {
+              "type": "string",
+              "format": "krn",
+              "example": "krn:wlappv:cluster1/workload1/app1/1.2.0",
+              "maxLength": 256
+            }
           },
           "updated": {
             "type": "string",
@@ -24811,8 +24969,6 @@
         "example": {
           "cpu": "2",
           "ephemeral-storage": "30417472Ki",
-          "hugepages-1Gi": "0",
-          "hugepages-2Mi": "0",
           "memory": "3944492Ki",
           "pods": "110"
         },
@@ -25055,7 +25211,6 @@
           },
           "warnings": {
             "type": "object",
-            "example": "container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:Network plugin returns error: cni plugin not initialized",
             "properties": {},
             "description": "Any warning messages received from Kubernetes."
           }
@@ -25658,7 +25813,6 @@
           },
           "value": {
             "type": "object",
-            "example": 1,
             "description": "Historical value at the given timestamp."
           }
         }
@@ -25763,7 +25917,7 @@
             "type": "array",
             "example": [
               "accepted",
-              "applied"
+              "auto_accepted"
             ],
             "description": "A filter to only count Recommendations associated with one or more `states`. The filter is on the full `state` name only. All strings in the array are treated as `OR`.",
             "items": {
@@ -25861,6 +26015,7 @@
             "description": "Confidence level of the Recommendation. This is usually, but not mandatory, related to any machine learning model confidence results."
           },
           "custom_identifier": {
+            "deprecated": true,
             "type": "string",
             "example": "model-aws-ltsm-anomaly",
             "description": "An optional custom identifier for any purpose."
@@ -25891,6 +26046,12 @@
             "type": "object",
             "description": "resource_parameters"
           },
+          "trace_id": {
+            "type": "string",
+            "example": "app-trace-123",
+            "maxLength": 256,
+            "description": "The Trace ID associated with the Recommendation used for tracing and debugging."
+          },
           "type": {
             "type": "string",
             "format": "^[a-zA-Z0-9]([-_ .a-zA-Z0-9]*[a-zA-Z0-9])?$",
@@ -25919,7 +26080,7 @@
             "type": "string",
             "format": "uuid",
             "example": "0002bc79-b42f-461b-95d6-cf0a28ba87aa",
-            "description": "Unique identifier id for the Control Change request. This will only be returned when the Recommendation state is `applied` or `auto_accepted` where the actions have been created and an id registered on the Server."
+            "description": "Unique identifier id for the Control Change request. This will only be returned when the Recommendation state is `accepted` or `auto_accepted` where the actions have been created and an id registered on the Server."
           },
           "expiration_date": {
             "type": "string",
@@ -25966,7 +26127,7 @@
         "properties": {
           "control_changes": {
             "type": "array",
-            "description": "An array of objects with Control Change information. If the Recommendation is `pending`, it will display creation information or if the Recommendation is `accepted` or `applied` it will show the Control Change status. Each Control Change does not need to be related to the `resource` of the Recommendation.",
+            "description": "An array of objects with Control Change information. If the Recommendation is `pending`, it will display creation information or if the Recommendation is `accepted` or `auto_accepted` it will show the Control Change status. Each Control Change does not need to be related to the `resource` of the Recommendation.",
             "items": {
               "$ref": "#/components/schemas/type.RecommendationControlChangeCreate"
             }
@@ -25986,13 +26147,6 @@
           }
         }
       },
-      "enum.RecommendationStateCreate": {
-        "type": "string",
-        "enum": [
-          "pending",
-          "auto_accepted"
-        ]
-      },
       "requests.RecommendationCreate": {
         "allOf": [
           {
@@ -26003,13 +26157,16 @@
             "properties": {
               "actions": {
                 "$ref": "#/components/schemas/type.RecommendationActionsCreate"
-              },
-              "state": {
-                "$ref": "#/components/schemas/enum.RecommendationStateCreate",
-                "description": "Current `state` of the Recommendation."
               }
             }
           }
+        ]
+      },
+      "enum.RecommendationStateCreate": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "auto_accepted"
         ]
       },
       "responses.RecommendationCreate": {
@@ -26107,7 +26264,7 @@
             "type": "array",
             "example": [
               "accepted",
-              "applied"
+              "auto_accepted"
             ],
             "description": "A filter on the list showing only Recommendations associated with one or more `states`. The filter is on the full `state` name only. All strings in the array are treated as `OR`.",
             "items": {
@@ -26161,7 +26318,7 @@
             "type": "string",
             "format": "uuid",
             "example": "0002bc79-b42f-461b-95d6-cf0a28ba87aa",
-            "description": "Unique identifier id for the Control Change request. This will only be returned when the Recommendation state is `applied` or `auto_accepted` where the actions have been created and an id registered on the Server."
+            "description": "Unique identifier id for the Control Change request. This will only be returned when the Recommendation state is `accepted` or `auto_accepted` where the actions have been created and an id registered on the Server."
           },
           "trace_id": {
             "type": "string",
@@ -26216,7 +26373,7 @@
         "properties": {
           "control_changes": {
             "type": "array",
-            "description": "An array of objects with Control Change information. If the Recommendation is `pending`, it will display creation information or if the Recommendation is `accepted` or `applied` it will show the Control Change status. Each Control Change does not need to be related to the `resource` of the Recommendation.",
+            "description": "An array of objects with Control Change information. If the Recommendation is `pending`, it will display creation information or if the Recommendation is `accepted` or `auto_accepted` it will show the Control Change status. Each Control Change does not need to be related to the `resource` of the Recommendation.",
             "items": {
               "$ref": "#/components/schemas/type.RecommendationControlChange"
             }
@@ -26397,7 +26554,7 @@
             "type": "array",
             "example": [
               "accepted",
-              "applied"
+              "auto_accepted"
             ],
             "description": "A filter on the list showing only Recommendations associated with one or more `states`. The filter is on the full `state` name only. All strings in the array are treated as `OR`.",
             "items": {
@@ -26532,7 +26689,7 @@
             "type": "array",
             "example": [
               "accepted",
-              "applied"
+              "auto_accepted"
             ],
             "description": "A filter on the list showing only Range of Recommendations associated with one or more `states`. The filter is on the full `state` name only. All strings in the array are treated as `OR`.",
             "items": {
@@ -26820,9 +26977,7 @@
           },
           "created_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the user that created the Secret."
           },
@@ -26834,9 +26989,7 @@
           },
           "updated_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the user that updated the Secret."
           }
@@ -26860,9 +27013,7 @@
           },
           "created_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the user that created the Secret."
           },
@@ -26874,9 +27025,7 @@
           },
           "updated_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the user that updated the Secret."
           }
@@ -26949,9 +27098,7 @@
           },
           "created_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the user that created the Secret."
           },
@@ -26963,9 +27110,7 @@
           },
           "updated_by": {
             "type": "string",
-            "example": [
-              "krn:user:person@kelvin.ai"
-            ],
+            "example": "krn:user:person@kelvin.ai",
             "maxLength": 256,
             "description": "Name of the user that updated the Secret."
           }
@@ -28774,7 +28919,7 @@
           },
           "http_status_code": {
             "type": "integer",
-            "example": "4XX",
+            "example": 400,
             "description": "HTTP status error code."
           },
           "message": {
@@ -33164,6 +33309,37 @@
           }
         }
       },
+      "errors_asset_responses-error.Conflict": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response.Error"
+            },
+            "examples": {
+              "err_asset_in_use_by_workloads": {
+                "summary": "Asset In Use By Workload",
+                "value": {
+                  "errors": [
+                    {
+                      "name": "err_asset_in_use_by_workloads",
+                      "title": "Asset In Use By Workload",
+                      "description": "The asset is currently in use by one or more workloads and cannot be deleted",
+                      "solution": "Please make sure the asset is not in use by any workload before attempting to delete it",
+                      "payload": {
+                        "name": "pcp-01",
+                        "in_use_by": [
+                          "krn:wlappv:cluster-1/pcp-optimization-dcjj1avvpva89:pcp-optimization/1.0.0"
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
       "errors_action_type_responses-error.BadRequest": {
         "description": "Bad Request",
         "content": {
@@ -33232,6 +33408,37 @@
                       "solution": "Please make sure the Custom Action type name corresponds to an existing Custom Action type",
                       "payload": {
                         "name": "name"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "errors_datastreams_responses-error.Conflict": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response.Error"
+            },
+            "examples": {
+              "err_data_stream_in_use_by_workloads": {
+                "summary": "Datastream In Use By Workload",
+                "value": {
+                  "errors": [
+                    {
+                      "name": "err_data_stream_in_use_by_workloads",
+                      "title": "Datastream In Use By Workload",
+                      "description": "The datastream is currently in use by one or more workloads and cannot be deleted",
+                      "solution": "Please make sure the datastream is not in use by any workload before attempting to delete it",
+                      "payload": {
+                        "name": "casing-pressure",
+                        "in_use_by": [
+                          "krn:wlappv:cluster-1/pcp-optimization-dcjj1avvpva89:pcp-optimization/1.0.0"
+                        ]
                       }
                     }
                   ]
