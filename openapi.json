@@ -5408,6 +5408,9 @@
           },
           "404": {
             "$ref": "#/components/responses/error.NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/errors_metric_responses-error.Conflict"
           }
         }
       }
@@ -21635,6 +21638,16 @@
             "example": false,
             "description": "Indicates whether this metric is system-protected and cannot be modified or deleted."
           },
+          "in_use_by": {
+            "type": "array",
+            "description": "List of workload sources that are using this Data Quality Metric.",
+            "items": {
+              "type": "string",
+              "format": "krn",
+              "example": "krn:wlappv:cluster1/workload1/app1/1.2.0",
+              "maxLength": 256
+            }
+          },
           "created": {
             "type": "string",
             "format": "date-time",
@@ -32140,6 +32153,9 @@
           "data_type_name": "number",
           "description": "Custom metric for high-priority assets requiring 99.9% uptime",
           "is_protected": false,
+          "in_use_by": [
+            "krn:wlappv:cluster1/workload1/app1/1.2.0"
+          ],
           "created": "2024-12-18T18:22:18.582724Z",
           "created_by": "krn:user:john@kelvininc.com",
           "updated": "2024-12-18T18:22:18.582724Z",
@@ -33408,6 +33424,37 @@
                       "solution": "Please make sure the Custom Action type name corresponds to an existing Custom Action type",
                       "payload": {
                         "name": "name"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "errors_metric_responses-error.Conflict": {
+        "description": "Conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/response.Error"
+            },
+            "examples": {
+              "err_data_quality_metric_in_use_by_workloads": {
+                "summary": "Data Quality Metric In Use By Workload",
+                "value": {
+                  "errors": [
+                    {
+                      "name": "err_data_quality_metric_in_use_by_workloads",
+                      "title": "Data Quality Metric In Use By Workload",
+                      "description": "The data quality metric is currently in use by one or more workloads and cannot be deleted",
+                      "solution": "Please make sure the data quality metric is not in use by any workload before attempting to delete it",
+                      "payload": {
+                        "name": "data-quality-metric-1",
+                        "in_use_by": [
+                          "krn:wlappv:cluster-1/pcp-optimization-dcjj1avvpva89:pcp-optimization/1.0.0"
+                        ]
                       }
                     }
                   ]
