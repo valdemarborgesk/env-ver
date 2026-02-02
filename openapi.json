@@ -10206,10 +10206,13 @@
             }
           },
           "400": {
-            "$ref": "#/components/responses/errors_recommendation_responses-error.BadRequest"
+            "$ref": "#/components/responses/error.BadRequest"
           },
           "401": {
             "$ref": "#/components/responses/error.Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/responses-error.Forbidden"
           }
         }
       }
@@ -10811,7 +10814,7 @@
             "description": "No Content"
           },
           "400": {
-            "$ref": "#/components/responses/errors_recommendation_responses-error.BadRequest"
+            "$ref": "#/components/responses/error.BadRequest"
           },
           "401": {
             "$ref": "#/components/responses/error.Unauthorized"
@@ -10847,7 +10850,7 @@
             "description": "No Content"
           },
           "400": {
-            "$ref": "#/components/responses/errors_recommendation_responses-error.BadRequest"
+            "$ref": "#/components/responses/error.BadRequest"
           },
           "401": {
             "$ref": "#/components/responses/error.Unauthorized"
@@ -10931,7 +10934,7 @@
             "description": "No Content"
           },
           "400": {
-            "$ref": "#/components/responses/errors_recommendation_responses-error.BadRequest"
+            "$ref": "#/components/responses/error.BadRequest"
           },
           "401": {
             "$ref": "#/components/responses/error.Unauthorized"
@@ -15458,9 +15461,10 @@
           "app",
           "importer",
           "exporter",
-          "docker"
+          "docker",
+          "task"
         ],
-        "description": "The type of application.\n\n- `app`: An App that allows mapping inputs and outputs to data\nstreams, sending control changes, recommendations, and data tags.\n- `importer`: Connects to an external system to import data into the\nplatform as well as receive control changes to act on the external\nsystem.\n- `exporter`: Connects to the platform to export data to an external\nsystem.\n- `docker`: An external application that does not connect to the\nplatform's data streams."
+        "description": "The type of application.\n\n- `app`: An App that allows mapping inputs and outputs to data\nstreams, sending control changes, recommendations, and data tags.\n- `importer`: Connects to an external system to import data into the\nplatform as well as receive control changes to act on the external\nsystem.\n- `exporter`: Connects to the platform to export data to an external\nsystem.\n- `docker`: An external application that does not connect to the\nplatform's data streams.\n- `task`: An application type used internally by the Tasks feature."
       },
       "manifest.AppInfo": {
         "type": "object",
@@ -16334,13 +16338,13 @@
           "created_at": {
             "type": "string",
             "description": "UTC time when the object was created, formatted in RFC 3339.",
-            "format": "date-time",
-            "example": "2024-11-18T18:22:18.582724Z"
+            "format": "date-time"
           },
           "created_by": {
             "type": "string",
             "description": "KRN of the user or process that created the object.",
-            "format": "krn"
+            "format": "krn",
+            "example": "krn:user:me@example.com"
           }
         }
       },
@@ -16350,13 +16354,13 @@
           "updated_at": {
             "type": "string",
             "description": "UTC time when any keys were last updated, formatted in RFC 3339.",
-            "format": "date-time",
-            "example": "2024-11-18T18:22:18.582724Z"
+            "format": "date-time"
           },
           "updated_by": {
             "type": "string",
             "description": "KRN of the user or process that last updated any of the keys.",
-            "format": "krn"
+            "format": "krn",
+            "example": "krn:user:me@example.com"
           }
         }
       },
@@ -33510,25 +33514,60 @@
           }
         }
       },
-      "errors_recommendation_responses-error.BadRequest": {
-        "description": "Bad Request",
+      "responses-error.Forbidden": {
+        "description": "Forbidden",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/response.Error"
             },
             "examples": {
-              "err_only_service_can_create_different_state": {
-                "summary": "Only service can create recommendation with different state",
+              "err_service_account_required": {
+                "summary": "Service account required for privileged fields",
                 "value": {
                   "errors": [
                     {
-                      "name": "err_only_service_can_create_different_state",
-                      "title": "Only service accounts can create recommendation with pre-defined states",
-                      "description": "Only service accounts may create recommendations with pre-defined states",
-                      "solution": "Please make sure the account is a service account or provide a valid state",
+                      "name": "err_service_account_required",
+                      "title": "Service account required",
+                      "description": "Only service accounts can set privileged fields",
+                      "solution": "Use a service account to perform this action, or remove the privileged field from your request",
                       "payload": {
-                        "state": "accepted"
+                        "field": "id",
+                        "value": "custom-uuid-123"
+                      }
+                    }
+                  ]
+                }
+              },
+              "err_service_account_required_state": {
+                "summary": "Service account required for non-pending state",
+                "value": {
+                  "errors": [
+                    {
+                      "name": "err_service_account_required",
+                      "title": "Service account required",
+                      "description": "Only service accounts can set privileged fields",
+                      "solution": "Use a service account to perform this action, or remove the privileged field from your request",
+                      "payload": {
+                        "field": "state",
+                        "value": "accepted"
+                      }
+                    }
+                  ]
+                }
+              },
+              "err_service_account_required_source": {
+                "summary": "Service account required for source override",
+                "value": {
+                  "errors": [
+                    {
+                      "name": "err_service_account_required",
+                      "title": "Service account required",
+                      "description": "Only service accounts can set privileged fields",
+                      "solution": "Use a service account to perform this action, or remove the privileged field from your request",
+                      "payload": {
+                        "field": "source",
+                        "value": "krn:user:other@example.com"
                       }
                     }
                   ]
