@@ -32,14 +32,6 @@
       "description": "Kelvin Platform - clr"
     },
     {
-      "url": "https://devon.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - devon"
-    },
-    {
-      "url": "https://devon-staging.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - devon-staging"
-    },
-    {
       "url": "https://hal-cementing.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hal-cementing"
     },
