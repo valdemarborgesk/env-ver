@@ -24,6 +24,10 @@
       "description": "Kelvin Platform - beta"
     },
     {
+      "url": "https://bpx.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - bpx"
+    },
+    {
       "url": "https://cenovus.kelvin.ai/api/v4",
       "description": "Kelvin Platform - cenovus"
     },
