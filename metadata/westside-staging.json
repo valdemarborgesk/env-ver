@@ -57,7 +57,7 @@
   "bridge": {
     "apps": {
       "kelvin-bridge-roc-client": "westside-staging.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.2",
-      "kelvin-bridge-opcua-client": "westside-staging.kelvin.ai:5000/kelvin-bridge-opcua-client:3.6.0",
+      "kelvin-bridge-opcua-client": "westside-staging.kelvin.ai:5000/kelvin-bridge-opcua-client:3.6.1",
       "kelvin-bridge-modbus-client": "westside-staging.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.2",
       "kelvin-csv-publisher-connector": "westside-staging.kelvin.ai:5000/kelvin-csv-publisher-connector:1.0.9"
     }
