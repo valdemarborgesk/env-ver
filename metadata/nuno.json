@@ -1,9 +1,9 @@
 {
   "versions": {
     "core": "6.4.0",
-    "core-ui": "2.4.0-rc.9",
-    "core-api": "9.4.1",
-    "api-spec": "9.4.1"
+    "core-ui": "2.4.1",
+    "core-api": "9.4.3",
+    "api-spec": "9.4.3"
   },
   "feature_flags": {
     "log_forward": true,
@@ -41,8 +41,8 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.4.4",
-    "ksdk_minimum_version": "9.4.4",
+    "ksdk_latest_version": "9.5.0",
+    "ksdk_minimum_version": "9.5.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
