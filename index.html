@@ -279,6 +279,37 @@
       color: var(--color-text);
     }
 
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: var(--color-muted);
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .status-dot.status-pending {
+      background: #fbbf24;
+      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.25);
+    }
+
+    .status-dot.status-ok {
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+    }
+
+    .status-dot.status-fail {
+      background: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+    }
+
     table.dataTable thead th {
       background-color: var(--table-header-bg) !important;
       color: #fff !important;
@@ -707,6 +738,7 @@
         <thead>
           <tr>
             <th>Environment</th>
+            <th>Status</th>
             <th>Core</th>
             <th>Core UI</th>
             <th>Core API</th>
@@ -765,6 +797,15 @@
       };
     };
 
+    const createStatusCell = (env, baseUrl) => {
+      return `
+        <span class="status-indicator" data-env="${env}" data-url="${baseUrl}">
+          <span class="status-dot status-pending" aria-hidden="true"></span>
+          <span class="status-text">Checking</span>
+        </span>
+      `;
+    };
+
     const versionColumnRender = {
       _: "display",
       sort: "sort",
@@ -795,6 +836,7 @@
             baseUrl = `https://${baseUrl}`;
           }
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
+          const statusCell = createStatusCell(env, baseUrl);
           const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}" data-metadata='${JSON.stringify(versionInfo)}'>/metadata</a></span>`;
           const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
@@ -808,6 +850,7 @@
 
           return {
             environment: envLink,
+            status: statusCell,
             core: createVersionCell(versionInfo["core"]),
             coreUi: createVersionCell(versionInfo["core-ui"]),
             coreApi: createVersionCell(versionInfo["core-api"]),
@@ -817,10 +860,11 @@
           };
         });
 
-        $("#versionsTable").DataTable({
+        const table = $("#versionsTable").DataTable({
           data: tableData,
           columns: [
             { title: "Environment", data: "environment" },
+            { title: "Status", data: "status" },
             { title: "Core", data: "core", render: versionColumnRender },
             { title: "Core UI", data: "coreUi", render: versionColumnRender },
             { title: "Core API", data: "coreApi", render: versionColumnRender },
@@ -832,6 +876,12 @@
           pageLength: 50,
           responsive: true
         });
+
+        table.on("draw", () => {
+          updateStatusIndicators();
+        });
+
+        updateStatusIndicators();
       } catch (err) {
         document.body.insertAdjacentHTML("beforeend", "<p style=\"color:red;\">Failed to load version data.</p>");
         console.error(err);
@@ -839,6 +889,48 @@
     }
 
     populateTable();
+
+    const statusCache = new Map();
+
+    async function checkEnvironmentStatus(baseUrl) {
+      if (statusCache.has(baseUrl)) {
+        return statusCache.get(baseUrl);
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000);
+
+      try {
+        await fetch(baseUrl, { mode: "no-cors", signal: controller.signal });
+        statusCache.set(baseUrl, true);
+        return true;
+      } catch (error) {
+        statusCache.set(baseUrl, false);
+        return false;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
+    async function updateStatusIndicators() {
+      const indicators = document.querySelectorAll(".status-indicator");
+      for (const indicator of indicators) {
+        const baseUrl = indicator.dataset.url;
+        const dot = indicator.querySelector(".status-dot");
+        const text = indicator.querySelector(".status-text");
+
+        if (!baseUrl || !dot || !text) continue;
+
+        if (dot.classList.contains("status-ok") || dot.classList.contains("status-fail")) {
+          continue;
+        }
+
+        const isOnline = await checkEnvironmentStatus(baseUrl);
+        dot.classList.remove("status-pending");
+        dot.classList.add(isOnline ? "status-ok" : "status-fail");
+        text.textContent = isOnline ? "Online" : "Offline";
+      }
+    }
 
     // Metadata tooltip functionality - load from local files fetched by GitHub Action
     function createLoadingTooltip(env) {
