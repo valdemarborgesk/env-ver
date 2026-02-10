@@ -310,6 +310,11 @@
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
     }
 
+    .status-dot.status-unknown {
+      background: #94a3b8;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.3);
+    }
+
     table.dataTable thead th {
       background-color: var(--table-header-bg) !important;
       color: #fff !important;
@@ -892,23 +897,45 @@
 
     const statusCache = new Map();
 
+    async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+
     async function checkEnvironmentStatus(baseUrl) {
       if (statusCache.has(baseUrl)) {
         return statusCache.get(baseUrl);
       }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 6000);
-
       try {
-        await fetch(baseUrl, { mode: "no-cors", signal: controller.signal });
-        statusCache.set(baseUrl, true);
-        return true;
+        const response = await fetchWithTimeout(baseUrl, {
+          method: "HEAD",
+          mode: "cors",
+          cache: "no-store"
+        });
+        const status = response.status < 500 ? "online" : "offline";
+        statusCache.set(baseUrl, status);
+        return status;
       } catch (error) {
-        statusCache.set(baseUrl, false);
-        return false;
-      } finally {
-        clearTimeout(timeoutId);
+        try {
+          await fetchWithTimeout(baseUrl, {
+            method: "HEAD",
+            mode: "no-cors",
+            cache: "no-store"
+          });
+          const status = "unknown";
+          statusCache.set(baseUrl, status);
+          return status;
+        } catch (networkError) {
+          const status = "offline";
+          statusCache.set(baseUrl, status);
+          return status;
+        }
       }
     }
 
@@ -921,14 +948,26 @@
 
         if (!baseUrl || !dot || !text) continue;
 
-        if (dot.classList.contains("status-ok") || dot.classList.contains("status-fail")) {
+        if (
+          dot.classList.contains("status-ok") ||
+          dot.classList.contains("status-fail") ||
+          dot.classList.contains("status-unknown")
+        ) {
           continue;
         }
 
-        const isOnline = await checkEnvironmentStatus(baseUrl);
-        dot.classList.remove("status-pending");
-        dot.classList.add(isOnline ? "status-ok" : "status-fail");
-        text.textContent = isOnline ? "Online" : "Offline";
+        const status = await checkEnvironmentStatus(baseUrl);
+        dot.classList.remove("status-pending", "status-ok", "status-fail", "status-unknown");
+        if (status === "online") {
+          dot.classList.add("status-ok");
+          text.textContent = "Online";
+        } else if (status === "offline") {
+          dot.classList.add("status-fail");
+          text.textContent = "Offline";
+        } else {
+          dot.classList.add("status-unknown");
+          text.textContent = "Unknown";
+        }
       }
     }
 
