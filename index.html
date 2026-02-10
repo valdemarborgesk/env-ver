@@ -802,11 +802,27 @@
       };
     };
 
-    const createStatusCell = (env, baseUrl) => {
+    const createStatusCell = (env, baseUrl, statusInfo) => {
+      const resolvedStatus = statusInfo && statusInfo.status ? statusInfo.status : "unknown";
+      let statusClass = "status-unknown";
+      let statusText = "Unknown";
+
+      if (resolvedStatus === "online") {
+        statusClass = "status-ok";
+        statusText = "Online";
+      } else if (resolvedStatus === "offline") {
+        statusClass = "status-fail";
+        statusText = "Offline";
+      }
+
+      const statusTitle = statusInfo && typeof statusInfo.code === "number" && statusInfo.code > 0
+        ? `HTTP ${statusInfo.code}`
+        : "";
+
       return `
-        <span class="status-indicator" data-env="${env}" data-url="${baseUrl}">
-          <span class="status-dot status-pending" aria-hidden="true"></span>
-          <span class="status-text">Checking</span>
+        <span class="status-indicator" data-env="${env}" data-url="${baseUrl}" ${statusTitle ? `title="${statusTitle}"` : ""}>
+          <span class="status-dot ${statusClass}" aria-hidden="true"></span>
+          <span class="status-text">${statusText}</span>
         </span>
       `;
     };
@@ -827,21 +843,24 @@
     // Fetch and populate DataTable
     async function populateTable() {
       try {
-        const [versionsResp, urlsResp] = await Promise.all([
+        const [versionsResp, urlsResp, statusResp] = await Promise.all([
           fetch("https://central-server.kelvininc.com/platformversions"),
-          fetch("https://central-server.kelvininc.com/platformurls")
+          fetch("https://central-server.kelvininc.com/platformurls"),
+          fetch("metadata/status.json", { cache: "no-store" })
         ]);
         const [versions, urls] = await Promise.all([
           versionsResp.json(),
           urlsResp.json()
         ]);
+        const statusData = statusResp.ok ? await statusResp.json() : null;
+        const statusMap = statusData && statusData.environments ? statusData.environments : {};
         const tableData = Object.entries(versions).map(([env, versionInfo]) => {
           let baseUrl = urls[env] || `${env}.kelvin.ai`;
           if (!/^https?:\/\//.test(baseUrl)) {
             baseUrl = `https://${baseUrl}`;
           }
           const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
-          const statusCell = createStatusCell(env, baseUrl);
+          const statusCell = createStatusCell(env, baseUrl, statusMap[env]);
           const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}" data-metadata='${JSON.stringify(versionInfo)}'>/metadata</a></span>`;
           const othersHtml = Object.entries(versionInfo)
             .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
@@ -882,11 +901,6 @@
           responsive: true
         });
 
-        table.on("draw", () => {
-          updateStatusIndicators();
-        });
-
-        updateStatusIndicators();
       } catch (err) {
         document.body.insertAdjacentHTML("beforeend", "<p style=\"color:red;\">Failed to load version data.</p>");
         console.error(err);
@@ -894,82 +908,6 @@
     }
 
     populateTable();
-
-    const statusCache = new Map();
-
-    async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-      try {
-        return await fetch(url, { ...options, signal: controller.signal });
-      } finally {
-        clearTimeout(timeoutId);
-      }
-    }
-
-    async function checkEnvironmentStatus(baseUrl) {
-      if (statusCache.has(baseUrl)) {
-        return statusCache.get(baseUrl);
-      }
-
-      try {
-        const response = await fetchWithTimeout(baseUrl, {
-          method: "HEAD",
-          mode: "cors",
-          cache: "no-store"
-        });
-        const status = response.status < 500 ? "online" : "offline";
-        statusCache.set(baseUrl, status);
-        return status;
-      } catch (error) {
-        try {
-          await fetchWithTimeout(baseUrl, {
-            method: "HEAD",
-            mode: "no-cors",
-            cache: "no-store"
-          });
-          const status = "unknown";
-          statusCache.set(baseUrl, status);
-          return status;
-        } catch (networkError) {
-          const status = "offline";
-          statusCache.set(baseUrl, status);
-          return status;
-        }
-      }
-    }
-
-    async function updateStatusIndicators() {
-      const indicators = document.querySelectorAll(".status-indicator");
-      for (const indicator of indicators) {
-        const baseUrl = indicator.dataset.url;
-        const dot = indicator.querySelector(".status-dot");
-        const text = indicator.querySelector(".status-text");
-
-        if (!baseUrl || !dot || !text) continue;
-
-        if (
-          dot.classList.contains("status-ok") ||
-          dot.classList.contains("status-fail") ||
-          dot.classList.contains("status-unknown")
-        ) {
-          continue;
-        }
-
-        const status = await checkEnvironmentStatus(baseUrl);
-        dot.classList.remove("status-pending", "status-ok", "status-fail", "status-unknown");
-        if (status === "online") {
-          dot.classList.add("status-ok");
-          text.textContent = "Online";
-        } else if (status === "offline") {
-          dot.classList.add("status-fail");
-          text.textContent = "Offline";
-        } else {
-          dot.classList.add("status-unknown");
-          text.textContent = "Unknown";
-        }
-      }
-    }
 
     // Metadata tooltip functionality - load from local files fetched by GitHub Action
     function createLoadingTooltip(env) {

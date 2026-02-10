@@ -5,6 +5,10 @@ echo "Fetching platform URLs and versions..."
 
 # Create metadata directory if it doesn't exist
 mkdir -p metadata
+status_tmp_file="metadata/status.tmp.jsonl"
+status_output_file="metadata/status.json"
+status_checked_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+: > "$status_tmp_file"
 
 # Fetch platform URLs and versions
 curl -s https://central-server.kelvininc.com/platformurls > metadata/platformurls.json
@@ -27,6 +31,23 @@ for env in $environments; do
     base_url="https://$base_url"
   fi
 
+  # Check base URL status (server-side, no CORS)
+  status_code=$(curl -s -o /dev/null -w "%{http_code}" -m 10 -L -I "$base_url" || true)
+  if [ "$status_code" = "405" ] || [ "$status_code" = "000" ] || [ -z "$status_code" ]; then
+    status_code=$(curl -s -o /dev/null -w "%{http_code}" -m 10 -L "$base_url" || true)
+  fi
+  if [[ ! "$status_code" =~ ^[0-9]+$ ]]; then
+    status_code=0
+  fi
+  if [ "$status_code" -ge 500 ] || [ "$status_code" -eq 0 ]; then
+    status="offline"
+  else
+    status="online"
+  fi
+
+  jq -n --arg env "$env" --arg status "$status" --arg code "$status_code" --arg checkedAt "$status_checked_at" \
+    '{($env): {status: $status, code: ($code|tonumber), checkedAt: $checkedAt}}' >> "$status_tmp_file"
+
   # Fetch metadata and save to file
   metadata_url="${base_url}/metadata"
   output_file="metadata/${env}.json"
@@ -39,6 +60,11 @@ for env in $environments; do
     cat metadata/platformversions.json | jq ".\"$env\"" > "$output_file"
   fi
 done
+
+jq -s --arg updatedAt "$status_checked_at" \
+  'reduce .[] as $item ({}; . * $item) | {updatedAt: $updatedAt, environments: .}' \
+  "$status_tmp_file" > "$status_output_file"
+rm -f "$status_tmp_file"
 
 echo "Metadata fetch complete!"
 echo "Total environments: $(echo "$environments" | wc -l)"
