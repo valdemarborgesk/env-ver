@@ -28,10 +28,6 @@
       "description": "Kelvin Platform - bpx"
     },
     {
-      "url": "https://carlos.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - carlos"
-    },
-    {
       "url": "https://cenovus.kelvin.ai/api/v4",
       "description": "Kelvin Platform - cenovus"
     },
