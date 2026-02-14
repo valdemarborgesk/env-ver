@@ -100,6 +100,10 @@
       "description": "Kelvin Platform - petronas"
     },
     {
+      "url": "https://propwr.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - propwr"
+    },
+    {
       "url": "https://qmai.kelvin.ai/api/v4",
       "description": "Kelvin Platform - qmai"
     },
