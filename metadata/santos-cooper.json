@@ -50,7 +50,7 @@
       "kelvin-mqtt-broker": "kelvin-cooper.santos.com:5000/kelvin-mqtt-broker:2.0.11-7",
       "kelvin-edge-gateway": "kelvin-cooper.santos.com:5000/kelvin-edge-gateway:6.4.1",
       "kelvin-edge-sync": "kelvin-cooper.santos.com:5000/kelvin-edge-sync:6.4.1",
-      "kelvin-control-change-manager": "kelvin-cooper.santos.com:5000/kelvin-control-change-manager:6.4.1",
+      "kelvin-control-change-manager": "kelvin-cooper.santos.com:5000/kelvin-control-change-manager:6.5.0",
       "kelvin-custom-action-manager": "kelvin-cooper.santos.com:5000/kelvin-custom-action-manager:6.4.1"
     }
   },
