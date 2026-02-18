@@ -6,7 +6,7 @@
     "api-spec": "9.0.0-rc2026.35.af4b829"
   },
   "feature_flags": {
-    "log_forward": false,
+    "log_forward": true,
     "telemetry_forward": true,
     "remote_workload_deploy": true,
     "remote_workload_undeploy": true,
