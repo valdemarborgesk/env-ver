@@ -15,7 +15,8 @@
     "docker_cluster": true,
     "k3s_cluster": true,
     "kubernetes_cluster": true,
-    "live_log_forward": true
+    "live_log_forward": true,
+    "allow_switch_app_type": true
   },
   "documentation": {
     "url": "https://docs-alpha.kelvininc.com/"
