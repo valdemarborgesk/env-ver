@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.4.0",
-    "core-ui": "2.4.2",
-    "core-api": "9.4.5",
-    "api-spec": "9.4.3"
+    "core": "6.5.0",
+    "core-ui": "2.5.0",
+    "core-api": "9.5.0",
+    "api-spec": "9.5.0"
   },
   "feature_flags": {
     "log_forward": true,
@@ -15,10 +15,11 @@
     "docker_cluster": true,
     "k3s_cluster": true,
     "kubernetes_cluster": true,
-    "live_log_forward": true
+    "live_log_forward": true,
+    "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.4/"
+    "url": "https://docs.kelvin.ai/6.5/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -27,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "bpx.kelvin.ai:5000/kelvin-edge-ui:1.4.0",
+    "kelvin-edge-ui": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-edge-ui:1.4.0",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -36,30 +37,30 @@
     "docs": "/api/swagger"
   },
   "docker": {
-    "url": "bpx.kelvin.ai",
-    "port": 5000
+    "url": "449569054481.dkr.ecr.us-east-1.amazonaws.com",
+    "port": 443
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.5.0",
-    "ksdk_minimum_version": "9.5.0",
+    "ksdk_latest_version": "9.6.0",
+    "ksdk_minimum_version": "9.6.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
-      "kelvin-mqtt-broker": "bpx.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "bpx.kelvin.ai:5000/kelvin-edge-gateway:6.4.1",
-      "kelvin-edge-sync": "bpx.kelvin.ai:5000/kelvin-edge-sync:6.4.1",
-      "kelvin-control-change-manager": "bpx.kelvin.ai:5000/kelvin-control-change-manager:6.4.1",
-      "kelvin-custom-action-manager": "bpx.kelvin.ai:5000/kelvin-custom-action-manager:6.4.1"
+      "kelvin-mqtt-broker": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-mqtt-broker:2.0.11-7",
+      "kelvin-edge-gateway": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-edge-gateway:6.5.0",
+      "kelvin-edge-sync": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-edge-sync:6.5.0",
+      "kelvin-control-change-manager": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-control-change-manager:6.5.0",
+      "kelvin-custom-action-manager": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-custom-action-manager:6.5.0"      
     }
   },
   "bridge": {
     "apps": {
-      "kelvin-bridge-roc-client": "bpx.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.2",
-      "kelvin-bridge-opcua-client": "bpx.kelvin.ai:5000/kelvin-bridge-opcua-client:3.4.11",
-      "kelvin-bridge-modbus-client": "bpx.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.2",
-      "kelvin-csv-publisher-connector": "bpx.kelvin.ai:5000/kelvin-csv-publisher-connector:1.0.9"
+      "kelvin-bridge-roc-client": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-bridge-roc-client:3.0.4",
+      "kelvin-bridge-opcua-client": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-bridge-opcua-client:3.4.11",
+      "kelvin-bridge-modbus-client": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-bridge-modbus-client:4.5.4",
+      "kelvin-csv-publisher-connector": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-csv-publisher-connector:1.0.9"
     }
   },
   "schema": {
