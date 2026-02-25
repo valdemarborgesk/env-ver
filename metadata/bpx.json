@@ -38,7 +38,9 @@
   },
   "docker": {
     "url": "449569054481.dkr.ecr.us-east-1.amazonaws.com",
-    "port": 443
+    "port": 443,
+    "path": "/kelvin/app"
+    
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
