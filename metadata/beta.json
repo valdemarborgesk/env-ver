@@ -15,7 +15,8 @@
     "docker_cluster": true,
     "k3s_cluster": true,
     "kubernetes_cluster": true,
-    "live_log_forward": true
+    "live_log_forward": true,
+    "allow_switch_app_type": false
   },
   "documentation": {
     "url": "https://docs.kelvin.ai/6.5/"
@@ -38,6 +39,7 @@
   "docker": {
     "url": "beta.kelvininc.com",
     "port": 5000
+    
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
@@ -51,7 +53,7 @@
       "kelvin-edge-gateway": "beta.kelvininc.com:5000/kelvin-edge-gateway:beta-251112-54a0e0b",
       "kelvin-edge-sync": "beta.kelvininc.com:5000/kelvin-edge-sync:beta-251112-54a0e0b",
       "kelvin-control-change-manager": "beta.kelvininc.com:5000/kelvin-control-change-manager:6.5.0",
-      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:beta-251112-54a0e0b"
+      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:beta-251112-54a0e0b"      
     }
   },
   "bridge": {
