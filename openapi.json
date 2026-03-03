@@ -259,7 +259,7 @@
           "Apps"
         ],
         "summary": "Update App Version",
-        "description": "Update App Version\n\nPartially update the default settings and schemas for an App Version. The\nfollowing keys can be updated individually. If a key is not specified, its\nexisting value will remain unchanged. If a key is specified, it will\ncompletely overwrite the current value for that key and its nested fields.\n\n- `defaults.deployment.max_resources`\n- `defaults.deployment.deployment_type`\n- `defaults.deployment.target`\n- `defaults.app.configuration`\n- `defaults.app.io_datastream_mapping`\n- `defaults.system`\n- `schemas.parameters`\n- `schemas.configuration`\n- `schemas.io_configuration`\n\n**Permission Required:** `kelvin.permission.app.update`\n",
+        "description": "Update App Version\n\nPartially update the default settings and schemas for an App Version. The\nfollowing keys can be updated individually. If a key is not specified, its\nexisting value will remain unchanged. If a key is specified, it will\ncompletely overwrite the current value for that key and its nested fields.\n\n- `defaults.deployment.max_resources`\n- `defaults.deployment.deployment_type`\n- `defaults.deployment.target`\n- `defaults.app.configuration`\n- `defaults.app.io_datastream_mapping`\n- `defaults.api_permissions`\n- `defaults.system`\n- `schemas.parameters`\n- `schemas.configuration`\n- `schemas.io_configuration`\n\n**Permission Required:** `kelvin.permission.app.update`\n",
         "operationId": "patchAppVersion",
         "parameters": [
           {
@@ -2089,7 +2089,7 @@
           "App Workloads"
         ],
         "summary": "Update Workload",
-        "description": "Update Workload\n\nUpdate the modifiable components of a Workload. The following keys can be\nupdated individually. If a key is not specified, its existing value will\nremain unchanged. If a key is specified, it will completely overwrite the\ncurrent value for that key and its nested fields.\n\n- `app_version`\n- `cluster_name`\n- `node_name`\n- `workload_title`\n- `runtime.resources`\n- `runtime.configuration`\n- `system`\n\n**Permission Required:** `kelvin.permission.workload.update`\n",
+        "description": "Update Workload\n\nUpdate the modifiable components of a Workload. The following keys can be\nupdated individually. If a key is not specified, its existing value will\nremain unchanged. If a key is specified, it will completely overwrite the\ncurrent value for that key and its nested fields.\n\n- `title`\n- `app_version`\n- `cluster_name`\n- `node_name`\n- `deployment_type`\n- `runtime.resources`\n- `runtime.configuration`\n- `system`\n- `api_permissions`\n\n**Permission Required:** `kelvin.permission.workload.update`\n",
         "operationId": "updateWorkload",
         "parameters": [
           {
@@ -16240,6 +16240,19 @@
           }
         }
       },
+      "manifest.ApiPermissions": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "example": [
+          "kelvin.permission.control_change.create",
+          "kelvin.permission.recommendation.create"
+        ],
+        "description": "List of API permissions that the application requires to operate. This is used to determine which default permissions to grant when deploying the application."
+      },
       "manifest.Defaults": {
         "type": "object",
         "description": "Default values for the application deployment and runtime configurations.",
@@ -16292,6 +16305,9 @@
           },
           "system": {
             "$ref": "#/components/schemas/manifest.System"
+          },
+          "api_permissions": {
+            "$ref": "#/components/schemas/manifest.ApiPermissions"
           }
         }
       },
@@ -16639,6 +16655,14 @@
             "properties": {
               "system": {
                 "$ref": "#/components/schemas/manifest.System"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "api_permissions": {
+                "$ref": "#/components/schemas/manifest.ApiPermissions"
               }
             }
           },
@@ -17948,6 +17972,9 @@
               },
               "deployment_type": {
                 "$ref": "#/components/schemas/enum.DeploymentType"
+              },
+              "api_permissions": {
+                "$ref": "#/components/schemas/manifest.ApiPermissions"
               }
             }
           }
@@ -18257,6 +18284,39 @@
           }
         }
       },
+      "enum.WorkloadServiceAccountStatus": {
+        "type": "string",
+        "enum": [
+          "pending_create",
+          "pending_update",
+          "active",
+          "deactivated",
+          "failed"
+        ]
+      },
+      "type.ServiceAccountStatus": {
+        "type": "object",
+        "description": "Realtime information about the Workload as seen from the Cloud.",
+        "properties": {
+          "state": {
+            "$ref": "#/components/schemas/enum.WorkloadServiceAccountStatus",
+            "description": "Current status of the Workload Service Account."
+          },
+          "retries": {
+            "type": "integer",
+            "description": "Number of retries attempted for creating or updating the Service Account."
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC time when the Service Account was last updated by the Cloud, formatted in RFC 3339."
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Simple description of the error in case the Service Account creation or update failed."
+          }
+        }
+      },
       "type.StagedStatus": {
         "type": "object",
         "description": "Realtime information about the Staged Workload as seen from the Cloud.",
@@ -18318,6 +18378,12 @@
               "system": {
                 "$ref": "#/components/schemas/manifest.System"
               },
+              "api_permissions": {
+                "$ref": "#/components/schemas/manifest.ApiPermissions"
+              },
+              "service_account_status": {
+                "$ref": "#/components/schemas/type.ServiceAccountStatus"
+              },
               "staged": {
                 "$ref": "#/components/schemas/type.WorkloadStaged"
               }
@@ -18376,6 +18442,9 @@
               },
               "deployment_type": {
                 "$ref": "#/components/schemas/enum.DeploymentType"
+              },
+              "api_permissions": {
+                "$ref": "#/components/schemas/manifest.ApiPermissions"
               }
             }
           }
@@ -18590,6 +18659,9 @@
           },
           "deployment_type": {
             "$ref": "#/components/schemas/enum.DeploymentType"
+          },
+          "api_permissions": {
+            "$ref": "#/components/schemas/manifest.ApiPermissions"
           }
         }
       },
@@ -27382,7 +27454,8 @@
           "type": {
             "type": "string",
             "format": "data;pt={primitive-type}",
-            "description": "Kelvin Message Type representing the message type. If you do not know what Kelvin Message Type to put, most likely you can use `data;pt={primitive-type}`."
+            "description": "Kelvin Message Type representing the message type. If you do not know what Kelvin Message Type to put, most likely you can use `data;pt={primitive-type}`.",
+            "example": "data;pt=number"
           },
           "resource": {
             "type": "string",
