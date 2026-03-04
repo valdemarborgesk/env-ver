@@ -50,10 +50,10 @@
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "beta.kelvininc.com:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "beta.kelvininc.com:5000/kelvin-edge-gateway:beta-251112-54a0e0b",
-      "kelvin-edge-sync": "beta.kelvininc.com:5000/kelvin-edge-sync:beta-251112-54a0e0b",
-      "kelvin-control-change-manager": "beta.kelvininc.com:5000/kelvin-control-change-manager:6.5.0",
-      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:beta-251112-54a0e0b"      
+      "kelvin-edge-gateway": "beta.kelvininc.com:5000/kelvin-edge-gateway:beta-260303-829bf61",
+      "kelvin-edge-sync": "beta.kelvininc.com:5000/kelvin-edge-sync:beta-260303-829bf61",
+      "kelvin-control-change-manager": "beta.kelvininc.com:5000/kelvin-control-change-manager:beta-260303-829bf61",
+      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:beta-260303-829bf61"      
     }
   },
   "bridge": {
