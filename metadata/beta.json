@@ -61,7 +61,7 @@
       "kelvin-bridge-roc-client": "beta.kelvininc.com:5000/kelvin-bridge-roc-client:3.0.2",
       "kelvin-bridge-opcua-client": "beta.kelvininc.com:5000/kelvin-bridge-opcua-client:3.7.0",
       "kelvin-bridge-modbus-client": "beta.kelvininc.com:5000/kelvin-bridge-modbus-client:4.5.2",
-      "kelvin-csv-publisher-connector": "beta.kelvininc.com:5000/kelvin-csv-publisher-connector:1.0.9"
+      "kelvin-csv-publisher-connector": "beta.kelvininc.com:5000/kelvin-csv-publisher-connector:1.1.0"
     }
   },
   "schema": {
