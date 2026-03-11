@@ -2186,7 +2186,9 @@
           },
           "202": {
             "description": "Workload is waiting for the worker to pick it up, or it's already processing.",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "400": {
             "$ref": "#/components/responses/error.BadRequest"
@@ -2672,7 +2674,9 @@
           },
           "501": {
             "description": "The operation is not implemented.",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           }
         }
       }
@@ -2959,7 +2963,9 @@
         "responses": {
           "201": {
             "description": "Assets created successfully",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "207": {
             "$ref": "#/components/responses/error.Multi"
@@ -6177,7 +6183,9 @@
         "responses": {
           "201": {
             "description": "Units created successfully",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "207": {
             "$ref": "#/components/responses/error.Multi"
@@ -6488,7 +6496,9 @@
         "responses": {
           "201": {
             "description": "Datastreams created successfully",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "207": {
             "$ref": "#/components/responses/error.Multi"
@@ -9030,7 +9040,9 @@
         "responses": {
           "200": {
             "description": "Upgrade apply trigger sent to the cluster",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "400": {
             "$ref": "#/components/responses/error.BadRequest"
@@ -9081,11 +9093,15 @@
         "responses": {
           "200": {
             "description": "Cluster Edge app version forced update succeeded.",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "202": {
             "description": "Forced Update initiation accepted by the server. Will send remote request to the Cluster when it next comes online.",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "400": {
             "$ref": "#/components/responses/error.BadRequest"
@@ -9906,7 +9922,10 @@
         },
         "responses": {
           "201": {
-            "description": "Values created/updated"
+            "description": "Values created/updated",
+            "content": {
+              "application/json": {}
+            }
           },
           "400": {
             "$ref": "#/components/responses/error.BadRequest"
@@ -11244,7 +11263,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/responses.ThreadsList"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/responses.ThreadsList"
+                  }
                 }
               }
             }
@@ -11684,7 +11706,9 @@
         "responses": {
           "201": {
             "description": "Success",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           },
           "207": {
             "$ref": "#/components/responses/error.Multi"
@@ -11863,7 +11887,9 @@
         "responses": {
           "200": {
             "description": "CSV file",
-            "content": {}
+            "content": {
+              "text/csv": {}
+            }
           },
           "400": {
             "$ref": "#/components/responses/error.BadRequest"
@@ -15282,7 +15308,9 @@
           },
           "501": {
             "description": "The operation is not implemented.",
-            "content": {}
+            "content": {
+              "application/json": {}
+            }
           }
         }
       }
@@ -27332,14 +27360,11 @@
         ]
       },
       "responses.ThreadsList": {
-        "type": "array",
-        "items": {
-          "allOf": [
-            {
-              "$ref": "#/components/schemas/type.Thread"
-            }
-          ]
-        }
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/type.Thread"
+          }
+        ]
       },
       "responses.ThreadFollowUpdate": {
         "allOf": [
