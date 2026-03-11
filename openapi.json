@@ -116,10 +116,6 @@
       "description": "Kelvin Platform - santos-csg"
     },
     {
-      "url": "https://santos-dev.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - santos-dev"
-    },
-    {
       "url": "https://santos-dev2.kelvin.ai/api/v4",
       "description": "Kelvin Platform - santos-dev2"
     },
