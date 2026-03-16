@@ -49,7 +49,7 @@
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
-      "kelvin-mqtt-broker": "sales.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
+      "kelvin-mqtt-broker": "sales.kelvin.ai:5000/kelvin-mqtt-broker:2.0.13",
       "kelvin-edge-gateway": "sales.kelvin.ai:5000/kelvin-edge-gateway:6.6.0",
       "kelvin-edge-sync": "sales.kelvin.ai:5000/kelvin-edge-sync:6.6.0",
       "kelvin-control-change-manager": "sales.kelvin.ai:5000/kelvin-control-change-manager:6.6.0",
