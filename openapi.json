@@ -84,10 +84,6 @@
       "description": "Kelvin Platform - jkmrc"
     },
     {
-      "url": "https://mcgx.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - mcgx"
-    },
-    {
       "url": "https://ovintiv.kelvin.ai/api/v4",
       "description": "Kelvin Platform - ovintiv"
     },
