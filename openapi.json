@@ -88,10 +88,6 @@
       "description": "Kelvin Platform - ovintiv"
     },
     {
-      "url": "https://petronas.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - petronas"
-    },
-    {
       "url": "https://propwr.kelvin.ai/api/v4",
       "description": "Kelvin Platform - propwr"
     },
