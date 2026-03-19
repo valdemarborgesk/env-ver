@@ -2,7 +2,7 @@
   "versions": {
     "core": "6.2.1",
     "core-ui": "2.2.5",
-    "core-api": "9.2.3",
+    "core-api": "9.2.4",
     "api-spec": "9.2.0"
   },
   "feature_flags": {
