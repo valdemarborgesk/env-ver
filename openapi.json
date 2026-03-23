@@ -68,20 +68,12 @@
       "description": "Kelvin Platform - halliburton-prod1"
     },
     {
-      "url": "https://idoba.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - idoba"
-    },
-    {
       "url": "https://ironoak.kelvin.ai/api/v4",
       "description": "Kelvin Platform - ironoak"
     },
     {
       "url": "https://ironoak-staging.kelvin.ai/api/v4",
       "description": "Kelvin Platform - ironoak-staging"
-    },
-    {
-      "url": "https://jkmrc.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - jkmrc"
     },
     {
       "url": "https://propwr.kelvin.ai/api/v4",
