@@ -62,7 +62,7 @@
       "kelvin-bridge-roc-client": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-bridge-roc-client:3.0.4",
       "kelvin-bridge-opcua-client": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-bridge-modbus-client:4.5.4",
-      "kelvin-csv-publisher-connector": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-csv-publisher-connector:1.0.9",
+      "kelvin-csv-publisher-connector": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-csv-publisher-connector:1.1.0",
       "kelvin-osi-pi-connector": "449569054481.dkr.ecr.us-east-1.amazonaws.com/kelvin/kelvin-osi-pi-connector:1.0.0"
     }
   },
