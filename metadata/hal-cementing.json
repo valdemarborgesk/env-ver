@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "5.15.0",
-    "core-ui": "1.12.0",
-    "core-api": "8.17.4",
-    "api-spec": "8.17.2"
+    "core": "6.4.0",
+    "core-ui": "2.4.1",
+    "core-api": "9.4.3",
+    "api-spec": "9.4.3"
   },
   "feature_flags": {
     "log_forward": false,
@@ -14,10 +14,11 @@
     "auto_workload_image_build": false,
     "docker_cluster": true,
     "k3s_cluster": false,
-    "kubernetes_cluster": false
+    "kubernetes_cluster": false,
+    "live_log_forward": true
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/5.15/"
+    "url": "https://docs.kelvin.ai/6.4/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -26,7 +27,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "hal-cementing.kelvin.ai:5000/kelvin-edge-ui:1.3.0",
+    "kelvin-edge-ui": "hal-cementing.kelvin.ai:5000/kelvin-edge-ui:1.4.0",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -40,21 +41,23 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.1.3",
-    "ksdk_minimum_version": "9.1.3",
+    "ksdk_latest_version": "9.5.0",
+    "ksdk_minimum_version": "9.5.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "hal-cementing.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "hal-cementing.kelvin.ai:5000/kelvin-edge-gateway:25.03.4",
-      "kelvin-control-change-manager": "hal-cementing.kelvin.ai:5000/kelvin-control-change-manager:2.3.0"
+      "kelvin-edge-gateway": "hal-cementing.kelvin.ai:5000/kelvin-edge-gateway:6.4.1",
+      "kelvin-edge-sync": "hal-cementing.kelvin.ai:5000/kelvin-edge-sync:6.4.1",
+      "kelvin-control-change-manager": "hal-cementing.kelvin.ai:5000/kelvin-control-change-manager:6.4.1",
+      "kelvin-custom-action-manager": "hal-cementing.kelvin.ai:5000/kelvin-custom-action-manager:6.4.1"
     }
   },
   "bridge": {
     "apps": {
       "kelvin-bridge-roc-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.2",
-      "kelvin-bridge-opcua-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-opcua-client:3.4.7",
+      "kelvin-bridge-opcua-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-opcua-client:3.4.11",
       "kelvin-bridge-modbus-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.2",
       "kelvin-csv-publisher-connector": "hal-cementing.kelvin.ai:5000/kelvin-csv-publisher-connector:1.0.9"
     }
