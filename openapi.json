@@ -36,6 +36,10 @@
       "description": "Kelvin Platform - clr"
     },
     {
+      "url": "https://diamondback.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - diamondback"
+    },
+    {
       "url": "https://hal-cementing.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hal-cementing"
     },
