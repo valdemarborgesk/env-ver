@@ -15,7 +15,7 @@
     "docker_cluster": true,
     "k3s_cluster": false,
     "kubernetes_cluster": false,
-    "live_log_forward": true
+    "live_log_forward": false
   },
   "documentation": {
     "url": "https://docs.kelvin.ai/6.4/"
@@ -27,7 +27,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "hal-cementing.kelvin.ai:5000/kelvin-edge-ui:1.4.0",
+    "kelvin-edge-ui": "hal-cementing.kelvin.ai/kelvin-edge-ui:1.4.0",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -37,7 +37,7 @@
   },
   "docker": {
     "url": "hal-cementing.kelvin.ai",
-    "port": 5000
+    "port": 443
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
@@ -47,19 +47,19 @@
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
-      "kelvin-mqtt-broker": "hal-cementing.kelvin.ai:5000/kelvin-mqtt-broker:2.0.11-7",
-      "kelvin-edge-gateway": "hal-cementing.kelvin.ai:5000/kelvin-edge-gateway:6.4.1",
-      "kelvin-edge-sync": "hal-cementing.kelvin.ai:5000/kelvin-edge-sync:6.4.1",
-      "kelvin-control-change-manager": "hal-cementing.kelvin.ai:5000/kelvin-control-change-manager:6.4.1",
-      "kelvin-custom-action-manager": "hal-cementing.kelvin.ai:5000/kelvin-custom-action-manager:6.4.1"
+      "kelvin-mqtt-broker": "hal-cementing.kelvin.ai/kelvin-mqtt-broker:2.0.11-7",
+      "kelvin-edge-gateway": "hal-cementing.kelvin.ai/kelvin-edge-gateway:6.4.1",
+      "kelvin-edge-sync": "hal-cementing.kelvin.ai/kelvin-edge-sync:6.4.1",
+      "kelvin-control-change-manager": "hal-cementing.kelvin.ai/kelvin-control-change-manager:6.4.1",
+      "kelvin-custom-action-manager": "hal-cementing.kelvin.ai/kelvin-custom-action-manager:6.4.1"
     }
   },
   "bridge": {
     "apps": {
-      "kelvin-bridge-roc-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.2",
-      "kelvin-bridge-opcua-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-opcua-client:3.4.11",
-      "kelvin-bridge-modbus-client": "hal-cementing.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.2",
-      "kelvin-csv-publisher-connector": "hal-cementing.kelvin.ai:5000/kelvin-csv-publisher-connector:1.0.9"
+      "kelvin-bridge-roc-client": "hal-cementing.kelvin.ai/kelvin-bridge-roc-client:3.0.2",
+      "kelvin-bridge-opcua-client": "hal-cementing.kelvin.ai/kelvin-bridge-opcua-client:3.4.11",
+      "kelvin-bridge-modbus-client": "hal-cementing.kelvin.ai/kelvin-bridge-modbus-client:4.5.2",
+      "kelvin-csv-publisher-connector": "hal-cementing.kelvin.ai/kelvin-csv-publisher-connector:1.0.9"
     }
   },
   "schema": {
