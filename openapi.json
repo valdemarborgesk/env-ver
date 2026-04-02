@@ -80,6 +80,10 @@
       "description": "Kelvin Platform - ironoak-staging"
     },
     {
+      "url": "https://origin.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - origin"
+    },
+    {
       "url": "https://propwr.kelvin.ai/api/v4",
       "description": "Kelvin Platform - propwr"
     },
