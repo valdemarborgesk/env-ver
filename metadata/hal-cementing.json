@@ -15,7 +15,7 @@
     "docker_cluster": true,
     "k3s_cluster": false,
     "kubernetes_cluster": false,
-    "live_log_forward": false
+    "live_log_forward": true
   },
   "documentation": {
     "url": "https://docs.kelvin.ai/6.4/"
