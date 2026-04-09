@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "6.5.x",
-    "core-ui": "1.4.12-beta.76",
+    "core-ui": "1.4.12-beta.78",
     "core-api": "9.0.0-beta2026.33.fa5f6aaa6",
     "api-spec": "9.0.0-rc2026.56.7981b34"
   },
