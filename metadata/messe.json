@@ -1,7 +1,7 @@
 {
   "versions": {
-    "core": "5.8.0",
-    "core-ui": "1.1.0-alpha.726",
+    "core": "6.7.0",
+    "core-ui": "1.1.0-alpha.721",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
     "api-spec": "9.0.0-rc2026.90.9dd32a5"
   },
@@ -19,7 +19,7 @@
     "allow_switch_app_type": true
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/5.8/"
+    "url": "https://docs.kelvin.ai/6.7/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -43,8 +43,8 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.4.3",
-    "ksdk_minimum_version": "9.3.1",
+    "ksdk_latest_version": "9.7.3",
+    "ksdk_minimum_version": "9.7.3",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
@@ -58,9 +58,9 @@
   },
   "bridge": {
     "apps": {
-      "kelvin-bridge-roc-client": "messe.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.2",
-      "kelvin-bridge-opcua-client": "messe.kelvin.ai:5000/kelvin-bridge-opcua-client:3.7.0",
-      "kelvin-bridge-modbus-client": "messe.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.2",
+      "kelvin-bridge-roc-client": "messe.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.4",
+      "kelvin-bridge-opcua-client": "messe.kelvin.ai:5000/kelvin-bridge-opcua-client:3.7.1",
+      "kelvin-bridge-modbus-client": "messe.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.4",
       "kelvin-csv-publisher-connector": "messe.kelvin.ai:5000/kelvin-csv-publisher-connector:1.1.0",
       "kelvin-osi-pi-connector": "messe.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.0"
     }
