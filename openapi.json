@@ -32,6 +32,10 @@
       "description": "Kelvin Platform - cenovus"
     },
     {
+      "url": "https://cenovus-staging.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - cenovus-staging"
+    },
+    {
       "url": "https://clr.kelvin.ai/api/v4",
       "description": "Kelvin Platform - clr"
     },
