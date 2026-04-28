@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "6.7.0",
-    "core-ui": "1.1.0-alpha.729",
+    "core-ui": "1.1.0-alpha.755",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
     "api-spec": "9.0.0-rc2026.90.9dd32a5"
   },
@@ -45,6 +45,7 @@
     "docker_minimum_version": "19.03.5",
     "ksdk_latest_version": "9.7.3",
     "ksdk_minimum_version": "9.7.3",
+    "agent_version": "0.0.1",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
@@ -53,7 +54,7 @@
       "kelvin-edge-gateway": "messe.kelvin.ai:5000/kelvin-edge-gateway:alpha-260417-6a6a382",
       "kelvin-edge-sync": "messe.kelvin.ai:5000/kelvin-edge-sync:alpha-260417-6a6a382",
       "kelvin-control-change-manager": "messe.kelvin.ai:5000/kelvin-control-change-manager:alpha-260326-2b60a93",
-      "kelvin-custom-action-manager": "messe.kelvin.ai:5000/kelvin-custom-action-manager:alpha-260417-6a6a382"      
+      "kelvin-custom-action-manager": "messe.kelvin.ai:5000/kelvin-custom-action-manager:alpha-260417-6a6a382"
     }
   },
   "bridge": {
