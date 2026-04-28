@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.6.0",
-    "core-ui": "2.6.0-rc.5",
-    "core-api": "9.6.0",
-    "api-spec": "9.6.0"
+    "core": "6.7.0",
+    "core-ui": "1.1.0-alpha.755",
+    "core-api": "9.0.0-rc2026.248.def2f1d55",
+    "api-spec": "9.0.0-rc2026.94.92fb6c3"
   },
   "feature_flags": {
     "log_forward": true,
@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.6/"
+    "url": "https://docs.kelvin.ai/6.7/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -28,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "nuno.kelvin.ai:5000/kelvin-edge-ui:1.4.0",
+    "kelvin-edge-ui": "nuno.kelvin.ai:5000/kelvin-edge-ui:1.0.1-alpha.457",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -45,15 +45,16 @@
     "docker_minimum_version": "19.03.5",
     "ksdk_latest_version": "9.7.3",
     "ksdk_minimum_version": "9.7.3",
+    "agent_version": "0.0.1",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
-      "kelvin-mqtt-broker": "nuno.kelvin.ai:5000/kelvin-mqtt-broker:2.0.13",
-      "kelvin-edge-gateway": "nuno.kelvin.ai:5000/kelvin-edge-gateway:6.6.0",
-      "kelvin-edge-sync": "nuno.kelvin.ai:5000/kelvin-edge-sync:6.6.0",
-      "kelvin-control-change-manager": "nuno.kelvin.ai:5000/kelvin-control-change-manager:6.6.0",
-      "kelvin-custom-action-manager": "nuno.kelvin.ai:5000/kelvin-custom-action-manager:6.6.0"      
+      "kelvin-mqtt-broker": "nuno.kelvin.ai:5000/kelvin-mqtt-broker:2.1.2",
+      "kelvin-edge-gateway": "nuno.kelvin.ai:5000/kelvin-edge-gateway:alpha-260417-6a6a382",
+      "kelvin-edge-sync": "nuno.kelvin.ai:5000/kelvin-edge-sync:alpha-260417-6a6a382",
+      "kelvin-control-change-manager": "nuno.kelvin.ai:5000/kelvin-control-change-manager:alpha-260417-6a6a382",
+      "kelvin-custom-action-manager": "nuno.kelvin.ai:5000/kelvin-custom-action-manager:alpha-260417-6a6a382"
     }
   },
   "bridge": {
