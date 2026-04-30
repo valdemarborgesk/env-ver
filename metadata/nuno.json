@@ -2,7 +2,7 @@
   "versions": {
     "core": "6.7.0",
     "core-ui": "1.1.0-alpha.755",
-    "core-api": "9.0.0-rc2026.248.def2f1d55",
+    "core-api": "9.7.0-aws3",
     "api-spec": "9.0.0-rc2026.94.92fb6c3"
   },
   "feature_flags": {
