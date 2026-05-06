@@ -2,7 +2,7 @@
   "versions": {
     "core": "6.7.0",
     "core-ui": "1.4.13-beta.82",
-    "core-api": "9.0.0-beta2026.42.5dd10109b",
+    "core-api": "9.0.0-beta2026.49.7fb4d72ff",
     "api-spec": "9.0.0-rc2026.103.ca4b3cf"
   },
   "feature_flags": {
