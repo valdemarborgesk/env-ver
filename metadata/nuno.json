@@ -1,9 +1,9 @@
 {
   "versions": {
     "core": "6.7.0",
-    "core-ui": "1.4.13-beta.83",
-    "core-api": "9.0.0-beta2026.49.7fb4d72ff",
-    "api-spec": "9.0.0-rc2026.103.ca4b3cf"
+    "core-ui": "2.7.0-rc.8",
+    "core-api": "9.7.1",
+    "api-spec": "9.7.0"
   },
   "feature_flags": {
     "log_forward": true,
@@ -28,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "nuno.kelvin.ai:5000/kelvin-edge-ui:1.0.5-beta.63",
+    "kelvin-edge-ui": "nuno.kelvin.ai:5000/kelvin-edge-ui:1.4.0",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -51,10 +51,10 @@
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "nuno.kelvin.ai:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "nuno.kelvin.ai:5000/kelvin-edge-gateway:beta-260417-6a6a382",
-      "kelvin-edge-sync": "nuno.kelvin.ai:5000/kelvin-edge-sync:beta-260417-6a6a382",
-      "kelvin-control-change-manager": "nuno.kelvin.ai:5000/kelvin-control-change-manager:beta-260417-6a6a382",
-      "kelvin-custom-action-manager": "nuno.kelvin.ai:5000/kelvin-custom-action-manager:beta-260417-6a6a382"
+      "kelvin-edge-gateway": "nuno.kelvin.ai:5000/kelvin-edge-gateway:6.7.0",
+      "kelvin-edge-sync": "nuno.kelvin.ai:5000/kelvin-edge-sync:6.7.0",
+      "kelvin-control-change-manager": "nuno.kelvin.ai:5000/kelvin-control-change-manager:6.7.0",
+      "kelvin-custom-action-manager": "nuno.kelvin.ai:5000/kelvin-custom-action-manager:6.7.0"
     }
   },
   "bridge": {
@@ -63,7 +63,7 @@
       "kelvin-bridge-opcua-client": "nuno.kelvin.ai:5000/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "nuno.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.4",
       "kelvin-csv-publisher-connector": "nuno.kelvin.ai:5000/kelvin-csv-publisher-connector:1.1.0",
-      "kelvin-osi-pi-connector": "nuno.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.0"
+      "kelvin-osi-pi-connector": "nuno.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.2"
     }
   },
   "schema": {
