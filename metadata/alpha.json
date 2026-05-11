@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "5.8.0",
-    "core-ui": "1.0.1-alpha.804",
+    "core-ui": "1.0.1-alpha.805",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
     "api-spec": "9.0.0-rc2026.105.d0c26b6"
   },
@@ -28,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.0.1-alpha.487",
+    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.0.1-alpha.488",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -51,10 +51,10 @@
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "alpha.kelvininc.com:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "alpha.kelvininc.com:5000/kelvin-edge-gateway:alpha-260417-6a6a382",
-      "kelvin-edge-sync": "alpha.kelvininc.com:5000/kelvin-edge-sync:alpha-260417-6a6a382",
-      "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260326-2b60a93",
-      "kelvin-custom-action-manager": "alpha.kelvininc.com:5000/kelvin-custom-action-manager:alpha-260417-6a6a382"
+      "kelvin-edge-gateway": "alpha.kelvininc.com:5000/kelvin-edge-gateway:alpha-260511-0446225",
+      "kelvin-edge-sync": "alpha.kelvininc.com:5000/kelvin-edge-sync:alpha-260511-0446225",
+      "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260511-aedfc51",
+      "kelvin-custom-action-manager": "alpha.kelvininc.com:5000/kelvin-custom-action-manager:alpha-260511-0446225"
     }
   },
   "bridge": {
