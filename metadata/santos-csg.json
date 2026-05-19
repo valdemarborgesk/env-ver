@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.7/"
+    "url": "https://docs.kelvin.ai/6.6/"
   },
   "authentication": {
     "realm": "kelvin",
