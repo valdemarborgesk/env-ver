@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.6.0",
-    "core-ui": "2.6.2",
-    "core-api": "9.6.0",
-    "api-spec": "9.6.0"
+    "core": "6.7.0",
+    "core-ui": "2.7.1",
+    "core-api": "9.7.2",
+    "api-spec": "9.7.0"
   },
   "feature_flags": {
     "log_forward": true,
@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.6/"
+    "url": "https://docs.kelvin.ai/6.7/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -43,17 +43,18 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.7.3",
-    "ksdk_minimum_version": "9.7.3",
+    "ksdk_latest_version": "9.7.4",
+    "ksdk_minimum_version": "9.7.4",
+    "agent_version": "0.0.1",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
-      "kelvin-mqtt-broker": "kelvin-csg.santos.com:5000/kelvin-mqtt-broker:2.0.13",
-      "kelvin-edge-gateway": "kelvin-csg.santos.com:5000/kelvin-edge-gateway:6.6.0",
-      "kelvin-edge-sync": "kelvin-csg.santos.com:5000/kelvin-edge-sync:6.6.0",
-      "kelvin-control-change-manager": "kelvin-csg.santos.com:5000/kelvin-control-change-manager:6.6.0",
-      "kelvin-custom-action-manager": "kelvin-csg.santos.com:5000/kelvin-custom-action-manager:6.6.0"      
+      "kelvin-mqtt-broker": "kelvin-csg.santos.com:5000/kelvin-mqtt-broker:2.1.2",
+      "kelvin-edge-gateway": "kelvin-csg.santos.com:5000/kelvin-edge-gateway:6.7.0",
+      "kelvin-edge-sync": "kelvin-csg.santos.com:5000/kelvin-edge-sync:6.7.0",
+      "kelvin-control-change-manager": "kelvin-csg.santos.com:5000/kelvin-control-change-manager:6.7.0",
+      "kelvin-custom-action-manager": "kelvin-csg.santos.com:5000/kelvin-custom-action-manager:6.7.0"
     }
   },
   "bridge": {
@@ -62,7 +63,7 @@
       "kelvin-bridge-opcua-client": "kelvin-csg.santos.com:5000/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "kelvin-csg.santos.com:5000/kelvin-bridge-modbus-client:4.5.4",
       "kelvin-csv-publisher-connector": "kelvin-csg.santos.com:5000/kelvin-csv-publisher-connector:1.1.0",
-      "kelvin-osi-pi-connector": "kelvin-csg.santos.com:5000/kelvin-osi-pi-connector:1.0.0"
+      "kelvin-osi-pi-connector": "kelvin-csg.santos.com:5000/kelvin-osi-pi-connector:1.0.2"
     }
   },
   "schema": {
