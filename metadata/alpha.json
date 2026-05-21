@@ -3,7 +3,7 @@
     "core": "5.8.0",
     "core-ui": "1.0.1-alpha.855",
     "core-api": "9.0.0-rc2025.13.b8fb8c540",
-    "api-spec": "9.0.0-rc2026.114.cda162f"
+    "api-spec": "9.0.0-rc2026.115.2348f46"
   },
   "feature_flags": {
     "log_forward": true,
@@ -52,7 +52,7 @@
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "alpha.kelvininc.com:5000/kelvin-mqtt-broker:2.1.2",
       "kelvin-edge-gateway": "alpha.kelvininc.com:5000/kelvin-edge-gateway:alpha-260511-0446225",
-      "kelvin-edge-sync": "alpha.kelvininc.com:5000/kelvin-edge-sync:alpha-260515-ab9a73d",
+      "kelvin-edge-sync": "alpha.kelvininc.com:5000/kelvin-edge-sync:alpha-260521-fbebc02",
       "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260512-6e2fe8f",
       "kelvin-custom-action-manager": "alpha.kelvininc.com:5000/kelvin-custom-action-manager:alpha-260511-0446225"
     }
