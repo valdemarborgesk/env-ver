@@ -44,6 +44,10 @@
       "description": "Kelvin Platform - diamondback"
     },
     {
+      "url": "https://duarte.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - duarte"
+    },
+    {
       "url": "https://hal-cementing.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hal-cementing"
     },
