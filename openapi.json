@@ -132,10 +132,6 @@
       "description": "Kelvin Platform - santos-staging"
     },
     {
-      "url": "https://validus.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - validus"
-    },
-    {
       "url": "https://westside.kelvin.ai/api/v4",
       "description": "Kelvin Platform - westside"
     },
