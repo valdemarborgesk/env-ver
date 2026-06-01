@@ -20158,6 +20158,61 @@
           }
         }
       },
+      "enum.AppFilterField": {
+        "type": "string",
+        "example": "status",
+        "enum": [
+          "workload_name",
+          "app_name",
+          "status"
+        ],
+        "description": "Field name of the App to filter by. The `status` field accepts `disabled`, `running`, `updating`, `stopped`, and `requires_attention`."
+      },
+      "type.Strings": {
+        "description": "Value represented as a string or an array of strings.",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "requests.AppFilter": {
+        "type": "object",
+        "required": [
+          "field",
+          "value"
+        ],
+        "properties": {
+          "field": {
+            "$ref": "#/components/schemas/enum.AppFilterField"
+          },
+          "value": {
+            "$ref": "#/components/schemas/type.Strings"
+          }
+        }
+      },
+      "requests.AppsFilters": {
+        "type": "object",
+        "properties": {
+          "contains": {
+            "type": "boolean",
+            "example": true,
+            "default": false
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/requests.AppFilter"
+            }
+          }
+        }
+      },
       "requests.ValueFilter": {
         "oneOf": [
           {
@@ -20247,20 +20302,6 @@
           "datastream_name"
         ],
         "description": "Field name of the Control Change to filter by."
-      },
-      "type.Strings": {
-        "description": "Value represented as a string or an array of strings.",
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        ]
       },
       "requests.ControlChangeFilter": {
         "type": "object",
@@ -20444,6 +20485,12 @@
         "type": "object",
         "description": "Create filters related to the Assets list and define specific filtering criteria for each filter.",
         "properties": {
+          "apps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/requests.AppsFilters"
+            }
+          },
           "asset_properties": {
             "type": "array",
             "items": {
@@ -22374,6 +22421,28 @@
           }
         }
       },
+      "enum.ControlChangeQueueingMode": {
+        "description": "Queue interaction mode for incoming Control Changes.",
+        "type": "string",
+        "enum": [
+          "enqueue",
+          "next",
+          "immediate"
+        ]
+      },
+      "type.ControlChangeQueueing": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Queueing behavior for Control Changes. This object is atomic: when `queueing` is present, `mode` is required.",
+        "required": [
+          "mode"
+        ],
+        "properties": {
+          "mode": {
+            "$ref": "#/components/schemas/enum.ControlChangeQueueingMode"
+          }
+        }
+      },
       "requests.ControlChangeCreate": {
         "required": [
           "resource",
@@ -22394,6 +22463,9 @@
           "payload": {
             "$ref": "#/components/schemas/type.Any",
             "example": 2000
+          },
+          "queueing": {
+            "$ref": "#/components/schemas/type.ControlChangeQueueing"
           },
           "trace_id": {
             "type": "string"
@@ -22455,6 +22527,9 @@
           "payload": {
             "$ref": "#/components/schemas/type.Any",
             "example": 2000
+          },
+          "queueing": {
+            "$ref": "#/components/schemas/type.ControlChangeQueueing"
           },
           "resource": {
             "type": "string",
@@ -22695,6 +22770,9 @@
           "payload": {
             "$ref": "#/components/schemas/type.Any",
             "example": 2000
+          },
+          "queueing": {
+            "$ref": "#/components/schemas/type.ControlChangeQueueing"
           },
           "resource": {
             "type": "string",
@@ -23015,28 +23093,6 @@
           }
         }
       },
-      "enum.ControlChangePolicyQueueingMode": {
-        "type": "string",
-        "description": "Queue interaction mode for incoming Control Changes.",
-        "enum": [
-          "enqueue",
-          "next",
-          "immediate"
-        ]
-      },
-      "type.ControlChangePolicyQueueing": {
-        "type": "object",
-        "description": "Queueing behavior for incoming Control Changes on this resource. This object is atomic: when `queueing` is present, `mode` is required.",
-        "additionalProperties": false,
-        "required": [
-          "mode"
-        ],
-        "properties": {
-          "mode": {
-            "$ref": "#/components/schemas/enum.ControlChangePolicyQueueingMode"
-          }
-        }
-      },
       "type.ControlChangePolicyDefinition": {
         "type": "object",
         "additionalProperties": false,
@@ -23064,7 +23120,7 @@
           "queueing": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/type.ControlChangePolicyQueueing"
+                "$ref": "#/components/schemas/type.ControlChangeQueueing"
               }
             ],
             "description": "Queueing behavior used when a new Control Change is submitted for the same resource. If omitted, this field inherits from precedence."
@@ -23174,7 +23230,7 @@
             "type": "array",
             "description": "Filter to list policies with specific queueing modes.",
             "items": {
-              "$ref": "#/components/schemas/enum.ControlChangePolicyQueueingMode"
+              "$ref": "#/components/schemas/enum.ControlChangeQueueingMode"
             }
           }
         }
@@ -27044,6 +27100,11 @@
             "type": "string",
             "example": "IfNotPresent",
             "description": "Image pull policy to be used when deploying workloads. Options are `Always`, and `IfNotPresent`. Default: `IfNotPresent`"
+          },
+          "auto_scale": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable auto-scaling of Kelvin services on the Cluster when there are enough nodes."
           }
         }
       },
@@ -28022,6 +28083,11 @@
             "type": "string",
             "example": "IfNotPresent",
             "description": "Image pull policy to be used when deploying workloads. Options are `Always`, and `IfNotPresent`. Default: `IfNotPresent`"
+          },
+          "auto_scale": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable auto-scaling of Kelvin services on the Cluster when there are enough nodes."
           }
         }
       },
@@ -28698,6 +28764,9 @@
             "example": 600,
             "description": "Time in seconds the Control Change Manager will wait after sending the Control Change for the Bridge to send a `processed` acknowledgement reply before retry sending the Control Change."
           },
+          "queueing": {
+            "$ref": "#/components/schemas/type.ControlChangeQueueing"
+          },
           "from": {
             "$ref": "#/components/schemas/type.ControlChangeFrom"
           }
@@ -28951,6 +29020,9 @@
             "default": 300,
             "example": 600,
             "description": "Time in seconds the Control Change Manager will wait after sending the Control Change for the Bridge to send a `processed` acknowledgement reply before retry sending the Control Change."
+          },
+          "queueing": {
+            "$ref": "#/components/schemas/type.ControlChangeQueueing"
           },
           "from": {
             "$ref": "#/components/schemas/type.ControlChangeFrom"
@@ -30266,7 +30338,7 @@
             "type": "string",
             "format": "date-time",
             "example": "2023-06-01T12:00:00Z",
-            "description": "End of the queried time range in RFC 3339 UTC format."
+            "description": "End of the queried time range in RFC 3339 UTC format with microsecond precision."
           },
           "fill": {
             "type": "string",
@@ -30294,17 +30366,12 @@
             "type": "string",
             "format": "date-time",
             "example": "2023-06-01T12:00:00Z",
-            "description": "Start of the queried time range in RFC 3339 UTC format."
+            "description": "Start of the queried time range in RFC 3339 UTC format with microsecond precision."
           },
           "time_bucket": {
             "type": "string",
             "example": "5m",
-            "description": "Defines the time range to use to aggregate the data values when using the `agg` key. Valid time units are \"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\"."
-          },
-          "time_shift": {
-            "type": "string",
-            "example": "1h",
-            "description": "Shift initial starting point of time buckets from the standard epoch for `time_bucket`. Valid time units are \"ns\", \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\"."
+            "description": "Defines the time range to use to aggregate the data values when using the `agg` key. Valid time units are \"us\" (or \"µs\"), \"ms\", \"s\", \"m\", \"h\"."
           }
         }
       },
@@ -35844,7 +35911,8 @@
             }
           },
           "edge_options": {
-            "image_pull_policy": "IfNotPresent"
+            "image_pull_policy": "IfNotPresent",
+            "auto_scale": false
           }
         }
       },
