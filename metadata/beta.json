@@ -3,7 +3,7 @@
     "core": "7.0.0",
     "core-ui": "1.1.0-alpha.883",
     "core-api": "9.0.0-beta2026.42.5dd10109b",
-    "api-spec": "9.0.0-rc2026.122.23cc9ad"
+    "api-spec": "9.0.0-rc2026.126.28627c1"
   },
   "feature_flags": {
     "log_forward": true,
@@ -43,8 +43,8 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.7.4b1",
-    "ksdk_minimum_version": "9.7.4b1",
+    "ksdk_latest_version": "9.7.5b1",
+    "ksdk_minimum_version": "9.7.5b1",
     "agent_version": "0.0.1",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",

@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.7.0",
-    "core-ui": "2.7.0-rc.12",
-    "core-api": "9.7.1",
-    "api-spec": "9.7.0"
+    "core": "7.0.0",
+    "core-ui": "3.0.0-rc.0",
+    "core-api": "9.8.0-rc.1",
+    "api-spec": "9.8.0-rc.1"
   },
   "feature_flags": {
     "log_forward": true,
@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.7/"
+    "url": "https://docs.kelvin.ai/7.0/"
   },
   "authentication": {
     "realm": "kelvin",
