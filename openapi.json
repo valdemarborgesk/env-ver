@@ -88,10 +88,6 @@
       "description": "Kelvin Platform - messe"
     },
     {
-      "url": "https://nuno.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - nuno"
-    },
-    {
       "url": "https://origin.kelvin.ai/api/v4",
       "description": "Kelvin Platform - origin"
     },
