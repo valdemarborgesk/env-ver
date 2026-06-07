@@ -1,150 +1,150 @@
 {
-  "updatedAt": "2026-06-07T16:24:15Z",
+  "updatedAt": "2026-06-07T18:11:20Z",
   "environments": {
     "alpha": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "beta": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "bpx": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "cenovus": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "cenovus-staging": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "clr": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "diamondback": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "hal-cementing": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "hal-cementing-dev": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "hal-cementing-staging": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "hal-sandbox": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "hall-int-dev": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "hall-int-prod": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "halliburton-dev1": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "halliburton-prod1": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "ironoak": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "ironoak-staging": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "messe": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "origin": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "propwr": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "qmai": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "sales": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "santos-cooper": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "santos-csg": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "santos-dev": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "santos-dev2": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "santos-staging": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "westside": {
       "status": "online",
-      "code": 403,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "code": 200,
+      "checkedAt": "2026-06-07T18:11:20Z"
     },
     "westside-staging": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-06-07T16:24:15Z"
+      "checkedAt": "2026-06-07T18:11:20Z"
     }
   }
 }
