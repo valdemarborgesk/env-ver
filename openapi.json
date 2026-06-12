@@ -96,6 +96,10 @@
       "description": "Kelvin Platform - propwr"
     },
     {
+      "url": "https://propwr-staging.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - propwr-staging"
+    },
+    {
       "url": "https://qmai.kelvin.ai/api/v4",
       "description": "Kelvin Platform - qmai"
     },
