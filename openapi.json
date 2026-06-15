@@ -40,10 +40,6 @@
       "description": "Kelvin Platform - clr"
     },
     {
-      "url": "https://demo.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - demo"
-    },
-    {
       "url": "https://demo-ai.kelvin.ai/api/v4",
       "description": "Kelvin Platform - demo-ai"
     },
