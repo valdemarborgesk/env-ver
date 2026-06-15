@@ -138,10 +138,6 @@
     {
       "url": "https://westside.kelvin.ai/api/v4",
       "description": "Kelvin Platform - westside"
-    },
-    {
-      "url": "https://westside-staging.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - westside-staging"
     }
   ],
   "paths": {
