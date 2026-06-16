@@ -2,8 +2,8 @@
   "versions": {
     "core": "7.0.0",
     "core-ui": "1.1.0-alpha.901",
-    "core-api": "9.8.0-rc.2",
-    "api-spec": "9.8.0-rc.2"
+    "core-api": "9.8.0-rc.3",
+    "api-spec": "9.8.0-rc.3"
   },
   "feature_flags": {
     "log_forward": true,
