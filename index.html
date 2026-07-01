@@ -894,6 +894,10 @@
           };
         });
 
+        // Seed the search box from the ?search= (or legacy ?q=) query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialSearch = urlParams.get("search") || urlParams.get("q") || "";
+
         const table = $("#versionsTable").DataTable({
           data: tableData,
           columns: [
@@ -908,7 +912,23 @@
           ],
           order: [[1, "desc"]],
           pageLength: 50,
-          responsive: true
+          responsive: true,
+          search: { search: initialSearch }
+        });
+
+        // Keep the URL in sync with the search box so filtered views are shareable
+        table.on("search.dt", () => {
+          const term = table.search();
+          const params = new URLSearchParams(window.location.search);
+          params.delete("q"); // normalize legacy param
+          if (term) {
+            params.set("search", term);
+          } else {
+            params.delete("search");
+          }
+          const query = params.toString();
+          const newUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+          window.history.replaceState(null, "", newUrl);
         });
 
       } catch (err) {
