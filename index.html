@@ -898,6 +898,25 @@
         const urlParams = new URLSearchParams(window.location.search);
         const initialSearch = urlParams.get("search") || urlParams.get("q") || "";
 
+        // Restore the sort column + direction from a previous visit
+        const SORT_STORAGE_KEY = "sortOrder";
+        const DEFAULT_ORDER = [[1, "desc"]];
+        const COLUMN_COUNT = 8;
+        const loadSavedOrder = () => {
+          try {
+            const raw = localStorage.getItem(SORT_STORAGE_KEY);
+            if (!raw) return DEFAULT_ORDER;
+            const parsed = JSON.parse(raw);
+            const isValid = Array.isArray(parsed) && parsed.length > 0 && parsed.every((entry) =>
+              Array.isArray(entry) &&
+              Number.isInteger(entry[0]) && entry[0] >= 0 && entry[0] < COLUMN_COUNT &&
+              (entry[1] === "asc" || entry[1] === "desc"));
+            return isValid ? parsed : DEFAULT_ORDER;
+          } catch (err) {
+            return DEFAULT_ORDER; // ignore corrupt/unavailable storage
+          }
+        };
+
         const table = $("#versionsTable").DataTable({
           data: tableData,
           columns: [
@@ -910,10 +929,19 @@
             { title: "Metadata", data: "metadata" },
             { title: "Other", data: "others" }
           ],
-          order: [[1, "desc"]],
+          order: loadSavedOrder(),
           pageLength: 50,
           responsive: true,
           search: { search: initialSearch }
+        });
+
+        // Persist the sort column + direction so it survives reloads
+        table.on("order.dt", () => {
+          try {
+            localStorage.setItem(SORT_STORAGE_KEY, JSON.stringify(table.order()));
+          } catch (err) {
+            // ignore storage failures (e.g. private browsing)
+          }
         });
 
         // Keep the URL in sync with the search box so filtered views are shareable
