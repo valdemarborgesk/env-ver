@@ -64,6 +64,10 @@
       "description": "Kelvin Platform - hal-sandbox"
     },
     {
+      "url": "https://hal-sperry.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - hal-sperry"
+    },
+    {
       "url": "https://halliburton-int-dev.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hall-int-dev"
     },
