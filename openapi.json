@@ -92,6 +92,10 @@
       "description": "Kelvin Platform - ironoak-staging"
     },
     {
+      "url": "https://layer8.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - layer8"
+    },
+    {
       "url": "https://messe.kelvin.ai/api/v4",
       "description": "Kelvin Platform - messe"
     },
