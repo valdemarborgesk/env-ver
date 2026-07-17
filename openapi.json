@@ -148,6 +148,10 @@
       "description": "Kelvin Platform - santos-staging"
     },
     {
+      "url": "https://sigma.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - sigma"
+    },
+    {
       "url": "https://westside.kelvin.ai/api/v4",
       "description": "Kelvin Platform - westside"
     }
