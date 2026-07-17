@@ -171,6 +171,9 @@
                 "ac": {
                   "$ref": "#/components/examples/AC"
                 },
+                "email-sender": {
+                  "$ref": "#/components/examples/EmailSender"
+                },
                 "sigcon": {
                   "$ref": "#/components/examples/Sigcon"
                 },
@@ -2951,7 +2954,7 @@
               "default": [
                 "name"
               ],
-              "description": "Sort the results by one or more Asset Insights fields. Typical options are `name`, `title`, `asset_type_name`, `asset_type_title`, `status`, and `last_seen`.",
+              "description": "Sort the results by one or more Asset Insights fields. Typical options are `name`, `title`, `asset_type_name`, `asset_type_title`, `status`, and `last_seen`. App extra fields can also be sorted by `<extra_field_name>.app_title`, `<extra_field_name>.app_version`, `<extra_field_name>.status`, `<extra_field_name>.workload_name`, and `<extra_field_name>.updated`.",
               "items": {
                 "type": "string"
               }
@@ -3996,6 +3999,61 @@
         }
       }
     },
+    "/assets/bulk/update": {
+      "post": {
+        "tags": [
+          "Asset"
+        ],
+        "summary": "Update Asset Bulk",
+        "description": "Update a list of existing Assets.\n\n**Permission Required:** `kelvin.permission.asset.update`\n",
+        "operationId": "updateAssetBulk",
+        "parameters": [
+          {
+            "name": "dry_run",
+            "in": "query",
+            "description": "Executes a simulated run when set to true, providing feedback without altering server data.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Asset bulk update schema",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/requests.AssetBulkUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Assets updated successfully",
+            "content": {}
+          },
+          "207": {
+            "$ref": "#/components/responses/error.Multi"
+          },
+          "400": {
+            "$ref": "#/components/responses/error.BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/error.Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/error.Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/error.NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/error.InternalServerError"
+          }
+        }
+      }
+    },
     "/assets/{asset_name}/get": {
       "get": {
         "tags": [
@@ -4925,7 +4983,7 @@
           "Custom Actions"
         ],
         "summary": "Create Custom Action",
-        "description": "Create Custom Action\n\n**Permission Required:** `kelvin.permission.custom-actions.create`\n",
+        "description": "Create Custom Action.\n\nThe platform validates `payload` against the schema bound to `type` before\ncreating the Custom Action. Types without a schema accept any object payload.\n\n**Permission Required:** `kelvin.permission.custom-actions.create`\n",
         "operationId": "createCustomAction",
         "requestBody": {
           "content": {
@@ -5177,7 +5235,7 @@
           "Custom Actions"
         ],
         "summary": "Create Custom Action Type",
-        "description": "Create a new Custom Action Type.\n\n**Permission Required:** `kelvin.permission.custom-actions.create`\n",
+        "description": "Create a new Custom Action Type.\n\n`schema`, when provided, must be a valid JSON Schema for the Custom Action\n`payload` object. The platform binds the schema to the new type and uses it\nto validate payloads on `/custom-actions/create`. To change the payload\ncontract, create a new Custom Action type.\n\n**Permission Required:** `kelvin.permission.custom-actions.create`\n",
         "operationId": "createCustomActionsType",
         "requestBody": {
           "description": "CustomActions type create schema",
@@ -5185,6 +5243,14 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/requests.CustomActionsTypeCreate"
+              },
+              "examples": {
+                "email": {
+                  "$ref": "#/components/examples/requests.CustomActionsTypeCreate.Email"
+                },
+                "no-schema": {
+                  "$ref": "#/components/examples/requests.CustomActionsTypeCreate.NoSchema"
+                }
               }
             }
           },
@@ -5197,6 +5263,14 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/responses.CustomActionsTypeCreate"
+                },
+                "examples": {
+                  "email": {
+                    "$ref": "#/components/examples/responses.CustomActionsTypeCreate.Email"
+                  },
+                  "no-schema": {
+                    "$ref": "#/components/examples/responses.CustomActionsTypeCreate.NoSchema"
+                  }
                 }
               }
             }
@@ -5381,6 +5455,14 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/responses.CustomActionsTypeGet"
+                },
+                "examples": {
+                  "email": {
+                    "$ref": "#/components/examples/responses.CustomActionsTypeGet.Email"
+                  },
+                  "no-schema": {
+                    "$ref": "#/components/examples/responses.CustomActionsTypeGet.NoSchema"
+                  }
                 }
               }
             }
@@ -16463,8 +16545,20 @@
           },
           "way": {
             "$ref": "#/components/schemas/enum.CAWay"
+          },
+          "schema": {
+            "type": "object",
+            "description": "JSON Schema for the Custom Action `payload` object.\n\nThe schema must be a valid JSON Schema. The platform binds it to the\nCustom Action type declared in `type`. If the type already exists,\nthis schema must match the schema bound to that type. To change the\npayload contract, create a new Custom Action type."
           }
         }
+      },
+      "enum.DQType": {
+        "type": "string",
+        "enum": [
+          "asset",
+          "ad"
+        ],
+        "description": "Resource scope of the data quality value.\n\n- `asset`: The data quality value is scoped to an asset.\n- `ad`: The data quality value is scoped to an asset/datastream pair."
       },
       "enum.DQWay": {
         "type": "string",
@@ -16488,7 +16582,16 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Datastream names this data quality value is scoped to. When this list is non-empty, `type` must be `ad`."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/enum.DQType"
+              }
+            ],
+            "description": "Resource scope of the data quality value.\n\nIf omitted, the platform uses `ad` when `datastreams` is non-empty and\n`asset` otherwise.\n\n`ad` is valid when `datastreams` is non-empty, or when the app\ndeclares dynamic I/O. Custom data quality using dynamic datastreams is\nonly supported by `importer` and `exporter` apps."
           },
           "way": {
             "$ref": "#/components/schemas/enum.DQWay"
@@ -16852,6 +16955,14 @@
           "service"
         ]
       },
+      "enum.PortProtocol": {
+        "type": "string",
+        "description": "Network protocol of the port. Defaults to `tcp`.",
+        "enum": [
+          "tcp",
+          "udp"
+        ]
+      },
       "enum.VolumeType": {
         "type": "string",
         "description": "Type of volume to use.",
@@ -16979,6 +17090,9 @@
                       "description": "Port on the host machine.",
                       "minimum": 1,
                       "maximum": 65535
+                    },
+                    "protocol": {
+                      "$ref": "#/components/schemas/enum.PortProtocol"
                     }
                   }
                 },
@@ -16995,6 +17109,9 @@
                       "description": "Port exposed by the service.",
                       "minimum": 1,
                       "maximum": 65535
+                    },
+                    "protocol": {
+                      "$ref": "#/components/schemas/enum.PortProtocol"
                     },
                     "container_port": {
                       "type": "integer",
@@ -17487,6 +17604,7 @@
                 },
                 "data_quality": {
                   "type": "object",
+                  "description": "Data quality configuration keyed by data quality name.",
                   "additionalProperties": {
                     "$ref": "#/components/schemas/type.AppDataQuality"
                   }
@@ -17517,6 +17635,20 @@
           }
         ]
       },
+      "type.AppDeploymentRuntimeCustomAction": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "way": {
+            "$ref": "#/components/schemas/enum.CAWay"
+          }
+        }
+      },
       "requests.AppVersionDeploy": {
         "allOf": [
           {
@@ -17533,7 +17665,7 @@
                       "custom_actions": {
                         "type": "array",
                         "items": {
-                          "$ref": "#/components/schemas/manifest.CustomAction"
+                          "$ref": "#/components/schemas/type.AppDeploymentRuntimeCustomAction"
                         }
                       }
                     }
@@ -18942,7 +19074,7 @@
                       "custom_actions": {
                         "type": "array",
                         "items": {
-                          "$ref": "#/components/schemas/manifest.CustomAction"
+                          "$ref": "#/components/schemas/type.AppDeploymentRuntimeCustomAction"
                         }
                       }
                     }
@@ -19234,7 +19366,7 @@
             "type": "array",
             "description": "Custom actions available for this workload runtime.",
             "items": {
-              "$ref": "#/components/schemas/manifest.CustomAction"
+              "$ref": "#/components/schemas/type.AppDeploymentRuntimeCustomAction"
             }
           },
           "resources": {
@@ -19291,7 +19423,7 @@
                 },
                 "data_quality": {
                   "type": "object",
-                  "description": "Data quality configuration keyed by datastream name.",
+                  "description": "Data quality configuration keyed by data quality name.",
                   "additionalProperties": {
                     "$ref": "#/components/schemas/type.AppDataQuality"
                   }
@@ -19743,12 +19875,19 @@
           "name"
         ],
         "properties": {
-          "app_name": {
-            "type": "string",
-            "format": "^[a-z]([-a-z0-9]*[a-z0-9])?$",
-            "example": "motor-speed-optimization",
-            "minLength": 1,
-            "maxLength": 64
+          "app_names": {
+            "type": "array",
+            "description": "Restrict the extra field to one or more App names. When omitted, the extra field can match any App.",
+            "example": [
+              "motor-speed-optimization",
+              "pump-diagnostics"
+            ],
+            "items": {
+              "type": "string",
+              "format": "^[a-z]([-a-z0-9]*[a-z0-9])?$",
+              "minLength": 1,
+              "maxLength": 64
+            }
           },
           "app_versions": {
             "type": "array",
@@ -19879,7 +20018,9 @@
           "mean",
           "sum",
           "max",
-          "min"
+          "min",
+          "first",
+          "last"
         ],
         "description": "Perform mathematical calculations on a group of data defined by the `start_time` and `end_time` keys. For text data, the option available is `count`."
       },
@@ -22277,6 +22418,59 @@
           }
         }
       },
+      "requests.AssetBulkUpdateItem": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "well_1",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Asset `name` to update."
+          },
+          "title": {
+            "type": "string",
+            "example": "Well 01",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Asset display name (`title`)."
+          },
+          "asset_type_name": {
+            "type": "string",
+            "example": "beam_pump",
+            "format": "^[a-z0-9]([-_.a-z0-9]*[a-z0-9])?$",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Asset Type `name`."
+          },
+          "properties": {
+            "type": "array",
+            "description": "Array of custom properties. Replaces the existing property values for this asset.",
+            "items": {
+              "$ref": "#/components/schemas/requests.AssetPropertyCreate"
+            }
+          }
+        }
+      },
+      "requests.AssetBulkUpdate": {
+        "required": [
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "assets": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Array of objects, each object represents an Asset to update.",
+            "items": {
+              "$ref": "#/components/schemas/requests.AssetBulkUpdateItem"
+            }
+          }
+        }
+      },
       "responses.AssetGet": {
         "allOf": [
           {
@@ -23348,7 +23542,7 @@
               "priority": "high",
               "description": "Diagnose Beam Pump GW-B12-037."
             },
-            "description": "JSON payload delivered to the executor. The object shape depends on the Custom Action type."
+            "description": "JSON payload delivered to the executor. If the Custom Action type has a schema, the platform validates this payload against that schema before creating the Custom Action. Types without a schema accept any object payload."
           },
           "trace_id": {
             "type": "string",
@@ -23675,6 +23869,10 @@
             "example": "Email",
             "maxLength": 64,
             "description": "Unique identifier `title` for the Custom Action Type."
+          },
+          "schema": {
+            "type": "object",
+            "description": "JSON Schema for the Custom Action `payload` object.\n\nThe schema must be a valid JSON Schema. The platform binds it to the\nCustom Action type declared in `name`. Payloads created with this\ntype must match the schema. To change the payload contract, create a\nnew Custom Action type."
           }
         }
       },
@@ -23720,10 +23918,22 @@
           }
         }
       },
+      "type.CustomActionTypeSchemaFields": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "object",
+            "description": "JSON Schema for the Custom Action `payload` object.\n\nThe schema must be a valid JSON Schema. The platform binds it to this\nCustom Action type. Payloads created with this type must match the\nschema. To change the payload contract, create a new Custom Action\ntype."
+          }
+        }
+      },
       "responses.CustomActionsTypeCreate": {
         "allOf": [
           {
             "$ref": "#/components/schemas/type.CustomActionType"
+          },
+          {
+            "$ref": "#/components/schemas/type.CustomActionTypeSchemaFields"
           }
         ]
       },
@@ -23768,6 +23978,9 @@
         "allOf": [
           {
             "$ref": "#/components/schemas/type.CustomActionType"
+          },
+          {
+            "$ref": "#/components/schemas/type.CustomActionTypeSchemaFields"
           }
         ]
       },
@@ -27862,6 +28075,15 @@
           }
         }
       },
+      "schemas-enum.PortProtocol": {
+        "type": "string",
+        "example": "tcp",
+        "enum": [
+          "tcp",
+          "udp"
+        ],
+        "description": "Network protocol of the Service port. Defaults to `tcp`."
+      },
       "enum.ServiceType": {
         "type": "string",
         "example": "cluster_ip",
@@ -27896,6 +28118,14 @@
             "type": "string",
             "example": "kelvin",
             "description": "Physical network interface name of the Node hosting the Service."
+          },
+          "port": {
+            "type": "integer",
+            "example": 4842,
+            "description": "Port to connect to the Service."
+          },
+          "protocol": {
+            "$ref": "#/components/schemas/schemas-enum.PortProtocol"
           },
           "service_type": {
             "$ref": "#/components/schemas/enum.ServiceType"
@@ -33194,6 +33424,106 @@
           }
         }
       },
+      "EmailSender": {
+        "summary": "Email Sender App",
+        "value": {
+          "name": "email-sender",
+          "title": "Email Sender",
+          "description": "Sends emails when it receives a Custom Action from another App or user.",
+          "category": "Integrations",
+          "type": "app",
+          "version": "1.0.0",
+          "custom_actions": [
+            {
+              "type": "send-email",
+              "way": "input-ca",
+              "schema": {
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "type": "object",
+                "required": [
+                  "to",
+                  "subject",
+                  "body"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "to": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  },
+                  "cc": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  },
+                  "bcc": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  },
+                  "subject": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "body": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": [
+                      "low",
+                      "normal",
+                      "high"
+                    ],
+                    "default": "normal"
+                  }
+                }
+              }
+            }
+          ],
+          "schemas": {
+            "configuration": {
+              "$schema": "https://json-schema.org/draft/2020-12/schema",
+              "type": "object",
+              "required": [
+                "smtp"
+              ],
+              "properties": {
+                "smtp": {
+                  "type": "object",
+                  "required": [
+                    "host",
+                    "port",
+                    "sender"
+                  ],
+                  "properties": {
+                    "host": {
+                      "type": "string"
+                    },
+                    "port": {
+                      "type": "number"
+                    },
+                    "sender": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "Sigcon": {
         "summary": "SmartLift Smart App",
         "value": {
@@ -33537,6 +33867,14 @@
               "type": "both"
             }
           ],
+          "data_quality": [
+            {
+              "name": "import_lag_seconds",
+              "data_type": "number",
+              "type": "ad",
+              "way": "output"
+            }
+          ],
           "defaults": {
             "app": {
               "configuration": {
@@ -33837,6 +34175,14 @@
                   "<datastream-name-2>": {
                     "map_to": "<io-name-2>",
                     "way": "input+output-cc"
+                  }
+                },
+                "data_quality": {
+                  "<data-quality-name>": {
+                    "way": "output",
+                    "configuration": {
+                      "<custom>": "<configuration>"
+                    }
                   }
                 }
               }
@@ -34336,6 +34682,14 @@
                     "storage": "node-and-cloud",
                     "configuration": {
                       "<resource-datastream>": "<specific-configuration-2>"
+                    }
+                  }
+                },
+                "data_quality": {
+                  "<data-quality-name>": {
+                    "way": "output",
+                    "configuration": {
+                      "<custom>": "<configuration>"
                     }
                   }
                 },
@@ -34885,6 +35239,157 @@
           "created_by": "krn:recommendation:6ab6c5a7-37d2-4baa-b502-f242113eea97",
           "updated": "2021-06-01T12:03:00Z",
           "updated_by": "krn:wlappv:my-cluster/my-workload:emailer/1.0.0"
+        }
+      },
+      "requests.CustomActionsTypeCreate.Email": {
+        "summary": "Email",
+        "description": "Custom Action type for sending email notifications.",
+        "value": {
+          "name": "email",
+          "title": "Email",
+          "schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "required": [
+              "to",
+              "subject",
+              "body"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "to": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      },
+      "requests.CustomActionsTypeCreate.NoSchema": {
+        "summary": "No Schema",
+        "description": "Custom Action type without a payload schema.",
+        "value": {
+          "name": "webhook",
+          "title": "Webhook"
+        }
+      },
+      "responses.CustomActionsTypeCreate.Email": {
+        "summary": "Email",
+        "description": "Custom Action type returned after creating the email type.",
+        "value": {
+          "name": "email",
+          "title": "Email",
+          "schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "required": [
+              "to",
+              "subject",
+              "body"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "to": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "created": "2024-12-18T18:22:18.582724Z",
+          "created_by": "krn:user:user@example.com",
+          "updated": "2024-12-18T18:22:18.582724Z",
+          "updated_by": "krn:user:user@example.com"
+        }
+      },
+      "responses.CustomActionsTypeCreate.NoSchema": {
+        "summary": "No Schema",
+        "description": "Custom Action type returned after creating a type without a payload schema.",
+        "value": {
+          "name": "webhook",
+          "title": "Webhook",
+          "created": "2024-12-18T18:22:18.582724Z",
+          "created_by": "krn:user:user@example.com",
+          "updated": "2024-12-18T18:22:18.582724Z",
+          "updated_by": "krn:user:user@example.com"
+        }
+      },
+      "responses.CustomActionsTypeGet.Email": {
+        "summary": "Email",
+        "description": "Custom Action type details for the email type.",
+        "value": {
+          "name": "email",
+          "title": "Email",
+          "schema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "required": [
+              "to",
+              "subject",
+              "body"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "to": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "format": "email"
+                }
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "created": "2024-12-18T18:22:18.582724Z",
+          "created_by": "krn:user:user@example.com",
+          "updated": "2024-12-18T18:22:18.582724Z",
+          "updated_by": "krn:user:user@example.com"
+        }
+      },
+      "responses.CustomActionsTypeGet.NoSchema": {
+        "summary": "No Schema",
+        "description": "Custom Action type details for a type without a payload schema.",
+        "value": {
+          "name": "webhook",
+          "title": "Webhook",
+          "created": "2024-12-18T18:22:18.582724Z",
+          "created_by": "krn:user:user@example.com",
+          "updated": "2024-12-18T18:22:18.582724Z",
+          "updated_by": "krn:user:user@example.com"
         }
       },
       "requests.DataQualityCreate.AllFields": {
