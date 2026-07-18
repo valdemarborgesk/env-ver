@@ -1,8 +1,8 @@
 {
   "versions": {
-    "core": "7.0.0",
-    "core-ui": "1.5.0-beta.111",
-    "core-api": "9.8.0-rc.1",
+    "core": "7.1.0",
+    "core-ui": "1.4.13-beta.112",
+    "core-api": "9.0.0-beta2026.64.30374e449",
     "api-spec": "9.0.0-rc2026.157.30374e4"
   },
   "feature_flags": {
@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/7.0/"
+    "url": "https://docs.kelvin.ai/7.1/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -28,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "beta.kelvininc.com:5000/kelvin-edge-ui:1.0.5-beta.88",
+    "kelvin-edge-ui": "beta.kelvininc.com:5000/kelvin-edge-ui:1.0.5-beta.89",
     "client_id": "kelvin-core"
   },
   "core-api": {
