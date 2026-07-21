@@ -48,6 +48,10 @@
       "description": "Kelvin Platform - diamondback-staging"
     },
     {
+      "url": "https://elisertech.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - elisertech"
+    },
+    {
       "url": "https://galatiq.kelvin.ai/api/v4",
       "description": "Kelvin Platform - galatiq"
     },
