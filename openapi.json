@@ -156,6 +156,10 @@
       "description": "Kelvin Platform - sigma"
     },
     {
+      "url": "https://smurfit.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - smurfit"
+    },
+    {
       "url": "https://westside.kelvin.ai/api/v4",
       "description": "Kelvin Platform - westside"
     }
