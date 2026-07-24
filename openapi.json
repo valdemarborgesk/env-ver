@@ -120,6 +120,10 @@
       "description": "Kelvin Platform - orion2"
     },
     {
+      "url": "https://orion3.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - orion3"
+    },
+    {
       "url": "https://propwr.kelvin.ai/api/v4",
       "description": "Kelvin Platform - propwr"
     },
