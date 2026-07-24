@@ -11697,6 +11697,60 @@
         }
       }
     },
+    "/recommendations/{recommendation_id}/metadata/update": {
+      "post": {
+        "tags": [
+          "Recommendation"
+        ],
+        "summary": "Update Recommendation Metadata",
+        "description": "Replace a Recommendation's `metadata` without changing its `state`, `confidence`, or `message`. Useful for attaching or correcting an external reference (e.g. a workorder or ticket ID) that is issued asynchronously, after the Recommendation has already been accepted or rejected. If `metadata` is provided, it fully replaces the existing value (pass an empty object to clear it); if omitted, existing metadata is left untouched. This endpoint works regardless of the Recommendation's current state.\n\n**Permission Required:** `kelvin.permission.recommendation.update`\n",
+        "operationId": "updateRecommendationMetadata",
+        "parameters": [
+          {
+            "name": "recommendation_id",
+            "in": "path",
+            "required": true,
+            "description": "Recommendation key `id` whose metadata is being updated. The string can only contain lowercase alphanumeric characters and `.`, `_` or `-` characters.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Recommendation metadata update schema",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/requests.RecommendationMetadataUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Recommendation metadata updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/responses.RecommendationMetadataUpdate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/error.BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/error.Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/errors_recommendation_responses-error.NotFound"
+          }
+        }
+      }
+    },
     "/recommendations/{recommendation_id}/reject/update": {
       "post": {
         "tags": [
@@ -16634,6 +16688,32 @@
           }
         }
       },
+      "enum.RecWay": {
+        "type": "string",
+        "enum": [
+          "output"
+        ],
+        "default": "output",
+        "description": "The direction of the recommendation. Only `output` is supported: the app produces recommendations."
+      },
+      "manifest.Recommendation": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]([-_ .a-zA-Z0-9]*[a-zA-Z0-9])?$",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The recommendation type the app produces."
+          },
+          "way": {
+            "$ref": "#/components/schemas/enum.RecWay"
+          }
+        }
+      },
       "manifest.AppVersion": {
         "allOf": [
           {
@@ -16745,6 +16825,12 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/manifest.DataTag"
+                }
+              },
+              "recommendations": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/manifest.Recommendation"
                 }
               }
             }
@@ -22700,39 +22786,87 @@
             "maxLength": 256,
             "description": "The asset / data stream pair that this Control Change will be applied to."
           },
+          "source": {
+            "type": "string",
+            "format": "krn",
+            "minLength": 1,
+            "maxLength": 256,
+            "example": "krn:recommendation:6ab6c5a7-37d2-4baa-b502-f242113eea97",
+            "description": "Source KRN for the Control Change. If omitted, the API uses the authenticated user's KRN."
+          },
           "retries": {
             "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
             "example": 3,
             "description": "How many times the Control Change Manager will try and send the same Control Change request to the Bridge before the change is tagged `failed` and no further attempts will be made. If the Bridge sends a `processed` acknowledgment, then the Control Change Manager will stop any further retries and wait for an `applied` response."
           },
           "timeout": {
             "type": "integer",
+            "minimum": 0,
             "example": 150,
             "description": "How long the Control Change Manager will wait in seconds for the Bridge to send a `processed` acknowledgement before a retry will be attempted. If the total number of retries has reach its `retries` limit, then the change is tagged `failed` and no further attempts will be made."
           }
         }
       },
+      "type.ControlChangeCreatePayload": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Control Change values stored and returned by the create endpoint.",
+        "required": [
+          "expiration_date",
+          "payload"
+        ],
+        "properties": {
+          "expiration_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-12-18T18:22:18.582724Z",
+            "description": "UTC time when the Control Change will expire, formatted in RFC 3339."
+          },
+          "from": {
+            "$ref": "#/components/schemas/type.ControlChangeFrom"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/type.Any",
+            "example": 2000
+          },
+          "retries": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255,
+            "example": 3
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 150
+          }
+        }
+      },
       "responses.ControlChangeCreate": {
         "required": [
+          "created",
+          "created_type",
           "id",
-          "trace_id"
+          "payload",
+          "resource",
+          "source",
+          "timestamp",
+          "trace_id",
+          "updated"
         ],
         "type": "object",
         "properties": {
-          "created_by": {
+          "created": {
             "type": "string",
-            "format": "krn",
-            "x-allowed-krn": [
-              "recommendation",
-              "user",
-              "wl",
-              "wlappv"
-            ],
-            "example": "krn:user:user@example.com",
-            "description": "KRN of the process that created the Control Change. Allowed namespaces are `user`, `wl`, `wlappv`, and `recommendation`."
+            "format": "date-time",
+            "example": "2024-12-18T18:22:18.582724Z",
+            "description": "UTC time when the Control Change was created, formatted in RFC 3339."
           },
           "created_type": {
             "type": "string",
+            "deprecated": true,
             "example": "recommendation",
             "description": "Type of process that created the Control Change. This is inferred from `source`."
           },
@@ -22742,13 +22876,8 @@
             "example": "0002bc79-b42f-461b-95d6-cf0a28ba87aa",
             "description": "A unique randomly generated UUID as the key `id` for the Control Change."
           },
-          "last_state": {
-            "$ref": "#/components/schemas/enum.ControlChangeState",
-            "description": "Current state of the Control Change."
-          },
           "payload": {
-            "$ref": "#/components/schemas/type.Any",
-            "example": 2000
+            "$ref": "#/components/schemas/type.ControlChangeCreatePayload"
           },
           "queueing": {
             "$ref": "#/components/schemas/type.ControlChangeQueueing"
@@ -22765,26 +22894,25 @@
           "source": {
             "type": "string",
             "format": "krn",
-            "x-allowed-krn": [
-              "recommendation",
-              "user",
-              "wl",
-              "wlappv"
-            ],
             "example": "krn:recommendation:6ab6c5a7-37d2-4baa-b502-f242113eea97",
-            "description": "Source KRN of the process that created the Control Change request. Allowed namespaces are `user`, `wl`, `wlappv`, and `recommendation`."
+            "description": "Source KRN of the process that created the Control Change request."
           },
           "timestamp": {
             "type": "string",
             "format": "date-time",
             "example": "2024-12-18T18:22:18.582724Z",
-            "description": "UTC time when the log was created, formatted in RFC 3339."
+            "description": "UTC time when the Control Change was created, formatted in RFC 3339."
           },
           "trace_id": {
             "type": "string",
-            "format": "uuid",
-            "example": "0002bc79-b42f-461b-95d6-cf0a28ba87aa",
-            "description": "This is for internal purposes and is the same as the `id`."
+            "example": "app-trace-123",
+            "description": "Caller-provided Trace ID. If omitted, the API uses the Control Change `id`."
+          },
+          "updated": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-12-18T18:22:18.582724Z",
+            "description": "UTC time when any Control Change keys were last updated, formatted in RFC 3339."
           }
         }
       },
@@ -22902,6 +23030,10 @@
             "type": "string",
             "description": "A message about the change in status. This will only appear if there is a message attached."
           },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata supplied with the status update."
+          },
           "reported": {
             "$ref": "#/components/schemas/type.ControlChangeReported"
           },
@@ -22932,18 +23064,13 @@
           },
           "created_by": {
             "type": "string",
-            "format": "krn",
-            "x-allowed-krn": [
-              "recommendation",
-              "user",
-              "wl",
-              "wlappv"
-            ],
-            "example": "krn:user:user@example.com",
-            "description": "KRN of the process that created the Control Change. Allowed namespaces are `user`, `wl`, `wlappv`, and `recommendation`."
+            "deprecated": true,
+            "example": "user@example.com",
+            "description": "Namespace-specific identifier extracted from `source`."
           },
           "created_type": {
             "type": "string",
+            "deprecated": true,
             "example": "recommendation",
             "description": "Type of process that created the Control Change. This is inferred from `source`."
           },
@@ -23004,6 +23131,12 @@
             ],
             "example": "krn:ad:beam_pump_01/motor_speed_set_point",
             "description": "Resource KRN that this Control Change targets. Allowed namespace is `ad`."
+          },
+          "source": {
+            "type": "string",
+            "format": "krn",
+            "example": "krn:recommendation:6ab6c5a7-37d2-4baa-b502-f242113eea97",
+            "description": "Source KRN of the process that created the Control Change request."
           },
           "status_log": {
             "type": "array",
@@ -29865,11 +29998,31 @@
             "type": "string",
             "example": "Recommendation is accurate based on the current performance.",
             "description": "Contains a message with any descriptions useful to be associated with the `accepted` state."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Custom dictionary keys/values for use by clients for anything useful and related to the Recommendation. If provided, replaces any existing metadata entirely (pass an empty object to clear it). If omitted, existing metadata is left unchanged."
           }
         }
       },
       "responses.RecommendationGet": {
         "description": "Recommendation identified by `recommendation_id`.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/type.Recommendation"
+          }
+        ]
+      },
+      "requests.RecommendationMetadataUpdate": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "description": "Custom dictionary keys/values for use by clients for anything useful and related to the Recommendation. If provided, replaces any existing metadata entirely (pass an empty object to clear it). If omitted, existing metadata is left unchanged. Does not change `state`, `confidence`, or `message`."
+          }
+        }
+      },
+      "responses.RecommendationMetadataUpdate": {
         "allOf": [
           {
             "$ref": "#/components/schemas/type.Recommendation"
@@ -29890,6 +30043,10 @@
             "type": "string",
             "example": "Recommendation is not accurate based on the current performance.",
             "description": "Contains a message with any descriptions useful to be associated with the `reject` state."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Custom dictionary keys/values for use by clients for anything useful and related to the Recommendation. If provided, replaces any existing metadata entirely (pass an empty object to clear it). If omitted, existing metadata is left unchanged."
           }
         }
       },
