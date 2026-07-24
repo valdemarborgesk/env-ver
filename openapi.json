@@ -112,6 +112,10 @@
       "description": "Kelvin Platform - origin"
     },
     {
+      "url": "https://orion1.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - orion1"
+    },
+    {
       "url": "https://propwr.kelvin.ai/api/v4",
       "description": "Kelvin Platform - propwr"
     },
