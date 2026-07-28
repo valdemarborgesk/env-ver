@@ -40,6 +40,10 @@
       "description": "Kelvin Platform - clr"
     },
     {
+      "url": "https://clr-staging.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - clr-staging"
+    },
+    {
       "url": "https://diamondback.kelvin.ai/api/v4",
       "description": "Kelvin Platform - diamondback"
     },
