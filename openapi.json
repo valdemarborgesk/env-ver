@@ -2986,7 +2986,7 @@
               "default": [
                 "name"
               ],
-              "description": "Sort the results by one or more Asset Insights fields. Typical options are `name`, `title`, `asset_type_name`, `asset_type_title`, `status`, and `last_seen`. App extra fields can also be sorted by `<extra_field_name>.app_title`, `<extra_field_name>.app_version`, `<extra_field_name>.status`, `<extra_field_name>.workload_name`, and `<extra_field_name>.updated`.",
+              "description": "Sort the results by one or more Asset Insights fields. Typical options are `name`, `title`, `asset_type_name`, `asset_type_title`, `status`, and `last_seen`. App extra fields can also be sorted by `<extra_field_name>.app_title`, `<extra_field_name>.app_version`, `<extra_field_name>.status`, `<extra_field_name>.workload_name`, and `<extra_field_name>.updated`. Impact extra fields can be sorted by `<extra_field_name>`. The sort value is the sum of `total_impact` and `impact_24h`.",
               "items": {
                 "type": "string"
               }
@@ -20248,6 +20248,20 @@
           }
         }
       },
+      "requests.ImpactExtraField": {
+        "type": "object",
+        "description": "Add an impact object to `extra_fields` for each Asset.",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "impact",
+            "description": "Unique key for the impact object in `extra_fields`. Use this name in `sort_by` to sort by overall impact."
+          }
+        }
+      },
       "requests.ParameterExtraField": {
         "type": "object",
         "required": [
@@ -20404,6 +20418,13 @@
             "description": "Create new columns based on Data Tags associated with the Asset.",
             "items": {
               "$ref": "#/components/schemas/requests.DataTagExtraField"
+            }
+          },
+          "impact": {
+            "type": "array",
+            "description": "Create impact columns for the Asset. Each named response field contains `total_impact` for accumulated impact before the latest 24-hour window and `impact_24h` for impact within that window. Add both values to get the Asset's overall impact.",
+            "items": {
+              "$ref": "#/components/schemas/requests.ImpactExtraField"
             }
           },
           "parameters": {
