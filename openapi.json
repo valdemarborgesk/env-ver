@@ -36,6 +36,10 @@
       "description": "Kelvin Platform - cenovus-staging"
     },
     {
+      "url": "https://chord.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - chord"
+    },
+    {
       "url": "https://clr.kelvin.ai/api/v4",
       "description": "Kelvin Platform - clr"
     },
