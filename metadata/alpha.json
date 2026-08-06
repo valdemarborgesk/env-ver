@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "5.8.0",
-    "core-ui": "1.0.1-alpha.1079",
+    "core-ui": "1.0.1-alpha.1083",
     "core-api": "9.0.0-rc2026.361.9981b086f",
     "api-spec": "9.0.0-rc2026.178.a3c0da4"
   },
@@ -28,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.0.1-alpha.634",
+    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.0.1-alpha.637",
     "client_id": "kelvin-core"
   },
   "core-api": {
