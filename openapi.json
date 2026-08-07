@@ -68,18 +68,6 @@
       "description": "Kelvin Platform - galatiq"
     },
     {
-      "url": "https://hal-cementing.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - hal-cementing"
-    },
-    {
-      "url": "https://hal-cementing-dev.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - hal-cementing-dev"
-    },
-    {
-      "url": "https://hal-cementing-staging.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - hal-cementing-staging"
-    },
-    {
       "url": "https://halliburton-sandbox.kelvin.ai/api/v4",
       "description": "Kelvin Platform - hal-sandbox"
     },
