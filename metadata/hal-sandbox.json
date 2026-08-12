@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.7.0",
-    "core-ui": "2.7.5",
-    "core-api": "9.7.4",
-    "api-spec": "9.7.0"
+    "core": "7.0.0",
+    "core-ui": "3.0.0-rc.2",
+    "core-api": "9.8.0-rc.3",
+    "api-spec": "9.8.0-rc.3"
   },
   "feature_flags": {
     "log_forward": true,
@@ -19,7 +19,7 @@
     "allow_switch_app_type": true
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.7/"
+    "url": "https://docs.kelvin.ai/7.0/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -43,18 +43,18 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.7.4",
-    "ksdk_minimum_version": "9.7.4",
-    "agent_version": "0.0.1",
+    "ksdk_latest_version": "9.7.5",
+    "ksdk_minimum_version": "9.7.5",
+    "agent_version": "1.0.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "halliburton-sandbox.kelvin.ai:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "halliburton-sandbox.kelvin.ai:5000/kelvin-edge-gateway:6.7.0",
-      "kelvin-edge-sync": "halliburton-sandbox.kelvin.ai:5000/kelvin-edge-sync:6.7.0",
-      "kelvin-control-change-manager": "halliburton-sandbox.kelvin.ai:5000/kelvin-control-change-manager:6.7.0",
-      "kelvin-custom-action-manager": "halliburton-sandbox.kelvin.ai:5000/kelvin-custom-action-manager:6.7.0"
+      "kelvin-edge-gateway": "halliburton-sandbox.kelvin.ai:5000/kelvin-edge-gateway:7.0.0",
+      "kelvin-edge-sync": "halliburton-sandbox.kelvin.ai:5000/kelvin-edge-sync:7.0.0",
+      "kelvin-control-change-manager": "halliburton-sandbox.kelvin.ai:5000/kelvin-control-change-manager:7.0.0",
+      "kelvin-custom-action-manager": "halliburton-sandbox.kelvin.ai:5000/kelvin-custom-action-manager:7.0.0"
     }
   },
   "bridge": {
@@ -62,8 +62,8 @@
       "kelvin-bridge-roc-client": "halliburton-sandbox.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.4",
       "kelvin-bridge-opcua-client": "halliburton-sandbox.kelvin.ai:5000/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "halliburton-sandbox.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.4",
-      "kelvin-csv-publisher-connector": "halliburton-sandbox.kelvin.ai:5000/kelvin-csv-publisher-connector:1.1.0",
-      "kelvin-osi-pi-connector": "halliburton-sandbox.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.2"
+      "kelvin-csv-publisher-connector": "halliburton-sandbox.kelvin.ai:5000/kelvin-csv-publisher-connector:2.0.2",
+      "kelvin-osi-pi-connector": "halliburton-sandbox.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.3"
     }
   },
   "schema": {
