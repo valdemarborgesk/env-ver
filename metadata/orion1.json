@@ -1,9 +1,9 @@
 {
   "versions": {
     "core": "7.1.0",
-    "core-ui": "1.1.0-alpha.1089",
-    "core-api": "9.9.0-rc.2",
-    "api-spec": "9.9.0-rc.1"
+    "core-ui": "3.1.0",
+    "core-api": "9.9.0",
+    "api-spec": "9.9.0"
   },
   "feature_flags": {
     "log_forward": true,
@@ -43,18 +43,18 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.7.5",
-    "ksdk_minimum_version": "9.7.5",
-    "agent_version": "1.0.0",
+    "ksdk_latest_version": "9.7.6",
+    "ksdk_minimum_version": "9.7.6",
+    "agent_version": "9.7.6",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "orion1.kelvin.ai:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "orion1.kelvin.ai:5000/kelvin-edge-gateway:7.0.0",
-      "kelvin-edge-sync": "orion1.kelvin.ai:5000/kelvin-edge-sync:7.0.0",
-      "kelvin-control-change-manager": "orion1.kelvin.ai:5000/kelvin-control-change-manager:7.0.0",
-      "kelvin-custom-action-manager": "orion1.kelvin.ai:5000/kelvin-custom-action-manager:7.0.0"
+      "kelvin-edge-gateway": "orion1.kelvin.ai:5000/kelvin-edge-gateway:7.1.0",
+      "kelvin-edge-sync": "orion1.kelvin.ai:5000/kelvin-edge-sync:7.1.0",
+      "kelvin-control-change-manager": "orion1.kelvin.ai:5000/kelvin-control-change-manager:7.1.0",
+      "kelvin-custom-action-manager": "orion1.kelvin.ai:5000/kelvin-custom-action-manager:7.1.0"
     }
   },
   "bridge": {

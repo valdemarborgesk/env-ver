@@ -164,10 +164,6 @@
       "description": "Kelvin Platform - santos-staging"
     },
     {
-      "url": "https://sigma.kelvin.ai/api/v4",
-      "description": "Kelvin Platform - sigma"
-    },
-    {
       "url": "https://smurfit.kelvin.ai/api/v4",
       "description": "Kelvin Platform - smurfit"
     },
