@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "6.7.0",
-    "core-ui": "2.7.5",
-    "core-api": "9.7.5",
-    "api-spec": "9.7.5"
+    "core": "7.1.0",
+    "core-ui": "3.1.0",
+    "core-api": "9.9.0",
+    "api-spec": "9.9.0"
   },
   "feature_flags": {
     "log_forward": true,
@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/6.7/"
+    "url": "https://docs.kelvin.ai/7.1/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -43,18 +43,18 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.7.4",
-    "ksdk_minimum_version": "9.7.4",
-    "agent_version": "0.0.1",
+    "ksdk_latest_version": "9.7.6",
+    "ksdk_minimum_version": "9.7.6",
+    "agent_version": "9.7.6",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "cenovus-staging.kelvin.ai:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "cenovus-staging.kelvin.ai:5000/kelvin-edge-gateway:6.7.0",
-      "kelvin-edge-sync": "cenovus-staging.kelvin.ai:5000/kelvin-edge-sync:6.7.0",
-      "kelvin-control-change-manager": "cenovus-staging.kelvin.ai:5000/kelvin-control-change-manager:6.7.0",
-      "kelvin-custom-action-manager": "cenovus-staging.kelvin.ai:5000/kelvin-custom-action-manager:6.7.0"
+      "kelvin-edge-gateway": "cenovus-staging.kelvin.ai:5000/kelvin-edge-gateway:7.1.0",
+      "kelvin-edge-sync": "cenovus-staging.kelvin.ai:5000/kelvin-edge-sync:7.1.0",
+      "kelvin-control-change-manager": "cenovus-staging.kelvin.ai:5000/kelvin-control-change-manager:7.1.0",
+      "kelvin-custom-action-manager": "cenovus-staging.kelvin.ai:5000/kelvin-custom-action-manager:7.1.0"
     }
   },
   "bridge": {
@@ -62,8 +62,9 @@
       "kelvin-bridge-roc-client": "cenovus-staging.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.4",
       "kelvin-bridge-opcua-client": "cenovus-staging.kelvin.ai:5000/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "cenovus-staging.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.4",
-      "kelvin-csv-publisher-connector": "cenovus-staging.kelvin.ai:5000/kelvin-csv-publisher-connector:1.1.0",
-      "kelvin-osi-pi-connector": "cenovus-staging.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.2"
+      "kelvin-opcua-connector": "cenovus-staging.kelvin.ai:5000/kelvin-opcua-connector:0.1.5",
+      "kelvin-csv-publisher-connector": "cenovus-staging.kelvin.ai:5000/kelvin-csv-publisher-connector:2.0.2",
+      "kelvin-osi-pi-connector": "cenovus-staging.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.3"
     }
   },
   "schema": {
