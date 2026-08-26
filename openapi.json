@@ -16936,7 +16936,7 @@
             "type": "integer",
             "title": "Initial Delay (s)",
             "description": "Seconds to wait before starting probes.",
-            "default": 1,
+            "default": 0,
             "minimum": 0,
             "maximum": 2147483647
           },
