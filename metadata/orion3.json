@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "7.1.0",
-    "core-ui": "3.1.2",
+    "core-ui": "3.1.3",
     "core-api": "9.9.0-rc.2",
     "api-spec": "9.9.0-rc.1"
   },
@@ -62,6 +62,7 @@
       "kelvin-bridge-roc-client": "orion3.kelvin.ai:5000/kelvin-bridge-roc-client:3.0.4",
       "kelvin-bridge-opcua-client": "orion3.kelvin.ai:5000/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "orion3.kelvin.ai:5000/kelvin-bridge-modbus-client:4.5.4",
+      "kelvin-opcua-connector": "orion3.kelvin.ai:5000/kelvin-opcua-connector:0.1.5",
       "kelvin-csv-publisher-connector": "orion3.kelvin.ai:5000/kelvin-csv-publisher-connector:2.0.2",
       "kelvin-osi-pi-connector": "orion3.kelvin.ai:5000/kelvin-osi-pi-connector:1.0.3"
     }
