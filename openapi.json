@@ -156,6 +156,10 @@
       "description": "Kelvin Platform - santos-staging"
     },
     {
+      "url": "https://silicaresources.kelvin.ai/api/v4",
+      "description": "Kelvin Platform - silicaresources"
+    },
+    {
       "url": "https://smurfit.kelvin.ai/api/v4",
       "description": "Kelvin Platform - smurfit"
     },
