@@ -3,7 +3,7 @@
     "core": "5.8.0",
     "core-ui": "1.1.0-alpha.1155",
     "core-api": "9.0.0-rc2026.361.9981b086f",
-    "api-spec": "9.0.0-rc2026.223.b035516"
+    "api-spec": "9.0.0-rc2026.227.d2b19c8"
   },
   "feature_flags": {
     "log_forward": true,
@@ -53,7 +53,7 @@
       "kelvin-mqtt-broker": "alpha.kelvininc.com:5000/kelvin-mqtt-broker:2.1.2",
       "kelvin-edge-gateway": "alpha.kelvininc.com:5000/kelvin-edge-gateway:alpha-260911-fb7808d",
       "kelvin-edge-sync": "alpha.kelvininc.com:5000/kelvin-edge-sync:alpha-260908-034536a",
-      "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260910-14f8adc",
+      "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260914-20ec698",
       "kelvin-custom-action-manager": "alpha.kelvininc.com:5000/kelvin-custom-action-manager:alpha-260911-fb7808d"
     }
   },
