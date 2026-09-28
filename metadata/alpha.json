@@ -55,7 +55,7 @@
       "kelvin-edge-sync": "alpha.kelvininc.com:5000/kelvin-edge-sync:alpha-260918-4c342f0",
       "kelvin-nats-mgr-cloud": "alpha.kelvininc.com:5000/kelvin-nats-mgr-cloud:disposable-260914-554c9f5",
       "kelvin-nats-mgr-edge": "alpha.kelvininc.com:5000/kelvin-nats-mgr-edge:disposable-260914-554c9f5",
-      "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260925-5b8d3a3",
+      "kelvin-control-change-manager": "alpha.kelvininc.com:5000/kelvin-control-change-manager:alpha-260928-648e0de",
       "kelvin-custom-action-manager": "alpha.kelvininc.com:5000/kelvin-custom-action-manager:alpha-260917-73209d2"
     }
   },
