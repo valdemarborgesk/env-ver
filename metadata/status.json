@@ -1,200 +1,200 @@
 {
-  "updatedAt": "2026-09-30T22:55:14Z",
+  "updatedAt": "2026-10-01T01:58:57Z",
   "environments": {
     "alpha": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "beta": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "bpx": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "carlos": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "cenovus": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "cenovus-staging": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "chord": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "clr": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "clr-staging": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "diamondback": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "diamondback-staging": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "elisertech": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "galatiq": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "hal-cementing": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "hal-cementing-dev": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "hal-sandbox": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "hal-sperry": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "hall-int-dev": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "hall-int-prod": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "halliburton-dev1": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "halliburton-prod1": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "ironoak": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "ironoak-staging": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "messe": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "propwr": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "propwr-dev": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "propwr-staging": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "qmai": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "sales": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "santos-cooper": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "santos-csg": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "santos-dev": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "santos-dev2": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "santos-staging": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "silica-staging": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "silicaresources": {
       "status": "online",
       "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "smurfit": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "validus": {
       "status": "online",
-      "code": 200,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     },
     "westside": {
-      "status": "offline",
-      "code": 503,
-      "checkedAt": "2026-09-30T22:55:14Z"
+      "status": "online",
+      "code": 403,
+      "checkedAt": "2026-10-01T01:58:57Z"
     }
   }
 }
