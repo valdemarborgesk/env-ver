@@ -1,9 +1,9 @@
 {
   "versions": {
-    "core": "7.1.0",
-    "core-ui": "1.5.0-beta.131",
-    "core-api": "9.0.0-beta2026.64.30374e449",
-    "api-spec": "9.0.0-rc2026.243.f281650"
+    "core": "7.2.0",
+    "core-ui": "3.2.0-rc.0",
+    "core-api": "9.0.0-beta2026.86.f28165002",
+    "api-spec": "9.0.0-rc2026.242.f281650"
   },
   "feature_flags": {
     "log_forward": true,
@@ -19,7 +19,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/7.1/"
+    "url": "https://docs.kelvin.ai/7.2/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -28,7 +28,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "beta.kelvininc.com:5000/kelvin-edge-ui:1.0.5-beta.101",
+    "kelvin-edge-ui": "beta.kelvininc.com:5000/kelvin-edge-ui:1.4.0",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -43,18 +43,20 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.8.0b1",
-    "ksdk_minimum_version": "9.8.0b1",
+    "ksdk_latest_version": "9.7.7a2",
+    "ksdk_minimum_version": "9.7.7a2",
     "agent_version": "1.0.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "beta.kelvininc.com:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "beta.kelvininc.com:5000/kelvin-edge-gateway:beta-261002-7c90741",
-      "kelvin-edge-sync": "beta.kelvininc.com:5000/kelvin-edge-sync:beta-261002-7c90741",
-      "kelvin-control-change-manager": "beta.kelvininc.com:5000/kelvin-control-change-manager:beta-261002-7c90741",
-      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:beta-261002-7c90741"
+      "kelvin-edge-gateway": "beta.kelvininc.com:5000/kelvin-edge-gateway:alpha-261002-e4813a8",
+      "kelvin-edge-sync": "beta.kelvininc.com:5000/kelvin-edge-sync:alpha-261001-45a008a",
+      "kelvin-nats-mgr-cloud": "beta.kelvininc.com:5000/kelvin-nats-mgr-cloud:disposable-260914-554c9f5",
+      "kelvin-nats-mgr-edge": "beta.kelvininc.com:5000/kelvin-nats-mgr-edge:disposable-260914-554c9f5",
+      "kelvin-control-change-manager": "beta.kelvininc.com:5000/kelvin-control-change-manager:alpha-261002-0da5be8",
+      "kelvin-custom-action-manager": "beta.kelvininc.com:5000/kelvin-custom-action-manager:alpha-261002-e4813a8"
     }
   },
   "bridge": {
@@ -62,7 +64,7 @@
       "kelvin-bridge-roc-client": "beta.kelvininc.com:5000/kelvin-bridge-roc-client:3.0.4",
       "kelvin-bridge-opcua-client": "beta.kelvininc.com:5000/kelvin-bridge-opcua-client:3.7.1",
       "kelvin-bridge-modbus-client": "beta.kelvininc.com:5000/kelvin-bridge-modbus-client:4.5.4",
-      "kelvin-opcua-connector": "beta.kelvininc.com:5000/kelvin-opcua-connector:0.1.8",
+      "kelvin-opcua-connector": "beta.kelvininc.com:5000/kelvin-opcua-connector:0.1.5",
       "kelvin-csv-publisher-connector": "beta.kelvininc.com:5000/kelvin-csv-publisher-connector:2.0.2",
       "kelvin-osi-pi-connector": "beta.kelvininc.com:5000/kelvin-osi-pi-connector:1.0.3"
     }
