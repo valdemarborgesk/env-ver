@@ -53,7 +53,7 @@
       "kelvin-mqtt-broker": "hal-cementing-dev.kelvin.ai/kelvin-mqtt-broker:2.1.2",
       "kelvin-edge-gateway": "hal-cementing-dev.kelvin.ai/kelvin-edge-gateway:7.1.0",
       "kelvin-edge-sync": "hal-cementing-dev.kelvin.ai/kelvin-edge-sync:7.1.0",
-      "kelvin-control-change-manager": "hal-cementing-dev.kelvin.ai/kelvin-control-change-manager:7.1.0",
+      "kelvin-control-change-manager": "hal-cementing-dev.kelvin.ai/kelvin-control-change-manager:7.1.1",
       "kelvin-custom-action-manager": "hal-cementing-dev.kelvin.ai/kelvin-custom-action-manager:7.1.0"
     }
   },
