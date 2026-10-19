@@ -28,6 +28,8 @@
   <style>
     /* ---------- Base ---------- */
     *, *::before, *::after { box-sizing: border-box; }
+    /* Author display rules (flex/grid) would otherwise beat the UA [hidden] rule. */
+    [hidden] { display: none !important; }
 
     html, body { margin: 0; min-height: 100%; }
 
@@ -222,7 +224,9 @@
 
     /* Table (table tokens) */
     .table-scroll { overflow-x: auto; }
+    #versionsTable,
     table.dataTable { width: 100% !important; margin: 0 !important; border-collapse: collapse; border-spacing: 0; }
+    #versionsTable thead th,
     table.dataTable thead th,
     table.dataTable thead td {
       padding: var(--table-padding-y-default) var(--table-padding-x-default);
@@ -276,7 +280,8 @@
     }
     table.dataTable tbody tr:last-child td { border-bottom: none; }
     table.dataTable.no-footer { border-bottom: none; }
-    table.dataTable tbody td.dataTables_empty { padding: var(--spacing-6xl); text-align: center; color: var(--table-text-main-subtle); }
+    table.dataTable tbody td.dataTables_empty,
+    #versionsTable td.loading-row { padding: var(--spacing-6xl); text-align: center; color: var(--table-text-main-subtle); }
 
     .env-link { display: inline-flex; align-items: center; gap: var(--spacing-sm); font-weight: 600; color: var(--link-label-default); white-space: nowrap; }
     .env-link .kv-icon { width: var(--size-sm); height: var(--size-sm); color: var(--link-icon-color-default); opacity: 0; transition: opacity 0.15s ease; }
@@ -354,12 +359,14 @@
       gap: var(--spacing-md);
       padding: var(--spacing-xl) var(--spacing-2xl);
       border-radius: var(--radius-xl);
-      background: var(--background-container-status-danger-soft);
-      border: 1px solid var(--border-container-status-danger-subtle);
-      color: var(--text-surface-neutral-primary);
+      background: var(--alert-background-primary-error);
+      color: var(--alert-text-default);
     }
-    .kv-alert .kv-icon { color: var(--icon-surface-status-danger-default); margin-top: 2px; }
+    .kv-alert .kv-icon { color: var(--alert-icon-color-primary-danger); margin-top: 2px; }
+    .kv-alert--warning { background: var(--alert-background-primary-warning); }
+    .kv-alert--warning .kv-icon { color: var(--alert-icon-color-primary-warning); }
     .kv-alert strong { display: block; }
+    .kv-alert .body-s { color: var(--alert-text-default); }
 
     /* ---------- Modal (modal tokens) ---------- */
     .kv-modal-backdrop {
@@ -507,6 +514,11 @@
       </div>
     </section>
 
+    <div id="snapshotNotice" class="kv-alert kv-alert--warning" hidden role="status">
+      <svg class="kv-icon"><use href="#kv-warning"/></svg>
+      <div><strong>Showing the hourly snapshot.</strong><span class="body-s">central-server.kelvininc.com could not be reached from this network, so versions come from the last copy stored by the hourly fetch.</span></div>
+    </div>
+
     <section class="table-card" id="tableCard">
       <table id="versionsTable" class="kv-table" style="width:100%">
         <thead>
@@ -521,13 +533,15 @@
             <th>Other</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <tr><td class="loading-row" colspan="8">Loading environments…</td></tr>
+        </tbody>
       </table>
     </section>
 
     <div id="loadError" class="kv-alert" hidden role="alert">
       <svg class="kv-icon"><use href="#kv-error"/></svg>
-      <div><strong>Failed to load version data.</strong><span class="body-s">Check the browser console for details, or retry in a moment.</span></div>
+      <div><strong>Failed to load version data.</strong><span class="body-s" id="loadErrorDetail">Check the browser console for details, or retry in a moment.</span></div>
     </div>
   </main>
 
@@ -620,19 +634,39 @@
       return date.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }) + " UTC";
     };
 
+    const CENTRAL_SERVER = "https://central-server.kelvininc.com";
+
     // Metadata we already have from /platformversions, used when the per-env file is missing.
     const fallbackMetadata = new Map();
 
     // ---------- Load data and build the table ----------
     async function populateTable() {
       try {
-        const [versionsResp, urlsResp, statusResp] = await Promise.all([
-          fetch("https://central-server.kelvininc.com/platformversions"),
-          fetch("https://central-server.kelvininc.com/platformurls"),
-          fetch("metadata/status.json", { cache: "no-store" })
-        ]);
-        const [versions, urls] = await Promise.all([versionsResp.json(), urlsResp.json()]);
-        const statusData = statusResp.ok ? await statusResp.json() : null;
+        // Live data comes from central-server; if it is unreachable (VPN, DNS filtering, outage)
+        // fall back to the copies the hourly GitHub Action stores in metadata/.
+        const fetchJson = async (url, options) => {
+          const resp = await fetch(url, options);
+          if (!resp.ok) throw new Error(`${url} responded ${resp.status}`);
+          return resp.json();
+        };
+        let versions, urls, source = "live";
+        try {
+          [versions, urls] = await Promise.all([
+            fetchJson(CENTRAL_SERVER + "/platformversions"),
+            fetchJson(CENTRAL_SERVER + "/platformurls")
+          ]);
+        } catch (liveErr) {
+          console.warn("central-server unreachable, using hourly snapshot:", liveErr);
+          [versions, urls] = await Promise.all([
+            fetchJson("metadata/platformversions.json", { cache: "no-store" }),
+            fetchJson("metadata/platformurls.json", { cache: "no-store" })
+          ]);
+          source = "snapshot";
+        }
+        if (!versions || typeof versions !== "object") throw new Error("platformversions payload is not an object");
+
+        let statusData = null;
+        try { statusData = await fetchJson("metadata/status.json", { cache: "no-store" }); } catch (statusErr) { console.warn(statusErr); }
         const statusMap = statusData && statusData.environments ? statusData.environments : {};
 
         // Summary tiles
@@ -661,6 +695,9 @@
             document.getElementById("checkedAtText").textContent = `Status checked ${formatted}`;
             document.getElementById("checkedAt").hidden = false;
           }
+        }
+        if (source === "snapshot") {
+          document.getElementById("snapshotNotice").hidden = false;
         }
 
         const tableData = entries.map(([env, versionInfo]) => {
@@ -782,11 +819,17 @@
       } catch (err) {
         document.getElementById("tableCard").hidden = true;
         document.getElementById("loadError").hidden = false;
+        document.getElementById("loadErrorDetail").textContent = err && err.message ? err.message : String(err);
         console.error(err);
       }
     }
 
-    populateTable();
+    // jQuery and DataTables are deferred; DOMContentLoaded fires after they have executed.
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", populateTable);
+    } else {
+      populateTable();
+    }
 
     // ---------- Metadata modal ----------
     const modal = document.getElementById("metadataModal");
