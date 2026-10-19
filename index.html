@@ -1,755 +1,514 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <title>Platform Versions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform Versions · Kelvin</title>
   <link rel="icon" href="https://kelvin.ai/favicon.ico" />
-  <!-- DataTables CSS -->
+  <!-- Proxima Nova is served from Adobe Fonts and cannot be loaded here; Inter is the Kelvin fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" />
+  <!-- Kelvin design tokens (Peacock Design System 2.0, from @kelvininc/ui-components v4.0.0) -->
+  <link rel="stylesheet" href="assets/kelvin-tokens.css" />
+  <!-- DataTables CSS (styles are overridden below with Kelvin table tokens) -->
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-  <!-- Optional: DataTables Dark Theme -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+  <script>
+    // Apply the saved theme before first paint to avoid a flash of the wrong theme.
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (e) {}
+      // ?theme=night|light overrides the saved preference (handy for sharing a link in a given theme)
+      var param = new URLSearchParams(window.location.search).get("theme");
+      if (param === "night" || param === "light") saved = param;
+      var night = saved ? saved === "night" || saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", night ? "night" : "light");
+    })();
+  </script>
   <style>
-    :root {
-      --background-gradient: linear-gradient(160deg, #f4f8fb 0%, #e6f1ff 100%);
-      --color-bg: #f4f8fb;
-      --color-surface: #ffffff;
-      --color-surface-alt: #eef5ff;
-      --color-text: #112240;
-      --color-muted: #5d738e;
-      --color-border: rgba(17, 34, 64, 0.1);
-      --color-accent: #00a3ff;
-      --color-accent-strong: #0082d1;
-      --color-link: #006ecb;
-      --table-header-bg: #0f2f57;
-      --table-row-hover: rgba(0, 163, 255, 0.08);
-      --code-bg: rgba(0, 163, 255, 0.08);
-      --brand-glow: rgba(0, 163, 255, 0.26);
-    }
+    /* ---------- Base ---------- */
+    *, *::before, *::after { box-sizing: border-box; }
 
-    body.dark {
-      --background-gradient: linear-gradient(160deg, #081529 0%, #020b17 100%);
-      --color-bg: #0b1a30;
-      --color-surface: #111f36;
-      --color-surface-alt: #15263f;
-      --color-text: #e3f1ff;
-      --color-muted: #92abc7;
-      --color-border: rgba(111, 170, 255, 0.18);
-      --color-accent: #46c6ff;
-      --color-accent-strong: #5fd3ff;
-      --color-link: #7dd8ff;
-      --table-header-bg: #123b67;
-      --table-row-hover: rgba(70, 198, 255, 0.14);
-      --code-bg: rgba(70, 198, 255, 0.18);
-      --brand-glow: rgba(70, 198, 255, 0.32);
-    }
+    html, body { margin: 0; min-height: 100%; }
 
     body {
-      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      background: var(--background-gradient);
-      color: var(--color-text);
-      min-height: 100vh;
-      padding: 56px 24px;
-      transition: background 0.35s ease, color 0.35s ease;
+      font-family: "Proxima Nova", "Inter", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--text-surface-neutral-primary);
+      background: var(--background-canvas-neutral-default);
+      -webkit-font-smoothing: antialiased;
     }
 
-    .main-container {
-      position: relative;
-      max-width: 1180px;
+    a { color: var(--text-interactive-link-default); text-decoration: none; }
+    a:hover { color: var(--text-interactive-link-hover); text-decoration: underline; text-decoration-color: var(--text-interactive-decoration-hover); text-underline-offset: 2px; }
+
+    :focus-visible { outline: 2px solid var(--border-surface-brand-default); outline-offset: 2px; }
+
+    .kv-icon { width: var(--size-default); height: var(--size-default); fill: currentColor; flex-shrink: 0; }
+    .kv-icon--sm { width: var(--size-sm); height: var(--size-sm); }
+    .kv-icon--lg { width: var(--size-lg); height: var(--size-lg); }
+
+    .muted { color: var(--text-surface-neutral-tertiary); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+
+    /* ---------- Text styles (SCSS mixins from ui-components, written out) ---------- */
+    .heading-xl { font-size: 24px; line-height: 32px; font-weight: 600; margin: 0; }
+    .heading-m { font-size: 16px; line-height: 24px; font-weight: 600; margin: 0; }
+    .heading-xs-caps { font-size: 12px; line-height: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+    .body-m { font-size: 14px; line-height: 20px; font-weight: 400; }
+    .body-s { font-size: 12px; line-height: 16px; font-weight: 400; }
+    .numeric-s { font-size: 24px; line-height: 32px; font-weight: 600; }
+
+    /* ---------- Buttons (button tokens) ---------- */
+    .kv-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--button-gap-regular);
+      height: var(--button-height-regular);
+      padding: 0 var(--button-padding-x-regular);
+      border-radius: var(--button-radius-regular);
+      border: var(--button-secondary-border-thickness-default) solid transparent;
+      background: transparent;
+      font: inherit;
+      font-weight: 600;
+      color: var(--text-surface-neutral-primary);
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .kv-btn:hover { text-decoration: none; }
+    .kv-btn--compact { height: var(--button-height-compact); padding: 0 var(--button-padding-x-compact); }
+
+    .kv-btn--primary { background: var(--button-primary-background-default); color: var(--button-primary-label-default); }
+    .kv-btn--primary:hover { background: var(--button-primary-background-hover); color: var(--button-primary-label-default); }
+    .kv-btn--primary:active { background: var(--button-primary-background-pressed); }
+
+    .kv-btn--secondary { border-color: var(--button-secondary-border-color-default); color: var(--button-secondary-label-default); }
+    .kv-btn--secondary .kv-icon { color: var(--button-secondary-icon-color-default); }
+    .kv-btn--secondary:hover { background: var(--button-secondary-background-hover); color: var(--button-secondary-label-default); }
+    .kv-btn--secondary:active { background: var(--button-secondary-background-pressed); border-color: var(--button-secondary-border-color-pressed); }
+
+    .kv-btn--text { color: var(--button-text-label-default); }
+    .kv-btn--text .kv-icon { color: var(--button-text-icon-color-default); }
+    .kv-btn--text:hover { background: var(--button-tertiary-background-hover); color: var(--button-text-label-default); }
+    .kv-btn--text:active { background: var(--button-tertiary-background-pressed); }
+
+    .kv-btn.is-success { color: var(--text-container-status-success-default); }
+
+    /* ---------- Navigation (navigation tokens) ---------- */
+    .kv-nav {
+      display: flex;
+      align-items: center;
+      gap: var(--navigation-gap-default);
+      padding: var(--navigation-padding-y-default) var(--spacing-4xl);
+      background: var(--navigation-background-default);
+      border-bottom: var(--navigation-border-thickness-default) solid var(--navigation-border-color-default);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .kv-nav__brand { display: inline-flex; align-items: center; height: var(--navigation-logo-height-default); }
+    .kv-nav__brand svg { height: var(--navigation-logo-height-default); width: auto; display: block; }
+    .kv-nav__divider { width: 1px; height: var(--size-xl); background: var(--border-surface-neutral-default); }
+    .kv-nav__title { font-weight: 600; color: var(--text-surface-neutral-secondary); }
+    .kv-nav__links { display: flex; align-items: center; gap: var(--spacing-xs); margin-left: auto; flex-wrap: wrap; }
+
+    /* ---------- Page layout ---------- */
+    .page {
+      max-width: 1320px;
       margin: 0 auto;
-      background: var(--color-surface);
-      border-radius: 24px;
-      box-shadow: 0 28px 60px rgba(9, 25, 46, 0.18);
-      border: 1px solid var(--color-border);
-      padding: 48px 52px;
-      transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+      padding: var(--spacing-5xl) var(--spacing-4xl) var(--spacing-9xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-4xl);
+    }
+
+    .page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--spacing-2xl); flex-wrap: wrap; }
+    .page-header .subtitle { margin: var(--spacing-xs) 0 0; color: var(--text-surface-neutral-tertiary); }
+    .page-header .checked-at { display: inline-flex; align-items: center; gap: var(--spacing-sm); color: var(--text-surface-neutral-tertiary); }
+    .page-header .checked-at .kv-icon { color: var(--icon-surface-neutral-tertiary); }
+
+    /* ---------- Stat tiles ---------- */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-2xl); }
+    .stat {
+      background: var(--background-surface-neutral-default);
+      border: 1px solid var(--border-surface-card-default, var(--border-surface-neutral-default));
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-2xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+      min-width: 0;
+    }
+    .stat__label { color: var(--text-surface-neutral-tertiary); }
+    .stat__value { color: var(--text-surface-neutral-primary); display: flex; align-items: baseline; gap: var(--spacing-md); min-width: 0; }
+    .stat__value code { font-size: 20px; line-height: 28px; }
+    .stat__hint { color: var(--text-surface-neutral-tertiary); }
+    .stat__value .kv-icon { align-self: center; }
+    .stat--success .stat__value .kv-icon { color: var(--icon-surface-status-success-default); }
+    .stat--danger .stat__value .kv-icon { color: var(--icon-surface-status-danger-default); }
+
+    /* ---------- Table card ---------- */
+    .table-card {
+      background: var(--background-surface-neutral-default);
+      border: 1px solid var(--border-surface-card-default, var(--border-surface-neutral-default));
+      border-radius: var(--radius-xl);
       overflow: hidden;
     }
 
-    .main-container::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: radial-gradient(120% 120% at 90% 0%, rgba(0, 163, 255, 0.16) 0%, rgba(0, 163, 255, 0) 52%);
-      pointer-events: none;
-      transition: opacity 0.35s ease;
-    }
-
-    body.dark .main-container::before {
-      background: radial-gradient(120% 120% at 90% 0%, rgba(70, 198, 255, 0.24) 0%, rgba(70, 198, 255, 0) 55%);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(1.0rem, 1.3vw, 1.2rem);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding: 8px 14px;
-      display: inline-block;
-      border-radius: 999px;
-      background: rgba(0, 163, 255, 0.12);
-      border: 1px solid rgba(0, 163, 255, 0.24);
-      color: var(--color-link);
-      box-shadow: 0 8px 18px rgba(0, 163, 255, 0.16);
-    }
-
-    body.dark h1 {
-      background: rgba(70, 198, 255, 0.16);
-      border-color: rgba(70, 198, 255, 0.28);
-      color: var(--color-text);
-      box-shadow: 0 10px 24px rgba(70, 198, 255, 0.2);
-    }
-
-    .subtitle {
-      margin-top: 10px;
-      font-size: 1rem;
-      color: var(--color-muted);
-    }
-
-    .page-header {
+    .table-toolbar {
       display: flex;
-      flex-direction: column;
-      gap: 24px;
-      margin-bottom: 32px;
-      padding: 0 24px;
-    }
-
-    .brand-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 24px;
-      width: 100%;
-    }
-
-    .brand-mark {
-      display: inline-flex;
       align-items: center;
-      justify-content: flex-start;
-      gap: 14px;
-      margin: 0;
+      gap: var(--spacing-xl);
+      padding: var(--spacing-2xl);
+      border-bottom: 1px solid var(--table-divider-default);
+      flex-wrap: wrap;
     }
+    .table-toolbar__title { display: flex; flex-direction: column; gap: 2px; margin-right: auto; }
+    .table-toolbar__title .count { color: var(--text-surface-neutral-tertiary); }
 
-    .page-title {
-      max-width: 620px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin: 0 auto;
-    }
-
-    .brand-mark img {
-      height: min(9vw, 106px);
-      width: auto;
-      display: block;
-      filter: drop-shadow(0 10px 24px rgba(0, 163, 255, 0.25));
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-      margin-left: auto;
-      align-items: center;
-    }
-
-    #techDocsLink,
-    #platformUsageLink,
-    #apiReferenceLink {
-      background: var(--color-surface);
-      color: var(--color-text);
-      border: 2px solid var(--color-border);
-      padding: 12px 20px;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
-
-    #techDocsLink:hover,
-    #platformUsageLink:hover,
-    #apiReferenceLink:hover {
-      transform: translateY(-1px);
-      border-color: var(--color-accent);
-      background: var(--color-surface-alt);
-    }
-
-    #techDocsLink:focus-visible,
-    #platformUsageLink:focus-visible,
-    #apiReferenceLink:focus-visible {
-      outline: 3px solid rgba(0, 163, 255, 0.35);
-      outline-offset: 4px;
-    }
-
-    #toggleDarkMode {
-      background: linear-gradient(140deg, var(--color-accent), var(--color-accent-strong));
-      color: #ffffff;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 16px 30px var(--brand-glow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    #toggleDarkMode:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 34px var(--brand-glow);
-      opacity: 0.95;
-    }
-
-    #toggleDarkMode:focus-visible {
-      outline: 3px solid rgba(0, 163, 255, 0.35);
-      outline-offset: 4px;
-    }
-
-    .table-card {
+    /* Search (search tokens) */
+    .dataTables_wrapper .dataTables_filter { margin: 0; float: none; text-align: left; }
+    .dataTables_wrapper .dataTables_filter label { display: block; margin: 0; font-size: 0; }
+    .kv-search {
       position: relative;
-      background: var(--color-surface);
-      border-radius: 18px;
-      border: 1px solid var(--color-border);
-      padding: 24px;
-      box-shadow: 0 20px 40px rgba(12, 36, 64, 0.12);
-      transition: background 0.35s ease, border-color 0.35s ease;
+      display: inline-flex;
+      align-items: center;
+      width: 280px;
+      max-width: 100%;
     }
+    .kv-search .kv-icon { position: absolute; left: var(--search-padding-x-regular); color: var(--search-icon-color-default); pointer-events: none; }
+    .dataTables_wrapper .dataTables_filter input,
+    .kv-search input {
+      height: var(--search-height-regular);
+      width: 100%;
+      padding: 0 var(--search-padding-x-regular) 0 calc(var(--search-padding-x-regular) + var(--size-default) + var(--search-gap-default));
+      border-radius: var(--search-radius-regular);
+      border: var(--search-border-thickness-default) solid var(--search-border-color-default);
+      background: var(--search-background-default);
+      color: var(--search-text-filled);
+      font: inherit;
+      margin: 0;
+      outline: none;
+    }
+    .kv-search input::placeholder { color: var(--search-text-default); }
+    .kv-search input:focus { border-color: var(--search-border-color-selected); }
+    .kv-search input:focus ~ .kv-icon, .kv-search.is-filled .kv-icon { color: var(--search-icon-color-selected); }
 
-    .table-card::before {
+    /* Page length (input tokens) */
+    .dataTables_wrapper .dataTables_length { margin: 0; float: none; }
+    .dataTables_wrapper .dataTables_length label { display: inline-flex; align-items: center; gap: var(--spacing-md); color: var(--text-surface-neutral-tertiary); margin: 0; }
+    .dataTables_wrapper .dataTables_length select {
+      height: var(--input-height-regular);
+      padding: 0 var(--spacing-4xl) 0 var(--input-padding-x-regular);
+      border-radius: var(--input-radius-regular);
+      border: var(--input-border-thickness-default) solid var(--input-border-color-default);
+      background: var(--input-background-default);
+      color: var(--input-text-text-input-filled);
+      font: inherit;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a6a6a6'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right var(--spacing-md) center;
+      background-size: var(--size-default);
+      outline: none;
+    }
+    .dataTables_wrapper .dataTables_length select:focus { border-color: var(--input-border-color-selected); }
+
+    /* Table (table tokens) */
+    .table-scroll { overflow-x: auto; }
+    table.dataTable { width: 100% !important; margin: 0 !important; border-collapse: collapse; border-spacing: 0; }
+    table.dataTable thead th,
+    table.dataTable thead td {
+      padding: var(--table-padding-y-default) var(--table-padding-x-default);
+      height: var(--table-height-small);
+      background: var(--table-background-level-subtle);
+      color: var(--table-text-main-subtle);
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: left;
+      border-bottom: var(--table-border-cell-thickness-default) solid var(--table-border-cell-color-default);
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    table.dataTable thead .sorting,
+    table.dataTable thead .sorting_asc,
+    table.dataTable thead .sorting_desc { background-image: none !important; padding-right: calc(var(--table-padding-x-default) + 16px); position: relative; cursor: pointer; }
+    table.dataTable thead .sorting::after,
+    table.dataTable thead .sorting_asc::after,
+    table.dataTable thead .sorting_desc::after {
       content: "";
       position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background: linear-gradient(120deg, rgba(0, 163, 255, 0.12), rgba(0, 163, 255, 0));
-      opacity: 0.6;
-      pointer-events: none;
-    }
-
-    body.dark .table-card::before {
-      background: linear-gradient(120deg, rgba(70, 198, 255, 0.2), rgba(70, 198, 255, 0));
-    }
-
-    .table-card .dataTables_wrapper {
-      width: 100%;
-    }
-
-    a {
-      color: var(--color-link);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    a:hover,
-    a:focus-visible {
-      color: var(--color-accent-strong);
-    }
-
-    .metadata-link {
-      color: var(--color-muted);
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .metadata-link:hover,
-    .metadata-link:focus-visible {
-      color: var(--color-link);
-    }
-
-    .version-cell {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .version-cell code {
-      background: var(--code-bg);
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      color: var(--color-text);
-      border: 1px solid rgba(17, 34, 64, 0.08);
-    }
-
-    body.dark .version-cell code {
-      border-color: rgba(143, 181, 222, 0.32);
-      color: var(--color-text);
-    }
-
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      color: var(--color-muted);
-    }
-
-    .status-dot {
+      right: var(--table-padding-x-default);
+      top: 50%;
       width: 12px;
       height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+      transform: translateY(-50%);
+      background-repeat: no-repeat;
+      background-size: 12px 12px;
+      opacity: 0.35;
     }
+    table.dataTable thead .sorting::after { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23595959'><path d='M12 5l5 6H7zM12 19l-5-6h10z'/></svg>"); }
+    table.dataTable thead .sorting_asc::after { opacity: 1; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23595959'><path d='M12 7l6 8H6z'/></svg>"); }
+    table.dataTable thead .sorting_desc::after { opacity: 1; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23595959'><path d='M12 17l-6-8h12z'/></svg>"); }
+    table.dataTable thead .sorting:hover::after { opacity: 0.7; }
+    [data-theme="night"] table.dataTable thead .sorting::after,
+    [data-theme="night"] table.dataTable thead .sorting_asc::after,
+    [data-theme="night"] table.dataTable thead .sorting_desc::after { filter: invert(0.6); }
+    table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc { color: var(--table-text-main-default); }
 
-    .status-dot.status-pending {
-      background: #fbbf24;
-      box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.25);
-    }
-
-    .status-dot.status-ok {
-      background: #22c55e;
-      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
-    }
-
-    .status-dot.status-fail {
-      background: #ef4444;
-      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
-    }
-
-    .status-dot.status-unknown {
-      background: #94a3b8;
-      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.3);
-    }
-
-    table.dataTable thead th {
-      background-color: var(--table-header-bg) !important;
-      color: #fff !important;
-      border-bottom: none !important;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    table.dataTable tbody tr {
-      background-color: var(--color-surface) !important;
-      transition: background-color 0.2s ease;
-    }
-
-    table.dataTable tbody tr:nth-child(even) {
-      background-color: var(--color-surface-alt) !important;
-    }
-
-    table.dataTable tbody tr:hover {
-      background-color: var(--table-row-hover) !important;
-    }
-
-    table.dataTable td,
-    table.dataTable th {
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    table.dataTable td {
-      padding: 14px 16px;
+    table.dataTable tbody tr { background: var(--table-background-state-default); }
+    table.dataTable tbody tr:hover { background: var(--table-background-state-hover); }
+    table.dataTable tbody td {
+      padding: var(--table-padding-y-spacious) var(--table-padding-x-default);
+      border-bottom: var(--table-border-cell-thickness-default) solid var(--table-border-cell-color-default);
+      color: var(--table-text-main-default);
       vertical-align: top;
-      color: var(--color-text);
-      line-height: 1.55;
-    }
-
-    table.dataTable a {
-      color: var(--color-link);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    table.dataTable a:hover {
-      text-decoration: underline;
-    }
-
-    .dataTables_wrapper .dataTables_filter input,
-    .dataTables_wrapper .dataTables_length select {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      color: var(--color-text);
-      border-radius: 10px;
-      padding: 8px 12px;
-      outline: none;
-      font-weight: 500;
-    }
-
-    .dataTables_wrapper .dataTables_filter input:focus,
-    .dataTables_wrapper .dataTables_length select:focus {
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px rgba(0, 163, 255, 0.2);
-    }
-
-    .dataTables_wrapper .dataTables_filter label,
-    .dataTables_wrapper .dataTables_length label,
-    .dataTables_wrapper .dataTables_info {
-      color: var(--color-muted);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    .dataTables_wrapper .dataTables_info {
-      margin-top: 14px;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
       background: transparent !important;
-      color: var(--color-text) !important;
-      border-radius: 8px !important;
-      border: 1px solid transparent !important;
-      margin: 0 2px !important;
-      padding: 6px 12px !important;
-      transition: background 0.2s ease, color 0.2s ease;
     }
+    table.dataTable tbody tr:last-child td { border-bottom: none; }
+    table.dataTable.no-footer { border-bottom: none; }
+    table.dataTable tbody td.dataTables_empty { padding: var(--spacing-6xl); text-align: center; color: var(--table-text-main-subtle); }
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong)) !important;
-      color: #fff !important;
-      border-color: transparent !important;
-      box-shadow: 0 6px 14px var(--brand-glow);
-    }
+    .env-link { display: inline-flex; align-items: center; gap: var(--spacing-sm); font-weight: 600; color: var(--link-label-default); white-space: nowrap; }
+    .env-link .kv-icon { width: var(--size-sm); height: var(--size-sm); color: var(--link-icon-color-default); opacity: 0; transition: opacity 0.15s ease; }
+    .env-link:hover { color: var(--link-label-hover); }
+    .env-link:hover .kv-icon { opacity: 1; color: var(--link-icon-color-hover); }
 
-    code {
-      background: var(--code-bg);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: "Source Code Pro", "Fira Code", monospace;
-      font-size: 0.9rem;
-    }
-
-    .muted {
-      color: var(--color-muted);
-    }
-
-    .kv-pair {
-      margin-bottom: 6px;
-      line-height: 1.4;
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-    }
-
-    .kv-key {
-      font-weight: 600;
-      color: var(--color-text);
-      margin-right: 6px;
-    }
-
-    .kv-key::after {
-      content: ":";
-      margin-left: 1px;
-    }
-
-    .kv-pair:last-child {
-      margin-bottom: 0;
-    }
-
-    .metadata-tooltip-wrapper {
-      position: relative;
+    /* Version chip */
+    .kv-code {
       display: inline-block;
+      font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 16px;
+      padding: 2px var(--spacing-sm);
+      border-radius: var(--radius-md);
+      background: var(--background-surface-neutral-strong);
+      border: 1px solid var(--border-surface-code-default);
+      color: var(--text-surface-neutral-primary);
+      white-space: nowrap;
     }
+    .kv-code--latest { border-color: var(--border-container-status-success-default); }
 
-    .metadata-tooltip {
-      position: fixed;
-      background: rgba(10, 10, 15, 0.85);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-        0 30px 60px rgba(0, 0, 0, 0.3);
-      z-index: 10000;
-      box-sizing: border-box;
-      min-width: min(900px, calc(100vw - 40px));
-      max-width: calc(100vw - 40px);
-      width: max-content;
-      max-height: calc(100vh - 40px);
-      opacity: 0;
-      pointer-events: none;
-      transform: scale(0.95);
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: normal;
-      overflow: hidden;
+    /* Status tag (kv-tag-status) */
+    .kv-tag-status { display: inline-flex; align-items: center; gap: var(--spacing-sm); font-weight: 600; color: var(--text-surface-neutral-secondary); white-space: nowrap; }
+    .kv-tag-status .kv-icon { --icon-background-color: none; }
+    .kv-tag-status--success .kv-icon { color: var(--icon-surface-status-success-default); }
+    .kv-tag-status--error .kv-icon { color: var(--icon-surface-status-danger-default); }
+    .kv-tag-status--unknown .kv-icon { color: var(--icon-surface-status-inactive-default); }
+
+    /* Description list in the "Other" column */
+    .kv-dl { display: grid; grid-template-columns: max-content auto; gap: var(--spacing-xs) var(--spacing-md); align-items: center; }
+    .kv-dl dt { color: var(--table-text-secondary-default); font-size: 12px; line-height: 16px; margin: 0; }
+    .kv-dl dd { margin: 0; }
+
+    .metadata-link { display: inline-flex; align-items: center; gap: var(--spacing-sm); font-weight: 600; cursor: pointer; }
+    .metadata-link .kv-icon { color: var(--table-icon-secondary-default); }
+    .metadata-link:hover .kv-icon { color: var(--table-icon-secondary-hover); }
+
+    /* Table footer: info + pagination */
+    .table-footer {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-2xl);
+      padding: var(--spacing-xl) var(--spacing-2xl);
+      border-top: 1px solid var(--table-divider-default);
+      flex-wrap: wrap;
     }
-
-    .metadata-tooltip.visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: scale(1);
-    }
-
-    .metadata-tooltip::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 16px;
-      background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0) 50%,
-        rgba(0, 0, 0, 0.1) 100%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .metadata-tooltip .metadata-content {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .metadata-json-wrapper {
-      flex: 1;
-      overflow: auto;
-      min-height: 0;
-      margin-bottom: 12px;
-    }
-
-    /* Custom scrollbar for JSON content */
-    .metadata-json-wrapper::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .metadata-json-wrapper::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      margin: 4px;
-    }
-
-    .metadata-json-wrapper::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      border: 2px solid rgba(0, 0, 0, 0.2);
-    }
-
-    .metadata-json-wrapper::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Firefox scrollbar */
-    .metadata-json-wrapper {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.2) rgba(0, 0, 0, 0.2);
-    }
-
-    .metadata-tooltip pre {
-      margin: 0;
-      overflow: visible;
-    }
-
-    .metadata-tooltip.loading {
-      text-align: center;
-      color: var(--color-muted);
-      font-size: 0.9rem;
-    }
-
-    .metadata-tooltip.error {
-      color: #ef4444;
-      font-size: 0.9rem;
-    }
-
-    .metadata-tooltip-title {
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 16px;
-      color: rgba(255, 255, 255, 0.95);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-      padding-bottom: 12px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      letter-spacing: 0.02em;
-    }
-
-    .metadata-content {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .metadata-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .metadata-label {
-      font-size: 0.8rem;
-      color: var(--color-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .metadata-value {
-      font-size: 0.9rem;
-      color: var(--color-text);
-      font-weight: 500;
-    }
-
-    .metadata-value code {
-      background: var(--code-bg);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-    }
-
-    .metadata-actions {
-      display: flex;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .metadata-btn {
-      flex: 1;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.85rem;
+    .dataTables_wrapper .dataTables_info { padding: 0; margin: 0; color: var(--text-surface-neutral-tertiary); float: none; }
+    .dataTables_wrapper .dataTables_paginate { padding: 0; margin: 0; float: none; display: flex; gap: var(--spacing-2xs); }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: var(--button-height-compact);
+      height: var(--button-height-compact);
+      padding: 0 var(--spacing-md) !important;
+      margin: 0 !important;
+      border: 1px solid transparent !important;
+      border-radius: var(--button-radius-compact) !important;
+      background: transparent !important;
+      color: var(--button-text-label-default) !important;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover { background: var(--button-tertiary-background-hover) !important; color: var(--button-text-label-default) !important; }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover { background: var(--table-background-state-selected) !important; color: var(--table-text-main-default) !important; }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover { color: var(--button-text-label-disabled) !important; background: transparent !important; cursor: default; }
+
+    /* ---------- Alert (alert tokens) ---------- */
+    .kv-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+      padding: var(--spacing-xl) var(--spacing-2xl);
+      border-radius: var(--radius-xl);
+      background: var(--background-container-status-danger-soft);
+      border: 1px solid var(--border-container-status-danger-subtle);
+      color: var(--text-surface-neutral-primary);
+    }
+    .kv-alert .kv-icon { color: var(--icon-surface-status-danger-default); margin-top: 2px; }
+    .kv-alert strong { display: block; }
+
+    /* ---------- Modal (modal tokens) ---------- */
+    .kv-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 13, 13, 0.55);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      text-decoration: none;
+      padding: var(--spacing-4xl);
+      z-index: 100;
+    }
+    .kv-modal-backdrop[hidden] { display: none; }
+    .kv-modal {
+      width: min(880px, 100%);
+      max-height: calc(100vh - var(--spacing-7xl));
+      display: flex;
+      flex-direction: column;
+      background: var(--modal-background-default);
+      border: 1px solid var(--modal-border-default);
+      border-radius: var(--modal-radius-default);
+      box-shadow: 0 16px 40px rgba(13, 13, 13, 0.35);
+      overflow: hidden;
+    }
+    .kv-modal__header {
+      display: flex;
+      align-items: center;
+      gap: var(--modal-gap-horizontal-default);
+      padding: var(--modal-padding-y-default) var(--modal-padding-x-default);
+      border-bottom: 1px solid var(--modal-divider-default);
+    }
+    .kv-modal__header .eyebrow { color: var(--modal-title-default); }
+    .kv-modal__header .heading-m { color: var(--text-surface-neutral-primary); }
+    .kv-modal__close { margin-left: auto; width: var(--button-height-compact); padding: 0; }
+    .kv-modal__body {
+      padding: var(--modal-padding-y-default) var(--modal-padding-x-default);
+      overflow: auto;
+      min-height: 120px;
+      background: var(--modal-background-subtle);
+    }
+    .kv-modal__body pre {
+      margin: 0;
+      font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--text-container-neutral-default);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .kv-modal__body .loading { color: var(--text-surface-neutral-tertiary); }
+    .kv-modal__footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--spacing-md);
+      padding: var(--spacing-xl) var(--modal-padding-x-default);
+      border-top: 1px solid var(--modal-divider-default);
     }
 
-    .copy-metadata-btn {
-      background: rgba(0, 163, 255, 0.2);
-      color: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(0, 163, 255, 0.4);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 12px rgba(0, 163, 255, 0.2);
-    }
-
-    .copy-metadata-btn:hover {
-      background: rgba(0, 163, 255, 0.3);
-      border-color: rgba(0, 163, 255, 0.6);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 163, 255, 0.3);
-    }
-
-    .copy-metadata-btn:active {
-      transform: translateY(0);
-    }
-
-    .copy-metadata-btn.copied {
-      background: rgba(16, 185, 129, 0.3);
-      border-color: rgba(16, 185, 129, 0.5);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .view-metadata-btn {
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-    }
-
-    .view-metadata-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    }
-
+    /* ---------- Responsive ---------- */
     @media (max-width: 768px) {
-      body {
-        padding: 32px 16px;
-      }
-
-      .main-container {
-        padding: 32px 24px;
-      }
-
-      .header-actions {
-        flex-direction: column;
-        width: 100%;
-        margin-left: 0;
-      }
-
-      #techDocsLink,
-      #platformUsageLink,
-      #apiReferenceLink,
-      #toggleDarkMode {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .page-header {
-        gap: 20px;
-        padding: 16px 24px 0 24px;
-      }
-
-      .brand-row {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-      }
-
-      .page-title {
-        max-width: none;
-        align-items: center;
-      }
-
-      .brand-mark {
-        align-self: center;
-        margin-bottom: 12px;
-      }
-    }
-
-    @media (max-width: 520px) {
-      body {
-        padding: 24px 14px;
-      }
-
-      .page-header {
-        padding: 16px 18px 0 18px;
-      }
-
-      .main-container {
-        padding: 28px 20px;
-      }
-
-      .brand-mark {
-        margin-bottom: 12px;
-      }
+      .kv-nav { padding: var(--navigation-padding-y-smaill) var(--navigation-padding-x-smaill); gap: var(--spacing-xl); flex-wrap: wrap; }
+      .kv-nav__title, .kv-nav__divider { display: none; }
+      .kv-nav__links { width: 100%; margin-left: 0; justify-content: flex-start; }
+      .page { padding: var(--spacing-4xl) var(--spacing-2xl) var(--spacing-7xl); }
+      .dataTables_wrapper .dataTables_filter { width: 100%; }
+      .kv-search { display: flex; width: 100%; }
+      .table-toolbar__title { width: 100%; }
+      .kv-modal-backdrop { padding: var(--spacing-2xl); }
     }
   </style>
 </head>
 <body>
-  <main class="main-container">
-    <header class="page-header">
-      <div class="brand-row">
-        <div class="brand-mark">
-          <img src="assets/kelvin-logo.png" alt="Kelvin logo" />
-        </div>
-        <div class="header-actions">
-          <a id="techDocsLink" href="https://refactored-adventure-2evp5q2.pages.github.io/" rel="noopener noreferrer">📖 Tech Docs</a>
-          <a id="platformUsageLink" href="https://refactored-adventure-2evp5q2.pages.github.io/platform-usage/" rel="noopener noreferrer">📊 Platform Usage</a>
-          <a id="apiReferenceLink" href="api-docs.html" target="_blank" rel="noopener noreferrer">📚 API Docs</a>
-          <button id="toggleDarkMode" type="button" aria-live="polite" aria-pressed="false">🌙 Dark Mode</button>
-        </div>
+  <!-- Kelvin icon sprite (subset of ui-components svg-symbols.svg) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="kv-external-link" viewBox="0 0 24 24"><path d="M18.222 18.222H5.778V5.778H12V4H5.778C4.79 4 4 4.8 4 5.778v12.444C4 19.2 4.791 20 5.778 20h12.444C19.2 20 20 19.2 20 18.222V12h-1.778v6.222zM13.778 4v1.778h3.19l-8.737 8.738 1.253 1.253 8.738-8.738v3.191H20V4h-6.222z"/></symbol>
+    <symbol id="kv-copy-clipboard" viewBox="0 0 16 16"><path d="M3 14.65C2.73333 14.65 2.5 14.55 2.3 14.35C2.1 14.15 2 13.9167 2 13.65V3.6H3V13.65H10.9V14.65H3ZM5 12.65C4.73333 12.65 4.5 12.55 4.3 12.35C4.1 12.15 4 11.9167 4 11.65V2.31667C4 2.05 4.1 1.81667 4.3 1.61667C4.5 1.41667 4.73333 1.31667 5 1.31667H12.3333C12.6 1.31667 12.8333 1.41667 13.0333 1.61667C13.2333 1.81667 13.3333 2.05 13.3333 2.31667V11.65C13.3333 11.9167 13.2333 12.15 13.0333 12.35C12.8333 12.55 12.6 12.65 12.3333 12.65H5Z"/></symbol>
+    <symbol id="kv-docs" viewBox="0 0 24 24"><path d="M6.75 3c-.963 0-1.741.788-1.741 1.75L5 18.75c0 .962.779 1.75 1.741 1.75H17.25c.962 0 1.75-.788 1.75-1.75V8.25L13.75 3h-7zm6.125 6.125V4.312l4.813 4.813h-4.813z"/></symbol>
+    <symbol id="kv-documentation" viewBox="0 0 24 24"><path d="M5 21c-.55 0-1.02-.196-1.413-.587A1.926 1.926 0 0 1 3 19V5c0-.55.196-1.02.587-1.413A1.926 1.926 0 0 1 5 3h14c.55 0 1.02.196 1.413.587C20.803 3.98 21 4.45 21 5v14c0 .55-.196 1.02-.587 1.413A1.926 1.926 0 0 1 19 21H5Zm2-4h7v-2H7v2Zm0-4h10v-2H7v2Zm0-4h10V7H7v2Z"/></symbol>
+    <symbol id="kv-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
+    <symbol id="kv-swagger" viewBox="0 0 24 24"><path d="M6.98871 3.34583c-6.651616 3.83473-6.651613 13.47357 0 17.30837C13.6403 24.4889 22 19.6695 22 12 22 4.33053 13.6403-.488906 6.98871 3.34583Zm1.9009 14.61327c-4.77108 0-.77848-5.3646-4.09281-5.2721v-1.4336c3.12651.3879-.6012-5.71145 4.06968-5.17962v1.10991c-2.60521.06167-.01541 3.39141-2.35856 4.78651 2.35856 1.5492-.12333 5.0794 2.38169 4.694v1.2949Zm-.16741-5.2118c-.53833-.3103-.53833-1.0904 0-1.4008.53832-.3103 1.21488.0797 1.21488.7004s-.67656 1.0107-1.21488.7004Zm2.8722 0c-.5383-.3103-.5383-1.0904 0-1.4008.5384-.3103 1.2149.0797 1.2149.7004s-.6765 1.0107-1.2149.7004Zm2.8723 0c-.5384-.3103-.5384-1.0904 0-1.4008.5383-.3103 1.2148.0797 1.2148.7004s-.6765 1.0107-1.2148.7004Zm.6437 5.2118v-1.2949c2.505.3854.0231-3.1448 2.3817-4.694-2.3432-1.3951.2466-4.72484-2.3586-4.78651V6.07378c4.6709-.53183.9432 5.56752 4.0697 5.17962v1.4336c-3.3143-.0925.6783 5.2721-4.0928 5.2721Z"/></symbol>
+    <symbol id="kv-monitoring" viewBox="0 0 24 24"><path d="M3 21v-2l2-2v4H3Zm4 0v-6l2-2v8H7Zm4 0v-8l2 2.025V21h-2Zm4 0v-5.975l2-2V21h-2Zm4 0V11l2-2v12h-2ZM3 15.825V13l7-7 4 4 7-7v2.825l-7 7-4-4-7 7Z"/></symbol>
+    <symbol id="kv-success" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="var(--icon-background-color, none)"/><path d="M12 2c5.52 0 10 4.466 10 9.968s-4.48 9.968-10 9.968S2 17.47 2 11.968 6.48 2 12 2zm4.435 6.366l-5.884 5.883-2.979-2.98-1.225 1.226 4.205 4.205 7.108-7.108-1.225-1.226z"/></symbol>
+    <symbol id="kv-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="var(--icon-background-color, none)"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></symbol>
+    <symbol id="kv-help-circle" viewBox="0 0 24 24"><path d="M11.95 18c.35 0 .646-.12.888-.363.241-.241.362-.537.362-.887s-.12-.646-.362-.887a1.207 1.207 0 0 0-.888-.363c-.35 0-.646.12-.887.363a1.207 1.207 0 0 0-.363.887c0 .35.12.646.363.887.241.242.537.363.887.363Zm-.9-3.85h1.85c0-.55.063-.983.188-1.3.125-.317.479-.75 1.062-1.3a7.494 7.494 0 0 0 1.025-1.238c.25-.391.375-.862.375-1.412 0-.933-.342-1.65-1.025-2.15-.683-.5-1.492-.75-2.425-.75-.95 0-1.72.25-2.313.75-.591.5-1.004 1.1-1.237 1.8l1.65.65c.083-.3.27-.625.563-.975.291-.35.737-.525 1.337-.525.533 0 .933.146 1.2.437.267.292.4.613.4.963 0 .333-.1.646-.3.938-.2.291-.45.562-.75.812-.733.65-1.183 1.142-1.35 1.475-.167.333-.25.942-.25 1.825ZM12 22a9.738 9.738 0 0 1-3.9-.788 10.099 10.099 0 0 1-3.175-2.137c-.9-.9-1.612-1.958-2.137-3.175A9.738 9.738 0 0 1 2 12c0-1.383.263-2.683.788-3.9a10.099 10.099 0 0 1 2.137-3.175c.9-.9 1.958-1.612 3.175-2.137A9.738 9.738 0 0 1 12 2c1.383 0 2.683.263 3.9.788a10.098 10.098 0 0 1 3.175 2.137c.9.9 1.613 1.958 2.137 3.175A9.738 9.738 0 0 1 22 12a9.738 9.738 0 0 1-.788 3.9 10.098 10.098 0 0 1-2.137 3.175c-.9.9-1.958 1.613-3.175 2.137A9.738 9.738 0 0 1 12 22Z"/></symbol>
+    <symbol id="kv-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+    <symbol id="kv-time" viewBox="0 0 24 24"><path d="M11.99 2C17.52 2 22 6.48 22 12s-4.48 10-10.01 10C6.47 22 2 17.52 2 12S6.47 2 11.99 2zM12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.5 3v5.25l4.5 2.67-.75 1.23L11 13V7h1.5z"/></symbol>
+    <symbol id="kv-world" viewBox="0 0 24 24"><path d="M12 22a9.7 9.7 0 0 1-3.898-.79 9.96 9.96 0 0 1-5.313-5.312A9.7 9.7 0 0 1 2 12q-.001-2.076.79-3.898a9.96 9.96 0 0 1 5.312-5.313A9.7 9.7 0 0 1 12 2q2.076-.001 3.898.79a9.96 9.96 0 0 1 5.313 5.312A9.7 9.7 0 0 1 22 12a9.7 9.7 0 0 1-.79 3.898 9.96 9.96 0 0 1-5.312 5.313A9.7 9.7 0 0 1 12 22m-1-2.05V18q-.825.001-1.41-.59A1.9 1.9 0 0 1 9 16v-1l-4.8-4.8c-.052.3-.095.6-.138.902A6 6 0 0 0 4 12q.001 3.023 1.988 5.3Q7.975 19.575 11 19.95m6.902-2.552a9 9 0 0 0 .899-1.187c.265-.422.488-.867.66-1.324.176-.457.309-.93.402-1.41A8 8 0 0 0 20 12a7.85 7.85 0 0 0-1.363-4.477A7.7 7.7 0 0 0 15 4.602V5q.001.826-.59 1.414c-.39.39-.86.59-1.41.59h-2V9c0 .281-.094.52-.29.71A.96.96 0 0 1 10 10H8v2h6q.426.001.71.29A.97.97 0 0 1 15 13v3h1q.65 0 1.176.387.527.389.726 1.011"/></symbol>
+    <symbol id="kv-checkmark" viewBox="0 0 12 12"><path d="M3.986 8.877L1.145 5.955a.667.667 0 1 0-.956.93l3.826 3.935 7.811-8.521a.667.667 0 0 0-.983-.901L3.986 8.877z" fill-rule="evenodd" clip-rule="evenodd"/></symbol>
+    <symbol id="kv-warning" viewBox="0 0 24 24"><path d="M12 3l10 17.273H2L12 3zm.88 12.347h-1.733v1.733h1.733v-1.733zm0-5.787h-1.733v4.053h1.733V9.56z"/></symbol>
+  </svg>
+
+  <header class="kv-nav">
+    <a class="kv-nav__brand" href="./" aria-label="Kelvin">
+      <!-- es-kelvin-logotype.svg from ui-components; gradient colors come from the navigation-logo tokens -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 99 32" role="img" aria-hidden="true">
+        <path fill="url(#kv-logo-gradient)" fill-rule="evenodd" d="M16.044 0C7.196 0 0 7.178 0 16s7.196 16 16.043 16 16.042-7.178 16.042-16S24.89 0 16.045 0m0 30.897C7.807 30.897 1.107 24.214 1.107 16s6.7-14.897 14.937-14.897S30.978 7.787 30.978 16s-6.7 14.897-14.934 14.897M23.413 8.48 15.867 16l7.546 7.518h-1.465l-7.456-7.289v7.289h-1.165V8.48h1.165v7.286l7.312-7.286zM52.7 8.418l-7.455 7.428 7.455 7.429h-1.447l-7.365-7.201v7.2h-1.151V8.419h1.15v7.197l7.224-7.197zm-42.616.599a.866.866 0 0 1-1.733 0c0-.47.397-.867.867-.867s.866.39.866.867m74.831 1.123a.85.85 0 0 1-1.7 0c0-.46.39-.85.85-.85s.85.381.85.85m-1.369 2.213h1.14v11.061h-1.14zm12.744 3.438v7.623h-1.14v-7.623c0-1.843-.749-2.63-2.505-2.63-1.396 0-2.846.94-3.513 1.831v8.421h-1.141v-11.06h1.141v1.3c.803-.75 2.171-1.563 3.602-1.563 2.395 0 3.558 1.21 3.558 3.7m-16.317-3.438h1.294l-4.751 11.061H75.43l-.021-.049-4.733-11.012h1.293l.022.05 3.99 9.386zm-13.119-4.03h1.142v15.091h-1.142zM58.97 12.09c-2.932 0-5.227 2.538-5.227 5.782s2.29 5.805 5.445 5.805c1.715 0 3.028-.57 4.259-1.85l.16-.165-.73-.768-.176.186c-.963 1.025-2.114 1.523-3.514 1.523-2.32 0-4.04-1.754-4.205-4.273h9.147v-.46c0-3.994-2.591-5.782-5.16-5.782zm-3.985 5.169c.154-2.001 1.58-4.097 3.962-4.097 2.499 0 3.888 2.048 3.99 4.097zm42.742-7.163h-.25V9.82h.25c.084 0 .153.053.153.137s-.07.138-.153.138zm-.25.684v-.416h.163l.206.416h.364l-.25-.45a.37.37 0 0 0 .244-.368c0-.229-.155-.409-.427-.409h-.617v1.227zm.168-1.622a1.028 1.028 0 1 0 0 2.055 1.028 1.028 0 1 0 0-2.055m0-.324a1.353 1.353 0 1 1 0 2.703 1.353 1.353 0 0 1-1.355-1.351c0-.747.606-1.352 1.355-1.352" clip-rule="evenodd"/>
+        <defs>
+          <linearGradient id="kv-logo-gradient" x1="0" x2="99" y1="16" y2="16" gradientUnits="userSpaceOnUse">
+            <stop stop-color="var(--navigation-logo-color-subtle)"/>
+            <stop offset="1" stop-color="var(--navigation-logo-color-default)"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </a>
+    <span class="kv-nav__divider" aria-hidden="true"></span>
+    <span class="kv-nav__title">Platform Versions</span>
+    <nav class="kv-nav__links" aria-label="Related sites">
+      <a id="techDocsLink" class="kv-btn kv-btn--text kv-btn--compact" href="https://refactored-adventure-2evp5q2.pages.github.io/" rel="noopener noreferrer"><svg class="kv-icon"><use href="#kv-documentation"/></svg>Tech Docs</a>
+      <a id="platformUsageLink" class="kv-btn kv-btn--text kv-btn--compact" href="https://refactored-adventure-2evp5q2.pages.github.io/platform-usage/" rel="noopener noreferrer"><svg class="kv-icon"><use href="#kv-monitoring"/></svg>Platform Usage</a>
+      <a id="apiReferenceLink" class="kv-btn kv-btn--text kv-btn--compact" href="api-docs.html" target="_blank" rel="noopener noreferrer"><svg class="kv-icon"><use href="#kv-swagger"/></svg>API Docs</a>
+      <button id="toggleTheme" class="kv-btn kv-btn--secondary kv-btn--compact" type="button" aria-pressed="false">Night mode</button>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="page-header">
+      <div>
+        <h1 class="heading-xl">Platform Versions</h1>
+        <p class="subtitle body-m">Live view of environment releases across the Kelvin platform.</p>
       </div>
-      <div class="page-title">
-        <h1>Platform Versions</h1>
-        <p class="subtitle">Live view of environment releases across the Kelvin platform.</p>
+      <div class="checked-at body-s" id="checkedAt" hidden>
+        <svg class="kv-icon"><use href="#kv-time"/></svg>
+        <span id="checkedAtText"></span>
       </div>
-    </header>
-    <div class="table-card">
-      <table id="versionsTable" class="display" style="width:100%">
+    </section>
+
+    <section class="stats" id="stats" aria-label="Summary" hidden>
+      <div class="stat">
+        <span class="stat__label heading-xs-caps">Environments</span>
+        <span class="stat__value numeric-s" id="statTotal">–</span>
+      </div>
+      <div class="stat stat--success">
+        <span class="stat__label heading-xs-caps">Online</span>
+        <span class="stat__value numeric-s"><svg class="kv-icon kv-icon--lg"><use href="#kv-success"/></svg><span id="statOnline">–</span></span>
+      </div>
+      <div class="stat stat--danger">
+        <span class="stat__label heading-xs-caps">Offline</span>
+        <span class="stat__value numeric-s"><svg class="kv-icon kv-icon--lg"><use href="#kv-error"/></svg><span id="statOffline">–</span></span>
+        <span class="stat__hint body-s" id="statUnknownHint"></span>
+      </div>
+      <div class="stat">
+        <span class="stat__label heading-xs-caps">Latest core</span>
+        <span class="stat__value numeric-s"><code class="kv-code kv-code--latest" id="statLatest">–</code></span>
+        <span class="stat__hint body-s" id="statLatestHint"></span>
+      </div>
+    </section>
+
+    <section class="table-card" id="tableCard">
+      <table id="versionsTable" class="kv-table" style="width:100%">
         <thead>
           <tr>
             <th>Environment</th>
@@ -764,26 +523,58 @@
         </thead>
         <tbody></tbody>
       </table>
+    </section>
+
+    <div id="loadError" class="kv-alert" hidden role="alert">
+      <svg class="kv-icon"><use href="#kv-error"/></svg>
+      <div><strong>Failed to load version data.</strong><span class="body-s">Check the browser console for details, or retry in a moment.</span></div>
     </div>
   </main>
+
+  <!-- Metadata modal -->
+  <div class="kv-modal-backdrop" id="metadataModal" hidden>
+    <div class="kv-modal" role="dialog" aria-modal="true" aria-labelledby="metadataModalTitle">
+      <div class="kv-modal__header">
+        <div>
+          <div class="eyebrow heading-xs-caps">Metadata</div>
+          <div class="heading-m" id="metadataModalTitle">environment</div>
+        </div>
+        <button type="button" class="kv-btn kv-btn--text kv-btn--compact kv-modal__close" id="metadataModalClose" aria-label="Close">
+          <svg class="kv-icon"><use href="#kv-close"/></svg>
+        </button>
+      </div>
+      <div class="kv-modal__body" id="metadataModalBody"><p class="loading">Loading metadata…</p></div>
+      <div class="kv-modal__footer">
+        <button type="button" class="kv-btn kv-btn--secondary" id="metadataCopyBtn"><svg class="kv-icon"><use href="#kv-copy-clipboard"/></svg>Copy JSON</button>
+        <a class="kv-btn kv-btn--primary" id="metadataOpenLink" href="#" target="_blank" rel="noopener noreferrer"><svg class="kv-icon"><use href="#kv-external-link"/></svg>Open /metadata</a>
+      </div>
+    </div>
+  </div>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js" defer></script>
   <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js" defer></script>
   <script>
-    // Dark Mode Toggle
-    const toggleButton = document.getElementById("toggleDarkMode");
-    const savedTheme = localStorage.getItem("theme");
-    const userPrefersDark = savedTheme ? savedTheme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-    if (userPrefersDark) document.body.classList.add("dark");
+    // ---------- Theme toggle (Light / Night) ----------
+    const root = document.documentElement;
+    const toggleButton = document.getElementById("toggleTheme");
     const setToggleState = () => {
-      const isDark = document.body.classList.contains("dark");
-      toggleButton.textContent = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
-      toggleButton.setAttribute("aria-pressed", String(isDark));
+      const isNight = root.getAttribute("data-theme") === "night";
+      toggleButton.textContent = isNight ? "Light mode" : "Night mode";
+      toggleButton.setAttribute("aria-pressed", String(isNight));
     };
     setToggleState();
+    toggleButton.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "night" ? "light" : "night";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (err) { /* ignore storage failures */ }
+      setToggleState();
+    });
+
+    // ---------- Helpers ----------
+    const escapeHtml = (value) => String(value)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
     const versionPlaceholder = '<span class="muted">N/A</span>';
 
@@ -794,63 +585,45 @@
       return parts.map((part) => part.padStart(6, "0")).join(".");
     };
 
-    const createVersionCell = (version, suffix = "") => {
-      const suffixHtml = suffix ? ` ${suffix}` : "";
+    const createVersionCell = (version, isLatest = false) => {
       if (version === undefined || version === null || version === "") {
-        return {
-          display: `${versionPlaceholder}${suffixHtml}`,
-          sort: "",
-          filter: ""
-        };
+        return { display: versionPlaceholder, sort: "", filter: "" };
       }
-
-      const sortValue = getVersionSortValue(version);
+      const cls = isLatest ? "kv-code kv-code--latest" : "kv-code";
       return {
-        display: `<span class="version-cell"><code>${version}</code>${suffixHtml}</span>`,
-        sort: sortValue,
+        display: `<code class="${cls}">${escapeHtml(version)}</code>`,
+        sort: getVersionSortValue(version),
         filter: version
       };
     };
 
-    const createStatusCell = (env, baseUrl, statusInfo) => {
-      const resolvedStatus = statusInfo && statusInfo.status ? statusInfo.status : "unknown";
-      let statusClass = "status-unknown";
-      let statusText = "Unknown";
-
-      if (resolvedStatus === "online") {
-        statusClass = "status-ok";
-        statusText = "Online";
-      } else if (resolvedStatus === "offline") {
-        statusClass = "status-fail";
-        statusText = "Offline";
-      }
-
-      const statusTitle = statusInfo && typeof statusInfo.code === "number" && statusInfo.code > 0
-        ? `HTTP ${statusInfo.code}`
-        : "";
-
-      return `
-        <span class="status-indicator" data-env="${env}" data-url="${baseUrl}" ${statusTitle ? `title="${statusTitle}"` : ""}>
-          <span class="status-dot ${statusClass}" aria-hidden="true"></span>
-          <span class="status-text">${statusText}</span>
-        </span>
-      `;
+    const createStatusCell = (statusInfo) => {
+      const resolved = statusInfo && statusInfo.status ? statusInfo.status : "unknown";
+      let cls = "kv-tag-status--unknown";
+      let icon = "kv-help-circle";
+      let text = "Unknown";
+      if (resolved === "online") { cls = "kv-tag-status--success"; icon = "kv-success"; text = "Online"; }
+      else if (resolved === "offline") { cls = "kv-tag-status--error"; icon = "kv-error"; text = "Offline"; }
+      const title = statusInfo && typeof statusInfo.code === "number" && statusInfo.code > 0 ? ` title="HTTP ${statusInfo.code}"` : "";
+      return {
+        display: `<span class="kv-tag-status ${cls}"${title}><svg class="kv-icon"><use href="#${icon}"/></svg>${text}</span>`,
+        sort: resolved === "online" ? 2 : resolved === "offline" ? 1 : 0,
+        filter: text
+      };
     };
 
-    const versionColumnRender = {
-      _: "display",
-      sort: "sort",
-      filter: "filter"
+    const dtRender = { _: "display", sort: "sort", filter: "filter" };
+
+    const formatCheckedAt = (iso) => {
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }) + " UTC";
     };
 
-    toggleButton.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      const isDark = document.body.classList.contains('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      setToggleState();
-    });
+    // Metadata we already have from /platformversions, used when the per-env file is missing.
+    const fallbackMetadata = new Map();
 
-    // Fetch and populate DataTable
+    // ---------- Load data and build the table ----------
     async function populateTable() {
       try {
         const [versionsResp, urlsResp, statusResp] = await Promise.all([
@@ -858,39 +631,67 @@
           fetch("https://central-server.kelvininc.com/platformurls"),
           fetch("metadata/status.json", { cache: "no-store" })
         ]);
-        const [versions, urls] = await Promise.all([
-          versionsResp.json(),
-          urlsResp.json()
-        ]);
+        const [versions, urls] = await Promise.all([versionsResp.json(), urlsResp.json()]);
         const statusData = statusResp.ok ? await statusResp.json() : null;
         const statusMap = statusData && statusData.environments ? statusData.environments : {};
-        const tableData = Object.entries(versions).map(([env, versionInfo]) => {
-          let baseUrl = urls[env] || `${env}.kelvin.ai`;
-          if (!/^https?:\/\//.test(baseUrl)) {
-            baseUrl = `https://${baseUrl}`;
+
+        // Summary tiles
+        const entries = Object.entries(versions);
+        let latestCore = "";
+        let latestSort = "";
+        for (const [, info] of entries) {
+          const s = getVersionSortValue(info.core);
+          if (s && s > latestSort) { latestSort = s; latestCore = info.core; }
+        }
+        const onLatest = entries.filter(([, info]) => info.core === latestCore).length;
+        const online = entries.filter(([env]) => statusMap[env] && statusMap[env].status === "online").length;
+        const offline = entries.filter(([env]) => statusMap[env] && statusMap[env].status === "offline").length;
+        document.getElementById("statTotal").textContent = entries.length;
+        document.getElementById("statOnline").textContent = online;
+        document.getElementById("statOffline").textContent = offline;
+        const unknown = entries.length - online - offline;
+        document.getElementById("statUnknownHint").textContent = unknown > 0 ? `${unknown} not checked` : "";
+        document.getElementById("statLatest").textContent = latestCore || "N/A";
+        document.getElementById("statLatestHint").textContent = latestCore ? `${onLatest} of ${entries.length} environments` : "";
+        document.getElementById("stats").hidden = false;
+
+        if (statusData && statusData.updatedAt) {
+          const formatted = formatCheckedAt(statusData.updatedAt);
+          if (formatted) {
+            document.getElementById("checkedAtText").textContent = `Status checked ${formatted}`;
+            document.getElementById("checkedAt").hidden = false;
           }
-          const envLink = `<a href="${baseUrl}" target="_blank" rel="noopener noreferrer">${env}</a>`;
-          const statusCell = createStatusCell(env, baseUrl, statusMap[env]);
-          const metadataLink = `<span class="metadata-tooltip-wrapper"><a class="metadata-link" href="${baseUrl}/metadata" target="_blank" rel="noopener noreferrer" data-metadata-url="${baseUrl}/metadata" data-env="${env}" data-metadata='${JSON.stringify(versionInfo)}'>/metadata</a></span>`;
-          const othersHtml = Object.entries(versionInfo)
-            .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key))
-            .map(([key, val]) => {
-              const valueMarkup = (val === undefined || val === null || val === "")
-                ? versionPlaceholder
-                : `<code>${val}</code>`;
-              return `<div class="kv-pair"><span class="kv-key">${key}</span>${valueMarkup}</div>`;
-            })
-            .join("");
+        }
+
+        const tableData = entries.map(([env, versionInfo]) => {
+          let baseUrl = urls[env] || `${env}.kelvin.ai`;
+          if (!/^https?:\/\//.test(baseUrl)) baseUrl = `https://${baseUrl}`;
+          fallbackMetadata.set(env, versionInfo);
+
+          const envLink = `<a class="env-link" href="${escapeHtml(baseUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(env)}<svg class="kv-icon"><use href="#kv-external-link"/></svg></a>`;
+          const metadataUrl = `${baseUrl}/metadata`;
+          const metadataLink = `<a class="metadata-link" href="${escapeHtml(metadataUrl)}" target="_blank" rel="noopener noreferrer" data-metadata-url="${escapeHtml(metadataUrl)}" data-env="${escapeHtml(env)}"><svg class="kv-icon"><use href="#kv-docs"/></svg>/metadata</a>`;
+
+          const otherPairs = Object.entries(versionInfo)
+            .filter(([key]) => !["core", "core-ui", "core-api", "api-spec"].includes(key));
+          const othersHtml = otherPairs.length
+            ? `<dl class="kv-dl">${otherPairs.map(([key, val]) => {
+                const valueMarkup = (val === undefined || val === null || val === "")
+                  ? versionPlaceholder
+                  : `<code class="kv-code">${escapeHtml(val)}</code>`;
+                return `<dt>${escapeHtml(key)}</dt><dd>${valueMarkup}</dd>`;
+              }).join("")}</dl>`
+            : versionPlaceholder;
 
           return {
             environment: envLink,
-            status: statusCell,
-            core: createVersionCell(versionInfo["core"]),
+            status: createStatusCell(statusMap[env]),
+            core: createVersionCell(versionInfo["core"], latestCore && versionInfo["core"] === latestCore),
             coreUi: createVersionCell(versionInfo["core-ui"]),
             coreApi: createVersionCell(versionInfo["core-api"]),
             apiSpec: createVersionCell(versionInfo["api-spec"]),
             metadata: metadataLink,
-            others: othersHtml || versionPlaceholder
+            others: othersHtml
           };
         });
 
@@ -913,7 +714,7 @@
               (entry[1] === "asc" || entry[1] === "desc"));
             return isValid ? parsed : DEFAULT_ORDER;
           } catch (err) {
-            return DEFAULT_ORDER; // ignore corrupt/unavailable storage
+            return DEFAULT_ORDER;
           }
         };
 
@@ -921,231 +722,147 @@
           data: tableData,
           columns: [
             { title: "Environment", data: "environment" },
-            { title: "Status", data: "status" },
-            { title: "Core", data: "core", render: versionColumnRender },
-            { title: "Core UI", data: "coreUi", render: versionColumnRender },
-            { title: "Core API", data: "coreApi", render: versionColumnRender },
-            { title: "API Spec", data: "apiSpec", render: versionColumnRender },
-            { title: "Metadata", data: "metadata" },
-            { title: "Other", data: "others" }
+            { title: "Status", data: "status", render: dtRender },
+            { title: "Core", data: "core", render: dtRender },
+            { title: "Core UI", data: "coreUi", render: dtRender },
+            { title: "Core API", data: "coreApi", render: dtRender },
+            { title: "API Spec", data: "apiSpec", render: dtRender },
+            { title: "Metadata", data: "metadata", orderable: false },
+            { title: "Other", data: "others", orderable: false }
           ],
           order: loadSavedOrder(),
           pageLength: 50,
-          responsive: true,
-          search: { search: initialSearch }
+          lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
+          search: { search: initialSearch },
+          dom: '<"table-toolbar"<"table-toolbar__title">fl><"table-scroll"t><"table-footer"ip>',
+          language: {
+            search: "",
+            searchPlaceholder: "Search environments, versions…",
+            lengthMenu: "Rows _MENU_",
+            info: "Showing _START_–_END_ of _TOTAL_ environments",
+            infoEmpty: "No environments",
+            infoFiltered: "(filtered from _MAX_)",
+            zeroRecords: "No matching environments",
+            paginate: { previous: "Previous", next: "Next" }
+          },
+          initComplete: function () {
+            // Toolbar title
+            const title = document.querySelector(".table-toolbar__title");
+            if (title) {
+              title.innerHTML = `<span class="heading-m">Environments</span><span class="count body-s">${entries.length} environments · ${Object.keys(statusMap).length} checked</span>`;
+            }
+            // Wrap the DataTables search input as a Kelvin search field
+            const filterInput = document.querySelector(".dataTables_filter input");
+            if (filterInput) {
+              const wrapper = document.createElement("div");
+              wrapper.className = "kv-search" + (filterInput.value ? " is-filled" : "");
+              filterInput.parentNode.insertBefore(wrapper, filterInput);
+              wrapper.appendChild(filterInput);
+              wrapper.insertAdjacentHTML("beforeend", '<svg class="kv-icon"><use href="#kv-search"/></svg>');
+              filterInput.setAttribute("aria-label", "Search environments");
+              filterInput.addEventListener("input", () => wrapper.classList.toggle("is-filled", Boolean(filterInput.value)));
+            }
+          }
         });
 
         // Persist the sort column + direction so it survives reloads
         table.on("order.dt", () => {
-          try {
-            localStorage.setItem(SORT_STORAGE_KEY, JSON.stringify(table.order()));
-          } catch (err) {
-            // ignore storage failures (e.g. private browsing)
-          }
+          try { localStorage.setItem(SORT_STORAGE_KEY, JSON.stringify(table.order())); } catch (err) { /* ignore */ }
         });
 
         // Keep the URL in sync with the search box so filtered views are shareable
         table.on("search.dt", () => {
           const term = table.search();
           const params = new URLSearchParams(window.location.search);
-          params.delete("q"); // normalize legacy param
-          if (term) {
-            params.set("search", term);
-          } else {
-            params.delete("search");
-          }
+          params.delete("q");
+          if (term) params.set("search", term); else params.delete("search");
           const query = params.toString();
-          const newUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
-          window.history.replaceState(null, "", newUrl);
+          window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`);
         });
-
       } catch (err) {
-        document.body.insertAdjacentHTML("beforeend", "<p style=\"color:red;\">Failed to load version data.</p>");
+        document.getElementById("tableCard").hidden = true;
+        document.getElementById("loadError").hidden = false;
         console.error(err);
       }
     }
 
     populateTable();
 
-    // Metadata tooltip functionality - load from local files fetched by GitHub Action
-    function createLoadingTooltip(env) {
-      return `
-        <div class="metadata-tooltip-title">${env} Metadata</div>
-        <div class="metadata-content">
-          <p style="color: var(--color-muted); font-size: 0.9rem; margin: 0; text-align: center;">
-            Loading metadata...
-          </p>
-        </div>
-      `;
-    }
-
-    function createMetadataTooltip(env, metadata, metadataUrl) {
-      const formattedJson = JSON.stringify(metadata, null, 2);
-
-      return `
-        <div class="metadata-tooltip-title">${env} Metadata</div>
-        <div class="metadata-content">
-          <div class="metadata-json-wrapper">
-            <pre style="background: rgba(0, 0, 0, 0.3); padding: 16px; border-radius: 12px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); font-family: 'JetBrains Mono', 'Fira Code', monospace; white-space: pre-wrap; word-break: break-word; border: 1px solid rgba(255, 255, 255, 0.08); line-height: 1.6;">${formattedJson}</pre>
-          </div>
-          <div class="metadata-actions">
-            <button class="metadata-btn copy-metadata-btn" data-metadata='${formattedJson}'>
-              📋 Copy JSON
-            </button>
-            <a href="${metadataUrl}" target="_blank" rel="noopener noreferrer" class="metadata-btn view-metadata-btn">
-              🔗 View Full
-            </a>
-          </div>
-        </div>
-      `;
-    }
-
-    // Position tooltip near the trigger element
-    function positionTooltip(tooltip, triggerElement) {
-      const triggerRect = triggerElement.getBoundingClientRect();
-      const tooltipRect = tooltip.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const margin = 20;
-
-      // Calculate position - align to the right edge of the screen
-      let top = triggerRect.bottom + 8;
-      let left = viewportWidth - tooltipRect.width - margin;
-
-      // Check if tooltip goes below viewport
-      if (top + tooltipRect.height > viewportHeight - margin) {
-        // Show above the element instead
-        top = triggerRect.top - tooltipRect.height - 8;
-      }
-
-      // Ensure tooltip doesn't go off screen vertically - maintain equal margins
-      if (top < margin) {
-        top = margin;
-      } else if (top + tooltipRect.height > viewportHeight - margin) {
-        // Ensure equal bottom margin
-        top = viewportHeight - tooltipRect.height - margin;
-      }
-
-      tooltip.style.top = `${top}px`;
-      tooltip.style.left = `${left}px`;
-    }
-
-    // Cache for loaded metadata
+    // ---------- Metadata modal ----------
+    const modal = document.getElementById("metadataModal");
+    const modalTitle = document.getElementById("metadataModalTitle");
+    const modalBody = document.getElementById("metadataModalBody");
+    const modalCopy = document.getElementById("metadataCopyBtn");
+    const modalOpen = document.getElementById("metadataOpenLink");
+    const modalClose = document.getElementById("metadataModalClose");
     const metadataCache = new Map();
+    let currentJson = "";
+    let lastFocused = null;
 
     async function loadMetadata(env) {
-      if (metadataCache.has(env)) {
-        return metadataCache.get(env);
-      }
-
+      if (metadataCache.has(env)) return metadataCache.get(env);
       try {
-        // Try to load from local file first (fetched by GitHub Action)
-        const response = await fetch(`metadata/${env}.json`);
+        const response = await fetch(`metadata/${encodeURIComponent(env)}.json`);
         if (response.ok) {
           const data = await response.json();
-          metadataCache.set(env, data);
-          return data;
+          if (data !== null && typeof data === "object" && Object.keys(data).length) {
+            metadataCache.set(env, data);
+            return data;
+          }
         }
       } catch (error) {
         console.warn(`Failed to load local metadata for ${env}:`, error);
       }
-
-      // Fallback to platformversions data if local file doesn't exist
       return null;
     }
 
-    // Click to toggle tooltip
-    document.addEventListener('click', async (e) => {
-      const link = e.target.closest('.metadata-link');
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+    }
 
+    async function openModal(env, metadataUrl, trigger) {
+      lastFocused = trigger || null;
+      modalTitle.textContent = env;
+      modalOpen.href = metadataUrl;
+      modalBody.innerHTML = '<p class="loading">Loading metadata…</p>';
+      currentJson = "";
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      modalClose.focus();
+
+      const data = (await loadMetadata(env)) || fallbackMetadata.get(env) || {};
+      currentJson = JSON.stringify(data, null, 2);
+      modalBody.innerHTML = `<pre>${escapeHtml(currentJson)}</pre>`;
+    }
+
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest(".metadata-link");
       if (link) {
         e.preventDefault();
-
-        // Check if this link already has a tooltip
-        const existingTooltip = document.querySelector('.metadata-tooltip[data-env="' + link.dataset.env + '"]');
-
-        if (existingTooltip) {
-          const isVisible = existingTooltip.classList.contains('visible');
-          // Close all tooltips
-          document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
-            t.classList.remove('visible');
-          });
-
-          if (!isVisible) {
-            existingTooltip.classList.add('visible');
-            positionTooltip(existingTooltip, link);
-          }
-          return;
-        }
-
-        // Close all other tooltips
-        document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
-          t.classList.remove('visible');
-        });
-
-        const env = link.dataset.env;
-        const metadataUrl = link.dataset.metadataUrl;
-
-        // Create new tooltip and add to body
-        const tooltip = document.createElement('div');
-        tooltip.className = 'metadata-tooltip';
-        tooltip.setAttribute('data-env', env);
-        tooltip.innerHTML = createLoadingTooltip(env);
-        document.body.appendChild(tooltip);
-
-        // Position and show
-        positionTooltip(tooltip, link);
-        tooltip.classList.add('visible');
-
-        // Load metadata from local file
-        const metadata = await loadMetadata(env);
-
-        if (metadata) {
-          tooltip.innerHTML = createMetadataTooltip(env, metadata, metadataUrl);
-        } else {
-          // Fallback to basic data we have
-          const fallbackData = JSON.parse(link.dataset.metadata || '{}');
-          tooltip.innerHTML = createMetadataTooltip(env, fallbackData, metadataUrl);
-        }
-
-        // Reposition after content is loaded
-        setTimeout(() => positionTooltip(tooltip, link), 0);
-      } else {
-        // Click outside - close all tooltips unless clicking on tooltip itself
-        if (!e.target.closest('.metadata-tooltip')) {
-          document.querySelectorAll('.metadata-tooltip.visible').forEach(t => {
-            t.classList.remove('visible');
-          });
-        }
+        openModal(link.dataset.env, link.dataset.metadataUrl, link);
+        return;
       }
+      if (e.target === modal) closeModal();
+    });
+    modalClose.addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) closeModal();
     });
 
-    // Handle copy button clicks
-    document.addEventListener('click', async (e) => {
-      if (e.target.closest('.copy-metadata-btn')) {
-        const btn = e.target.closest('.copy-metadata-btn');
-        const metadata = btn.dataset.metadata;
-
-        try {
-          await navigator.clipboard.writeText(metadata);
-          const originalText = btn.innerHTML;
-          btn.innerHTML = '✓ Copied!';
-          btn.classList.add('copied');
-
-          setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.classList.remove('copied');
-          }, 2000);
-        } catch (err) {
-          console.error('Failed to copy:', err);
-          btn.innerHTML = '✗ Failed';
-          setTimeout(() => {
-            btn.innerHTML = '📋 Copy JSON';
-          }, 2000);
-        }
+    modalCopy.addEventListener("click", async () => {
+      const original = modalCopy.innerHTML;
+      try {
+        await navigator.clipboard.writeText(currentJson);
+        modalCopy.innerHTML = '<svg class="kv-icon"><use href="#kv-checkmark"/></svg>Copied';
+        modalCopy.classList.add("is-success");
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        modalCopy.innerHTML = '<svg class="kv-icon"><use href="#kv-error"/></svg>Copy failed';
       }
+      setTimeout(() => { modalCopy.innerHTML = original; modalCopy.classList.remove("is-success"); }, 2000);
     });
-
   </script>
 </body>
 </html>
