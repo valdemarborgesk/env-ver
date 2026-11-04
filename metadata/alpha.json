@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "5.8.0",
-    "core-ui": "1.1.0-alpha.62",
+    "core-ui": "1.1.0-alpha.63",
     "core-api": "9.0.0-rc2026.361.9981b086f"
   },
   "feature_flags": {
