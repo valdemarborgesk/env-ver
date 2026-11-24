@@ -1,7 +1,7 @@
 {
   "versions": {
     "core": "5.8.0",
-    "core-ui": "1.1.0-alpha.106",
+    "core-ui": "1.1.0-alpha.108",
     "core-api": "9.0.0-rc2026.361.9981b086f"
   },
   "feature_flags": {
@@ -27,7 +27,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.1.0-alpha.75",
+    "kelvin-edge-ui": "alpha.kelvininc.com:5000/kelvin-edge-ui:1.1.0-alpha.76",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -42,8 +42,8 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "latest",
-    "ksdk_minimum_version": "latest",
+    "ksdk_latest_version": "9.8.2a1",
+    "ksdk_minimum_version": "9.8.2a1",
     "agent_version": "1.0.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
