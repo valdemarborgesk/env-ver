@@ -1,8 +1,8 @@
 {
   "versions": {
-    "core": "7.2.0",
-    "core-ui": "3.2.2",
-    "core-api": "9.10.3"
+    "core": "5.8.0",
+    "core-ui": "1.1.0-alpha.110",
+    "core-api": "9.0.0-rc2026.96.a26b45fc1"
   },
   "feature_flags": {
     "log_forward": true,
@@ -18,7 +18,7 @@
     "allow_switch_app_type": false
   },
   "documentation": {
-    "url": "https://docs.kelvin.ai/7.2/"
+    "url": "https://docs.kelvin.ai/5.8/"
   },
   "authentication": {
     "realm": "kelvin",
@@ -27,7 +27,7 @@
     "logout_path": "/logout"
   },
   "core-ui": {
-    "kelvin-edge-ui": "carlos.kelvin.ai:5000/kelvin-edge-ui:1.4.0",
+    "kelvin-edge-ui": "carlos.kelvin.ai:5000/kelvin-edge-ui:1.1.0-alpha.76",
     "client_id": "kelvin-core"
   },
   "core-api": {
@@ -42,20 +42,20 @@
   },
   "sdk": {
     "docker_minimum_version": "19.03.5",
-    "ksdk_latest_version": "9.8.0",
-    "ksdk_minimum_version": "9.8.0",
-    "agent_version": "9.8.0",
+    "ksdk_latest_version": "9.8.2a1",
+    "ksdk_minimum_version": "9.8.2a1",
+    "agent_version": "1.0.0",
     "components": {
       "kelvin-python-app-builder": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner": "kelvinengineering/kelvin-python-app-builder:3.0.3",
       "kelvin-python-app-runner-slim": "python:3.8-slim",
       "kelvin-mqtt-broker": "carlos.kelvin.ai:5000/kelvin-mqtt-broker:2.1.2",
-      "kelvin-edge-gateway": "carlos.kelvin.ai:5000/kelvin-edge-gateway:7.2.0",
-      "kelvin-edge-sync": "carlos.kelvin.ai:5000/kelvin-edge-sync:7.2.0",
-      "kelvin-nats-mgr-cloud": "carlos.kelvin.ai:5000/kelvin-nats-mgr-cloud:0.0.1",
-      "kelvin-nats-mgr-edge": "carlos.kelvin.ai:5000/kelvin-nats-mgr-edge:0.0.1",
-      "kelvin-control-change-manager": "carlos.kelvin.ai:5000/kelvin-control-change-manager:7.2.0",
-      "kelvin-custom-action-manager": "carlos.kelvin.ai:5000/kelvin-custom-action-manager:7.2.0"
+      "kelvin-edge-gateway": "carlos.kelvin.ai:5000/kelvin-edge-gateway:alpha-261117-4e247cf",
+      "kelvin-edge-sync": "carlos.kelvin.ai:5000/kelvin-edge-sync:alpha-261113-5fd21a1",
+      "kelvin-nats-mgr-cloud": "carlos.kelvin.ai:5000/kelvin-nats-mgr-cloud:alpha-261119-b7e19d6",
+      "kelvin-nats-mgr-edge": "carlos.kelvin.ai:5000/kelvin-nats-mgr-edge:alpha-261119-b7e19d6",
+      "kelvin-control-change-manager": "carlos.kelvin.ai:5000/kelvin-control-change-manager:alpha-261113-5fd21a1",
+      "kelvin-custom-action-manager": "carlos.kelvin.ai:5000/kelvin-custom-action-manager:alpha-261113-5fd21a1"
     }
   },
   "bridge": {
