@@ -38,7 +38,7 @@
   "docker": {
     "url": "jfrog-test.kelvin.ai",
     "port": 443,
-    "path": "/ecr/kelvin-platform"
+    "path": "/apps"
     
   },
   "sdk": {
@@ -61,12 +61,12 @@
   },
   "bridge": {
     "apps": {
-      "kelvin-bridge-roc-client": "jfrog-test.kelvin.ai/ecr/kelvin-platform/kelvin-bridge-roc-client:3.0.4",
-      "kelvin-opcua-exporter": "jfrog-test.kelvin.ai/ecr/kelvin-platform/kelvin-opcua-exporter:0.1.4",
-      "kelvin-opcua-connector": "jfrog-test.kelvin.ai/ecr/kelvin-platform/kelvin-opcua-connector:0.2.2",
-      "kelvin-modbus-connector": "jfrog-test.kelvin.ai/ecr/kelvin-platform/kelvin-modbus-connector:0.1.2",
-      "kelvin-osi-pi-connector": "jfrog-test.kelvin.ai/ecr/kelvin-platform/kelvin-osi-pi-connector:1.0.4",
-      "kelvin-csv-publisher-connector": "jfrog-test.kelvin.ai/ecr/kelvin-platform/kelvin-csv-publisher-connector:2.0.3"
+      "kelvin-bridge-roc-client": "jfrog-test.kelvin.ai/apps/kelvin-bridge-roc-client:3.0.4",
+      "kelvin-opcua-exporter": "jfrog-test.kelvin.ai/apps/kelvin-opcua-exporter:0.1.4",
+      "kelvin-opcua-connector": "jfrog-test.kelvin.ai/apps/kelvin-opcua-connector:0.2.2",
+      "kelvin-modbus-connector": "jfrog-test.kelvin.ai/apps/kelvin-modbus-connector:0.1.2",
+      "kelvin-osi-pi-connector": "jfrog-test.kelvin.ai/apps/kelvin-osi-pi-connector:1.0.4",
+      "kelvin-csv-publisher-connector": "jfrog-test.kelvin.ai/apps/kelvin-csv-publisher-connector:2.0.3"
     }
   },
   "schema": {
